@@ -1,0 +1,33 @@
+{
+    "type":  "kaleidoscope_cookery:stockpot",
+    "carrier":  {
+                    "item":  "kaleidoscope_cookery:empty_cup"
+                },
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:lily_of_the_valley"
+                        },
+                        {
+                            "item":  "minecraft:lily_of_the_valley"
+                        },
+                        {
+                            "item":  "minecraft:lily_of_the_valley"
+                        },
+                        {
+                            "item":  "minecraft:lily_of_the_valley"
+                        },
+                        {
+                            "item":  "minecraft:honey_bottle"
+                        }
+                    ],
+    "soup_base":  "minecraft:water",
+    "cooking_texture":  "kaleidoscope_flora:stockpot/may_kiss_cooking",
+    "finished_texture":  "kaleidoscope_flora:stockpot/may_kiss_finished",
+    "cooking_bubble_color":  -1510687,
+    "finished_bubble_color":  -1510687,
+    "time":  240,
+    "result":  {
+                   "count":  8,
+                   "id":  "kaleidoscope_flora:may_kiss"
+               }
+}

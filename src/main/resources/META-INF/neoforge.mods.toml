@@ -1,0 +1,41 @@
+modLoader = "javafml"
+# NeoForge's javafml version is independent of the MC version (1.21.1 = FML 4.x); do not copy Forge's [21,)
+loaderVersion = "[4,)"
+license = "MIT"
+
+[[mods]]
+modId = "kaleidoscope_flora"
+# Resolved at RUNTIME by FML from the jar manifest's Implementation-Version
+# (stamped by the jar task in build.gradle from gradle.properties' mod_version).
+# This avoids Gradle resource filtering, which IntelliJ IDEA cannot replicate
+# with its own builder ("Cannot resolve resource filtering" warning).
+version = "${file.jarVersion}"
+displayName = "Kaleidoscope Flora"
+authors = "Rlosking-C"
+# Shown in the in-game mod list (480x300 banner at the jar root)
+logoFile = "logo.png"
+description = '''
+Brew vanilla flowers into signature teas, each with its own dedicated
+effects. An addon for Kaleidoscope Cookery.
+'''
+
+[[dependencies.kaleidoscope_flora]]
+    modId = "neoforge"
+    type = "required"
+    versionRange = "[21.1.0,)"
+    ordering = "NONE"
+    side = "BOTH"
+
+[[dependencies.kaleidoscope_flora]]
+    modId = "minecraft"
+    type = "required"
+    versionRange = "[1.21.1,1.22)"
+    ordering = "NONE"
+    side = "BOTH"
+
+[[dependencies.kaleidoscope_flora]]
+    modId = "kaleidoscope_cookery"
+    type = "required"
+    versionRange = "[1.4.0,)"
+    ordering = "AFTER"
+    side = "BOTH"

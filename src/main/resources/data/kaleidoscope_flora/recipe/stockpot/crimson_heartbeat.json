@@ -1,0 +1,36 @@
+{
+    "type":  "kaleidoscope_cookery:stockpot",
+    "carrier":  {
+                    "item":  "kaleidoscope_cookery:empty_cup"
+                },
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:red_tulip"
+                        },
+                        {
+                            "item":  "minecraft:red_tulip"
+                        },
+                        {
+                            "item":  "minecraft:red_tulip"
+                        },
+                        {
+                            "item":  "minecraft:red_tulip"
+                        },
+                        {
+                            "item":  "minecraft:sweet_berries"
+                        },
+                        {
+                            "item":  "minecraft:sweet_berries"
+                        }
+                    ],
+    "soup_base":  "minecraft:water",
+    "cooking_texture":  "kaleidoscope_flora:stockpot/crimson_heartbeat_cooking",
+    "finished_texture":  "kaleidoscope_flora:stockpot/crimson_heartbeat_finished",
+    "cooking_bubble_color":  -1818308,
+    "finished_bubble_color":  -1818308,
+    "time":  240,
+    "result":  {
+                   "count":  8,
+                   "id":  "kaleidoscope_flora:crimson_heartbeat"
+               }
+}

@@ -1,0 +1,21 @@
+{
+    "replace": false,
+    "values": [
+        "#minecraft:wool_carpets",
+        "minecraft:moss_carpet",
+        "minecraft:snow",
+        "minecraft:pink_petals",
+        {
+            "id": "minecraft:wildflowers",
+            "required": false
+        },
+        {
+            "id": "minecraft:leaf_litter",
+            "required": false
+        },
+        {
+            "id": "minecraft:pale_moss_carpet",
+            "required": false
+        }
+    ]
+}

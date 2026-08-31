@@ -1,0 +1,33 @@
+{
+    "type":  "kaleidoscope_cookery:stockpot",
+    "carrier":  {
+                    "item":  "kaleidoscope_cookery:empty_cup"
+                },
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:pink_petals"
+                        },
+                        {
+                            "item":  "minecraft:pink_petals"
+                        },
+                        {
+                            "item":  "minecraft:pink_petals"
+                        },
+                        {
+                            "item":  "minecraft:sugar"
+                        },
+                        {
+                            "item":  "minecraft:honey_bottle"
+                        }
+                    ],
+    "soup_base":  "kaleidoscope_flora:milk",
+    "cooking_texture":  "kaleidoscope_flora:stockpot/hanami_tale_cooking",
+    "finished_texture":  "kaleidoscope_flora:stockpot/hanami_tale_finished",
+    "cooking_bubble_color":  -538919,
+    "finished_bubble_color":  -538919,
+    "time":  240,
+    "result":  {
+                   "count":  8,
+                   "id":  "kaleidoscope_flora:hanami_tale"
+               }
+}

@@ -1,0 +1,36 @@
+{
+    "type":  "kaleidoscope_cookery:stockpot",
+    "carrier":  {
+                    "item":  "kaleidoscope_cookery:empty_cup"
+                },
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:azure_bluet"
+                        },
+                        {
+                            "item":  "minecraft:azure_bluet"
+                        },
+                        {
+                            "item":  "minecraft:azure_bluet"
+                        },
+                        {
+                            "item":  "minecraft:azure_bluet"
+                        },
+                        {
+                            "item":  "minecraft:azure_bluet"
+                        },
+                        {
+                            "item":  "minecraft:phantom_membrane"
+                        }
+                    ],
+    "soup_base":  "minecraft:water",
+    "cooking_texture":  "kaleidoscope_flora:stockpot/the_unnoticed_cooking",
+    "finished_texture":  "kaleidoscope_flora:stockpot/the_unnoticed_finished",
+    "cooking_bubble_color":  -1710628,
+    "finished_bubble_color":  -1710628,
+    "time":  240,
+    "result":  {
+                   "count":  8,
+                   "id":  "kaleidoscope_flora:the_unnoticed"
+               }
+}

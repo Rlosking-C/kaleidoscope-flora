@@ -1,0 +1,36 @@
+{
+    "type":  "kaleidoscope_cookery:stockpot",
+    "carrier":  {
+                    "item":  "kaleidoscope_cookery:empty_cup"
+                },
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:pink_tulip"
+                        },
+                        {
+                            "item":  "minecraft:pink_tulip"
+                        },
+                        {
+                            "item":  "minecraft:pink_tulip"
+                        },
+                        {
+                            "item":  "minecraft:pink_tulip"
+                        },
+                        {
+                            "item":  "minecraft:sugar"
+                        },
+                        {
+                            "item":  "minecraft:feather"
+                        }
+                    ],
+    "soup_base":  "minecraft:water",
+    "cooking_texture":  "kaleidoscope_flora:stockpot/rosy_stride_cooking",
+    "finished_texture":  "kaleidoscope_flora:stockpot/rosy_stride_finished",
+    "cooking_bubble_color":  -1334584,
+    "finished_bubble_color":  -1334584,
+    "time":  240,
+    "result":  {
+                   "count":  8,
+                   "id":  "kaleidoscope_flora:rosy_stride"
+               }
+}

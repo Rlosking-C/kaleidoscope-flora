@@ -1,0 +1,36 @@
+{
+    "type":  "kaleidoscope_cookery:stockpot",
+    "carrier":  {
+                    "item":  "kaleidoscope_cookery:empty_cup"
+                },
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:lilac"
+                        },
+                        {
+                            "item":  "minecraft:lilac"
+                        },
+                        {
+                            "item":  "minecraft:lilac"
+                        },
+                        {
+                            "item":  "minecraft:sweet_berries"
+                        },
+                        {
+                            "item":  "minecraft:sweet_berries"
+                        },
+                        {
+                            "item":  "minecraft:honey_bottle"
+                        }
+                    ],
+    "soup_base":  "minecraft:water",
+    "cooking_texture":  "kaleidoscope_flora:stockpot/spring_waltz_cooking",
+    "finished_texture":  "kaleidoscope_flora:stockpot/spring_waltz_finished",
+    "cooking_bubble_color":  -3824688,
+    "finished_bubble_color":  -3824688,
+    "time":  240,
+    "result":  {
+                   "count":  8,
+                   "id":  "kaleidoscope_flora:spring_waltz"
+               }
+}

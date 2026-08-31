@@ -1,0 +1,36 @@
+{
+    "type":  "kaleidoscope_cookery:stockpot",
+    "carrier":  {
+                    "item":  "kaleidoscope_cookery:empty_cup"
+                },
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:wither_rose"
+                        },
+                        {
+                            "item":  "minecraft:wither_rose"
+                        },
+                        {
+                            "item":  "minecraft:wither_rose"
+                        },
+                        {
+                            "item":  "minecraft:wither_rose"
+                        },
+                        {
+                            "item":  "minecraft:bone"
+                        },
+                        {
+                            "item":  "minecraft:sugar"
+                        }
+                    ],
+    "soup_base":  "minecraft:water",
+    "cooking_texture":  "kaleidoscope_flora:stockpot/fleurs_du_mal_cooking",
+    "finished_texture":  "kaleidoscope_flora:stockpot/fleurs_du_mal_finished",
+    "cooking_bubble_color":  -13751762,
+    "finished_bubble_color":  -13751762,
+    "time":  240,
+    "result":  {
+                   "count":  8,
+                   "id":  "kaleidoscope_flora:fleurs_du_mal"
+               }
+}

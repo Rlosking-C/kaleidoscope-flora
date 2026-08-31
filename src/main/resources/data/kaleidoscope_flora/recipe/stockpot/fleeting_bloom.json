@@ -1,0 +1,30 @@
+{
+    "type":  "kaleidoscope_cookery:stockpot",
+    "carrier":  {
+                    "item":  "kaleidoscope_cookery:empty_cup"
+                },
+    "ingredients":  [
+                        {
+                            "tag":  "kaleidoscope_flora:cactus_flowers"
+                        },
+                        {
+                            "tag":  "kaleidoscope_flora:cactus_flowers"
+                        },
+                        {
+                            "item":  "minecraft:sugar"
+                        },
+                        {
+                            "item":  "minecraft:glow_berries"
+                        }
+                    ],
+    "soup_base":  "minecraft:water",
+    "cooking_texture":  "kaleidoscope_flora:stockpot/fleeting_bloom_cooking",
+    "finished_texture":  "kaleidoscope_flora:stockpot/fleeting_bloom_finished",
+    "cooking_bubble_color":  -1846182,
+    "finished_bubble_color":  -1846182,
+    "time":  240,
+    "result":  {
+                   "count":  8,
+                   "id":  "kaleidoscope_flora:fleeting_bloom"
+               }
+}

@@ -1,0 +1,30 @@
+{
+    "type":  "kaleidoscope_cookery:stockpot",
+    "carrier":  {
+                    "item":  "kaleidoscope_cookery:empty_cup"
+                },
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:torchflower"
+                        },
+                        {
+                            "item":  "minecraft:torchflower"
+                        },
+                        {
+                            "item":  "minecraft:honey_bottle"
+                        },
+                        {
+                            "item":  "minecraft:glow_berries"
+                        }
+                    ],
+    "soup_base":  "minecraft:lava",
+    "cooking_texture":  "kaleidoscope_flora:stockpot/breath_of_ancients_cooking",
+    "finished_texture":  "kaleidoscope_flora:stockpot/breath_of_ancients_finished",
+    "cooking_bubble_color":  -891879,
+    "finished_bubble_color":  -891879,
+    "time":  240,
+    "result":  {
+                   "count":  8,
+                   "id":  "kaleidoscope_flora:breath_of_ancients"
+               }
+}

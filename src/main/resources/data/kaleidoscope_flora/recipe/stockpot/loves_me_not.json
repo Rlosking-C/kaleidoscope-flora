@@ -1,0 +1,36 @@
+{
+    "type":  "kaleidoscope_cookery:stockpot",
+    "carrier":  {
+                    "item":  "kaleidoscope_cookery:empty_cup"
+                },
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:oxeye_daisy"
+                        },
+                        {
+                            "item":  "minecraft:oxeye_daisy"
+                        },
+                        {
+                            "item":  "minecraft:oxeye_daisy"
+                        },
+                        {
+                            "item":  "minecraft:oxeye_daisy"
+                        },
+                        {
+                            "item":  "minecraft:oxeye_daisy"
+                        },
+                        {
+                            "item":  "minecraft:rabbit_foot"
+                        }
+                    ],
+    "soup_base":  "minecraft:water",
+    "cooking_texture":  "kaleidoscope_flora:stockpot/loves_me_not_cooking",
+    "finished_texture":  "kaleidoscope_flora:stockpot/loves_me_not_finished",
+    "cooking_bubble_color":  -856123,
+    "finished_bubble_color":  -856123,
+    "time":  240,
+    "result":  {
+                   "count":  8,
+                   "id":  "kaleidoscope_flora:loves_me_not"
+               }
+}

@@ -1,0 +1,76 @@
+plugins {
+    id 'net.neoforged.moddev' version '2.0.144'
+}
+
+version = mod_version
+group = 'com.rlosking.flora'
+
+base { archivesName = 'kaleidoscope-flora' }
+
+java {
+    toolchain { languageVersion = JavaLanguageVersion.of(21) }
+}
+
+neoForge {
+    version = project.neo_version
+
+    // Matches the Parchment mappings used by the colored-connections project
+    // on the same machine, keeping parameter names readable in the IDE.
+    parchment {
+        minecraftVersion = project.minecraft_version
+        mappingsVersion = project.parchment_version
+    }
+
+    mods {
+        kaleidoscope_flora { sourceSet(sourceSets.main) }
+    }
+
+    runs {
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+        }
+        client { client() }
+    }
+}
+
+repositories {
+    // Modrinth maven hosts both dependency mod jars. Resolving them by
+    // coordinate instead of committing local jar files keeps this repo
+    // clone-and-build friendly and avoids redistributing third-party jars.
+    exclusiveContent {
+        forRepository {
+            maven { url = 'https://api.modrinth.com/maven' }
+        }
+        filter { includeGroup 'maven.modrinth' }
+    }
+}
+
+dependencies {
+    // Kaleidoscope Cookery: compile against AND load the published NeoForge
+    // jar. Its TeacupRegistry / TeacupData API is public and meant for
+    // addons, and the jar is already in Mojang mappings, so no
+    // deobfuscation is needed. The coordinate is a Modrinth version id
+    // (1.4.1-neoforge+mc1.21.1).
+    implementation 'maven.modrinth:kaleidoscope-cookery:TqaHu4Ma'
+
+    // SodiumDynamicLights API (soft dependency): compile-only; at runtime
+    // the integration checks ModList before calling any of its classes,
+    // so the mod is never required (neoforge-1.21.1-1.0.10).
+    compileOnly 'maven.modrinth:sodium-dynamic-lights:XI0WLXdn'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+// The mod version is stamped into the jar manifest; neoforge.mods.toml reads
+// it back at runtime via its ${file.jarVersion} placeholder. This keeps
+// gradle.properties as the single source of truth WITHOUT Gradle resource
+// filtering - IntelliJ IDEA cannot replicate CopySpec filtering with its own
+// builder and shows "Cannot resolve resource filtering of MatchingCopyAction"
+// when it sees one, so avoiding filtering keeps IDEA builds warning-free.
+jar {
+    manifest {
+        attributes 'Implementation-Version': project.version
+    }
+}

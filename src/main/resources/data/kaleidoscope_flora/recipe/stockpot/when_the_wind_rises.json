@@ -1,0 +1,33 @@
+{
+    "type":  "kaleidoscope_cookery:stockpot",
+    "carrier":  {
+                    "item":  "kaleidoscope_cookery:empty_cup"
+                },
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:dandelion"
+                        },
+                        {
+                            "item":  "minecraft:dandelion"
+                        },
+                        {
+                            "item":  "minecraft:dandelion"
+                        },
+                        {
+                            "item":  "minecraft:honey_bottle"
+                        },
+                        {
+                            "item":  "minecraft:sugar"
+                        }
+                    ],
+    "soup_base":  "minecraft:water",
+    "cooking_texture":  "kaleidoscope_flora:stockpot/when_the_wind_rises_cooking",
+    "finished_texture":  "kaleidoscope_flora:stockpot/when_the_wind_rises_finished",
+    "cooking_bubble_color":  -75715,
+    "finished_bubble_color":  -75715,
+    "time":  240,
+    "result":  {
+                   "count":  8,
+                   "id":  "kaleidoscope_flora:when_the_wind_rises"
+               }
+}

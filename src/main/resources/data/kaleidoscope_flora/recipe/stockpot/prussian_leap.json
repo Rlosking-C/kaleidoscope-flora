@@ -1,0 +1,36 @@
+{
+    "type":  "kaleidoscope_cookery:stockpot",
+    "carrier":  {
+                    "item":  "kaleidoscope_cookery:empty_cup"
+                },
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:cornflower"
+                        },
+                        {
+                            "item":  "minecraft:cornflower"
+                        },
+                        {
+                            "item":  "minecraft:cornflower"
+                        },
+                        {
+                            "item":  "minecraft:cornflower"
+                        },
+                        {
+                            "item":  "minecraft:feather"
+                        },
+                        {
+                            "item":  "minecraft:sugar"
+                        }
+                    ],
+    "soup_base":  "minecraft:water",
+    "cooking_texture":  "kaleidoscope_flora:stockpot/prussian_leap_cooking",
+    "finished_texture":  "kaleidoscope_flora:stockpot/prussian_leap_finished",
+    "cooking_bubble_color":  -11833631,
+    "finished_bubble_color":  -11833631,
+    "time":  240,
+    "result":  {
+                   "count":  8,
+                   "id":  "kaleidoscope_flora:prussian_leap"
+               }
+}

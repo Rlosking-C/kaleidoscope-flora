@@ -1,0 +1,33 @@
+{
+    "type":  "kaleidoscope_cookery:stockpot",
+    "carrier":  {
+                    "item":  "kaleidoscope_cookery:empty_cup"
+                },
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:blue_orchid"
+                        },
+                        {
+                            "item":  "minecraft:blue_orchid"
+                        },
+                        {
+                            "item":  "minecraft:blue_orchid"
+                        },
+                        {
+                            "item":  "minecraft:sugar"
+                        },
+                        {
+                            "item":  "minecraft:glow_berries"
+                        }
+                    ],
+    "soup_base":  "minecraft:water",
+    "cooking_texture":  "kaleidoscope_flora:stockpot/first_bloom_cooking",
+    "finished_texture":  "kaleidoscope_flora:stockpot/first_bloom_finished",
+    "cooking_bubble_color":  -12930086,
+    "finished_bubble_color":  -12930086,
+    "time":  240,
+    "result":  {
+                   "count":  8,
+                   "id":  "kaleidoscope_flora:first_bloom"
+               }
+}

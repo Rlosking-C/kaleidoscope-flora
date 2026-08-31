@@ -1,0 +1,33 @@
+{
+    "type":  "kaleidoscope_cookery:stockpot",
+    "carrier":  {
+                    "item":  "kaleidoscope_cookery:empty_cup"
+                },
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:allium"
+                        },
+                        {
+                            "item":  "minecraft:allium"
+                        },
+                        {
+                            "item":  "minecraft:allium"
+                        },
+                        {
+                            "item":  "minecraft:allium"
+                        },
+                        {
+                            "item":  "minecraft:glow_berries"
+                        }
+                    ],
+    "soup_base":  "minecraft:water",
+    "cooking_texture":  "kaleidoscope_flora:stockpot/fire_waltz_cooking",
+    "finished_texture":  "kaleidoscope_flora:stockpot/fire_waltz_finished",
+    "cooking_bubble_color":  -4882724,
+    "finished_bubble_color":  -4882724,
+    "time":  240,
+    "result":  {
+                   "count":  8,
+                   "id":  "kaleidoscope_flora:fire_waltz"
+               }
+}

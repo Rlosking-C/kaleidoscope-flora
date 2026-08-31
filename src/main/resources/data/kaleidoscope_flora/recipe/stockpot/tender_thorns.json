@@ -1,0 +1,36 @@
+{
+    "type":  "kaleidoscope_cookery:stockpot",
+    "carrier":  {
+                    "item":  "kaleidoscope_cookery:empty_cup"
+                },
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:rose_bush"
+                        },
+                        {
+                            "item":  "minecraft:rose_bush"
+                        },
+                        {
+                            "item":  "minecraft:rose_bush"
+                        },
+                        {
+                            "item":  "minecraft:rose_bush"
+                        },
+                        {
+                            "item":  "minecraft:sweet_berries"
+                        },
+                        {
+                            "item":  "minecraft:sweet_berries"
+                        }
+                    ],
+    "soup_base":  "minecraft:water",
+    "cooking_texture":  "kaleidoscope_flora:stockpot/tender_thorns_cooking",
+    "finished_texture":  "kaleidoscope_flora:stockpot/tender_thorns_finished",
+    "cooking_bubble_color":  -5890526,
+    "finished_bubble_color":  -5890526,
+    "time":  240,
+    "result":  {
+                   "count":  8,
+                   "id":  "kaleidoscope_flora:tender_thorns"
+               }
+}

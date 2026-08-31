@@ -1,0 +1,30 @@
+{
+    "type":  "kaleidoscope_cookery:stockpot",
+    "carrier":  {
+                    "item":  "kaleidoscope_cookery:empty_cup"
+                },
+    "ingredients":  [
+                        {
+                            "tag":  "kaleidoscope_flora:wildflowers"
+                        },
+                        {
+                            "tag":  "kaleidoscope_flora:wildflowers"
+                        },
+                        {
+                            "item":  "minecraft:bone_meal"
+                        },
+                        {
+                            "item":  "minecraft:honey_bottle"
+                        }
+                    ],
+    "soup_base":  "minecraft:water",
+    "cooking_texture":  "kaleidoscope_flora:stockpot/springtime_stroll_cooking",
+    "finished_texture":  "kaleidoscope_flora:stockpot/springtime_stroll_finished",
+    "cooking_bubble_color":  -7352230,
+    "finished_bubble_color":  -7352230,
+    "time":  240,
+    "result":  {
+                   "count":  8,
+                   "id":  "kaleidoscope_flora:springtime_stroll"
+               }
+}

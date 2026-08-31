@@ -1,0 +1,33 @@
+{
+    "type":  "kaleidoscope_cookery:stockpot",
+    "carrier":  {
+                    "item":  "kaleidoscope_cookery:empty_cup"
+                },
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:sunflower"
+                        },
+                        {
+                            "item":  "minecraft:sunflower"
+                        },
+                        {
+                            "item":  "minecraft:sunflower"
+                        },
+                        {
+                            "item":  "minecraft:glow_berries"
+                        },
+                        {
+                            "item":  "minecraft:honey_bottle"
+                        }
+                    ],
+    "soup_base":  "minecraft:water",
+    "cooking_texture":  "kaleidoscope_flora:stockpot/the_sunward_cooking",
+    "finished_texture":  "kaleidoscope_flora:stockpot/the_sunward_finished",
+    "cooking_bubble_color":  -14316,
+    "finished_bubble_color":  -14316,
+    "time":  240,
+    "result":  {
+                   "count":  8,
+                   "id":  "kaleidoscope_flora:the_sunward"
+               }
+}

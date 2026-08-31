@@ -1,0 +1,33 @@
+{
+    "type":  "kaleidoscope_cookery:stockpot",
+    "carrier":  {
+                    "item":  "kaleidoscope_cookery:empty_cup"
+                },
+    "ingredients":  [
+                        {
+                            "tag":  "kaleidoscope_flora:eyeblossoms"
+                        },
+                        {
+                            "tag":  "kaleidoscope_flora:eyeblossoms"
+                        },
+                        {
+                            "tag":  "kaleidoscope_flora:eyeblossoms"
+                        },
+                        {
+                            "item":  "minecraft:ghast_tear"
+                        },
+                        {
+                            "item":  "minecraft:sugar"
+                        }
+                    ],
+    "soup_base":  "minecraft:water",
+    "cooking_texture":  "kaleidoscope_flora:stockpot/the_gaze_cooking",
+    "finished_texture":  "kaleidoscope_flora:stockpot/the_gaze_finished",
+    "cooking_bubble_color":  -2496278,
+    "finished_bubble_color":  -2496278,
+    "time":  240,
+    "result":  {
+                   "count":  8,
+                   "id":  "kaleidoscope_flora:the_gaze"
+               }
+}

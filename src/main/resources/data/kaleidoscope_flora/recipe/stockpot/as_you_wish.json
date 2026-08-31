@@ -1,0 +1,30 @@
+{
+    "type":  "kaleidoscope_cookery:stockpot",
+    "carrier":  {
+                    "item":  "kaleidoscope_cookery:empty_cup"
+                },
+    "ingredients":  [
+                        {
+                            "tag":  "kaleidoscope_flora:golden_dandelions"
+                        },
+                        {
+                            "tag":  "kaleidoscope_flora:golden_dandelions"
+                        },
+                        {
+                            "item":  "minecraft:gold_nugget"
+                        },
+                        {
+                            "item":  "minecraft:honey_bottle"
+                        }
+                    ],
+    "soup_base":  "minecraft:water",
+    "cooking_texture":  "kaleidoscope_flora:stockpot/as_you_wish_cooking",
+    "finished_texture":  "kaleidoscope_flora:stockpot/as_you_wish_finished",
+    "cooking_bubble_color":  -8892,
+    "finished_bubble_color":  -8892,
+    "time":  240,
+    "result":  {
+                   "count":  8,
+                   "id":  "kaleidoscope_flora:as_you_wish"
+               }
+}

@@ -1,0 +1,36 @@
+{
+    "type":  "kaleidoscope_cookery:stockpot",
+    "carrier":  {
+                    "item":  "kaleidoscope_cookery:empty_cup"
+                },
+    "ingredients":  [
+                        {
+                            "item":  "minecraft:orange_tulip"
+                        },
+                        {
+                            "item":  "minecraft:orange_tulip"
+                        },
+                        {
+                            "item":  "minecraft:orange_tulip"
+                        },
+                        {
+                            "item":  "minecraft:orange_tulip"
+                        },
+                        {
+                            "item":  "minecraft:carrot"
+                        },
+                        {
+                            "item":  "minecraft:sugar"
+                        }
+                    ],
+    "soup_base":  "minecraft:water",
+    "cooking_texture":  "kaleidoscope_flora:stockpot/autumn_serenade_cooking",
+    "finished_texture":  "kaleidoscope_flora:stockpot/autumn_serenade_finished",
+    "cooking_bubble_color":  -1538502,
+    "finished_bubble_color":  -1538502,
+    "time":  240,
+    "result":  {
+                   "count":  8,
+                   "id":  "kaleidoscope_flora:autumn_serenade"
+               }
+}
