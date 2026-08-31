@@ -42,7 +42,7 @@ Gather flowers → brew them in the stockpot → drink and gain the flower's ble
 Third-party mod jars are resolved automatically from the Modrinth maven - no manual download needed:
 
 ```
-git clone https://github.com/Rl0sking-C/kaleidoscope-flora.git
+git clone https://github.com/Rlosking-C/kaleidoscope-flora.git
 cd kaleidoscope-flora
 ./gradlew build
 ```
