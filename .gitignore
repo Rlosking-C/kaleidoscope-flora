@@ -38,12 +38,10 @@ backup/
 # Third-party jars (resolved from the Modrinth maven at build time instead)
 libs/
 
-# tools/: ship only the asset generators. Everything else under tools/ is
-# decompile/research scratch and downloaded mod jars that must not be
-# redistributed with this repository.
-tools/*
-!tools/generate.ps1
-!tools/gen_effect_icons.ps1
+# tools/: local-only asset generators and research scratch - kept out of the
+# repository (the .ps1 generators also claimed a 22% PowerShell slice on
+# GitHub's language bar).
+tools/
 
 # OS
 Thumbs.db

@@ -20,7 +20,7 @@ Gather flowers, brew them in the stockpot, drink and gain the flower's blessing.
 | NeoForge | 21.1.248 | Yes |
 | [Kaleidoscope Cookery](https://modrinth.com/mod/kaleidoscope-cookery) | 1.4.1 | Yes |
 | [Sodium Dynamic Lights](https://modrinth.com/mod/sodium-dynamic-lights) | 1.0.10 | No (full glow effect at night) |
-| Vanilla Backport | - | No (unlocks 4 crossover drinks brewed from 1.21.4+ flowers) |
+| [Vanilla Backport](https://modrinth.com/mod/vanillabackport) | - | No (unlocks 4 crossover drinks brewed from 1.21.4+ flowers) |
 
 ## Download
 
@@ -47,7 +47,7 @@ Grab the latest jar from [Releases](https://github.com/Rlosking-C/kaleidoscope-f
 ## License
 
 - Code: [MIT](LICENSE)
-- Final art assets: planned CC BY-NC-SA 4.0 (placeholders in the meantime)
+- Art assets: [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Credits
 
