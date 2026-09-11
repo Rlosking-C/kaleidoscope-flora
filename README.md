@@ -1,5 +1,7 @@
 # Kaleidoscope Flora
 
+![Banner](docs/banner.png)
+
 Brew drinks from flowers, and let every flower have a flavor of its own.
 
 An addon for [Kaleidoscope Cookery](https://modrinth.com/mod/kaleidoscope-cookery) that turns vanilla flowers into a full brewing experience.
