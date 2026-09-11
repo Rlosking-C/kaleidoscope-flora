@@ -9,8 +9,9 @@ An addon for [Kaleidoscope Cookery](https://modrinth.com/mod/kaleidoscope-cooker
 Gather flowers, brew them in the stockpot, drink and gain the flower's blessing.
 
 - **26 flower drinks** - each with its own recipe, effect, and a flower-language quote
-- **One pot yields 8 cups** - ladle them out with Cookery's empty teacups
+- **One pot yields 9 cups** - ladle them out with Cookery's empty teacups
 - **Signature effects** - walk on water, glow through the night, dig up artifacts with a sniffer's instincts, and more
+- **15 advancements** - a 4-stage collection line plus 11 hidden gag achievements
 
 ## Requirements
 
@@ -30,17 +31,16 @@ Grab the latest jar from [Releases](https://github.com/Rlosking-C/kaleidoscope-f
 
 ## Roadmap
 
-- **v0.1.0** (current, release candidate)
+- **v0.2.0** (current)
   - 26 flower drinks: recipes, effects, item/cup/teapot textures, stockpot surface animations
   - 23 custom effects (auras, gaze, sniffer-dig archaeology, water-walking, drop magnet, and more)
   - VanillaBackport crossover: 4 bonus drinks with 1.21.4+ flowers (recipes and drinks both gated cleanly)
-- **v0.1.x - release line**
-  - Release on GitHub Releases, then Modrinth / CurseForge / MC Wiki
-  - Launch the 26-post brewing-journal campaign (one drink, one culture, one quote per post)
-  - Soak-test multiplayer sync and blueprint edge cases
-- **v0.2.0**
+  - 15 advancements: a 4-stage collection line plus 11 hidden gag achievements
+  - Rosy Stride reworked into true surface physics - smooth boarding of banks and shores
+- **Next**
   - Balance pass from first player feedback (drop rates, aura ranges, cooldowns)
   - Config options for the most requested knobs (effect durations, dye-free purity mode)
+  - Golden dandelion port; As-You-Wish swaps back from gold nuggets once it lands
 - **Later / exploratory**
   - Considered, not promised: additional drink families (herbal? mushroom?), EMI/JEI recipe viewing for the stockpot, localizations beyond en/zh
 
