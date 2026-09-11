@@ -11,7 +11,7 @@ Gather flowers, brew them in the stockpot, drink and gain the flower's blessing.
 - **26 flower drinks** - each with its own recipe, effect, and a flower-language quote
 - **One pot yields 9 cups** - ladle them out with Cookery's empty teacups
 - **Signature effects** - walk on water, glow through the night, dig up artifacts with a sniffer's instincts, and more
-- **15 advancements** - a 4-stage collection line plus 11 hidden gag achievements
+- **15 advancements**
 
 ## Requirements
 
@@ -35,7 +35,7 @@ Grab the latest jar from [Releases](https://github.com/Rlosking-C/kaleidoscope-f
   - 26 flower drinks: recipes, effects, item/cup/teapot textures, stockpot surface animations
   - 23 custom effects (auras, gaze, sniffer-dig archaeology, water-walking, drop magnet, and more)
   - VanillaBackport crossover: 4 bonus drinks with 1.21.4+ flowers (recipes and drinks both gated cleanly)
-  - 15 advancements: a 4-stage collection line plus 11 hidden gag achievements
+  - 15 advancements
   - Rosy Stride reworked into true surface physics - smooth boarding of banks and shores
 - **Next**
   - Balance pass from first player feedback (drop rates, aura ranges, cooldowns)
