@@ -1,0 +1,14 @@
+{
+  "parent": "kaleidoscope_flora:root",
+  "display": {
+    "icon": { "id": "minecraft:honey_bottle" },
+    "title": { "translate": "advancement.kaleidoscope_flora.flowers_for_wine" },
+    "description": { "translate": "advancement.kaleidoscope_flora.flowers_for_wine.desc" },
+    "frame": "goal",
+    "hidden": true
+  },
+  "criteria": {
+    "toast": { "trigger": "kaleidoscope_flora:flora_event", "conditions": { "event": "flowers_for_wine" } }
+  },
+  "requirements": [["toast"]]
+}

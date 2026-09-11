@@ -32,6 +32,9 @@ known_commits.txt
 /icon.png
 color-palette.png
 
+# Local safety backups of shipped icons (made before batch edits)
+backup/
+
 # Third-party jars (resolved from the Modrinth maven at build time instead)
 libs/
 

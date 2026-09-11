@@ -76,11 +76,14 @@ public final class FloraDrinks {
                 .addEffect(() -> new MobEffectInstance(MobEffects.SLOW_FALLING, 90 * 20)));
 
         // Poppy "Lullaby": drowsiness aura - hostiles slow to a crawl,
-        // phantoms lose their lock, insomnia resets. Maxim: Li Yu (China).
+        // phantoms drop their lock (spawning untouched); 180s per cup, cups
+        // stack additively. Maxim: Li Yu (China) - "in dreams, one forgets
+        // one is a guest".
         register("lullaby", TeacupRegistry.TeacupData.create(4)
-                .addEffect(() -> new MobEffectInstance(ModEffects.DROWSY, 3 * 60 * 20)));
+                .addEffect(() -> new MobEffectInstance(ModEffects.DROWSY, 180 * 20)));
 
-        // Blue orchid "First Bloom": food eaten restores 50% more.
+        // Blue orchid "First Bloom": the cup is a meal (bread on the first
+        // sip), food then restores 50% more, and a full belly grants Haste.
         // Maxim: Amharic proverb (Ethiopia).
         register("first_bloom", TeacupRegistry.TeacupData.create(4)
                 .addEffect(() -> new MobEffectInstance(ModEffects.TASTEBLOOM, 5 * 60 * 20)));
@@ -97,16 +100,16 @@ public final class FloraDrinks {
                 .addEffect(() -> new MobEffectInstance(MobEffects.INVISIBILITY, 60 * 20))
                 .addEffect(() -> new MobEffectInstance(ModEffects.FADEAWAY, 1, 0)));
 
-        // Red tulip "Crimson Heartbeat": 15% lifesteal on melee.
+        // Red tulip "Crimson Heartbeat": 20% lifesteal on melee.
         // Maxim: Persian legend of Farhad (Persia).
         register("crimson_heartbeat", TeacupRegistry.TeacupData.create(4)
                 .addEffect(() -> new MobEffectInstance(ModEffects.VAMPIRIC, 3 * 60 * 20)));
 
-        // Orange tulip "Autumn Serenade": haste and double harvest drops.
+        // Orange tulip "Autumn Serenade": harvest drops x2-x4, and a magnet
+        // pull that draws nearby loose drops to the harvester.
         // Maxim: Hesiod, Works and Days (ancient Greece).
         register("autumn_serenade", TeacupRegistry.TeacupData.create(4)
-                .addEffect(() -> new MobEffectInstance(ModEffects.HARVEST, 3 * 60 * 20))
-                .addEffect(() -> new MobEffectInstance(MobEffects.DIG_SPEED, 3 * 60 * 20)));
+                .addEffect(() -> new MobEffectInstance(ModEffects.HARVEST, 3 * 60 * 20)));
 
         // White tulip "Absolution": harmful effects cannot be applied.
         // Maxim: Gandhi (India).
@@ -165,11 +168,14 @@ public final class FloraDrinks {
                 .addEffect(() -> new MobEffectInstance(ModEffects.THORNS, 3 * 60 * 20)));
 
         // Peony "Coronation": luck - the hidden vanilla effect, this is its
-        // only regular source. Maxim: Inca saying.
+        // only regular source - plus Hero of the Village I: a crown is worn
+        // among people, so traders bow to the crowned one. Maxim: Inca saying.
         register("coronation", TeacupRegistry.TeacupData.create(4)
-                .addEffect(() -> new MobEffectInstance(MobEffects.LUCK, 5 * 60 * 20)));
+                .addEffect(() -> new MobEffectInstance(MobEffects.LUCK, 5 * 60 * 20))
+                .addEffect(() -> new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 5 * 60 * 20, 0)));
 
-        // Pitcher plant "The Voracious Urn": kills count as +1 looting.
+        // Pitcher plant "The Voracious Urn": kills count as +1 looting level
+        // AND drop everything x2-x3.
         // Maxim: Charles Darwin letter (UK).
         register("voracious_urn", TeacupRegistry.TeacupData.create(4)
                 .addEffect(() -> new MobEffectInstance(ModEffects.DIGESTION, 4 * 60 * 20)));
@@ -200,7 +206,8 @@ public final class FloraDrinks {
         if (ModList.get().isLoaded("vanillabackport")) {
 
             // Eyeblossom "The Gaze": everything alive in 25 blocks glows
-            // through walls. Maxim: Nietzsche, Beyond Good and Evil.
+            // through walls; a straight stare pins it in place for 4
+            // seconds, then only slows it. Maxim: Nietzsche.
             register("the_gaze", TeacupRegistry.TeacupData.create(4)
                     .addEffect(() -> new MobEffectInstance(ModEffects.GAZE, 3 * 60 * 20)));
 

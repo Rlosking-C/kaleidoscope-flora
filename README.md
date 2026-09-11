@@ -20,13 +20,29 @@ Gather flowers, brew them in the stockpot, drink and gain the flower's blessing.
 | NeoForge | 21.1.248 | Yes |
 | [Kaleidoscope Cookery](https://modrinth.com/mod/kaleidoscope-cookery) | 1.4.1 | Yes |
 | [Sodium Dynamic Lights](https://modrinth.com/mod/sodium-dynamic-lights) | 1.0.10 | No (full glow effect at night) |
-| Vanilla Backport | - | No (unlocks 3 crossover drinks) |
+| Vanilla Backport | - | No (unlocks 4 crossover drinks brewed from 1.21.4+ flowers) |
 
 ## Download
 
 Grab the latest jar from [Releases](https://github.com/Rlosking-C/kaleidoscope-flora/releases) and drop it into your `mods` folder.
 
-**Status**: in development. Mechanics and balancing are complete; final artwork is in progress - the current textures are programmatic placeholders while an artist is being recruited.
+**Status**: feature complete. All 26 drinks, effects and artwork are in - see the roadmap below for what comes next.
+
+## Roadmap
+
+- **v0.1.0** (current, release candidate)
+  - 26 flower drinks: recipes, effects, item/cup/teapot textures, stockpot surface animations
+  - 23 custom effects (auras, gaze, sniffer-dig archaeology, water-walking, drop magnet, and more)
+  - VanillaBackport crossover: 4 bonus drinks with 1.21.4+ flowers (recipes and drinks both gated cleanly)
+- **v0.1.x - release line**
+  - Release on GitHub Releases, then Modrinth / CurseForge / MC Wiki
+  - Launch the 26-post brewing-journal campaign (one drink, one culture, one quote per post)
+  - Soak-test multiplayer sync and blueprint edge cases
+- **v0.2.0**
+  - Balance pass from first player feedback (drop rates, aura ranges, cooldowns)
+  - Config options for the most requested knobs (effect durations, dye-free purity mode)
+- **Later / exploratory**
+  - Considered, not promised: additional drink families (herbal? mushroom?), EMI/JEI recipe viewing for the stockpot, localizations beyond en/zh
 
 ## License
 

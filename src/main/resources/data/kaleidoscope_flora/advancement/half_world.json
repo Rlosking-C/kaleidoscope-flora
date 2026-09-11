@@ -1,0 +1,13 @@
+{
+  "parent": "kaleidoscope_flora:root",
+  "display": {
+    "icon": { "id": "kaleidoscope_flora:may_kiss" },
+    "title": { "translate": "advancement.kaleidoscope_flora.half_world" },
+    "description": { "translate": "advancement.kaleidoscope_flora.half_world.desc" },
+    "frame": "task"
+  },
+  "criteria": {
+    "nine_cups": { "trigger": "kaleidoscope_flora:drinks_tasted", "conditions": { "count": 9 } }
+  },
+  "requirements": [["nine_cups"]]
+}

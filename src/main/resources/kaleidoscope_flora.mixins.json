@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "com.rlosking.flora.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "PetalFilmMixin"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

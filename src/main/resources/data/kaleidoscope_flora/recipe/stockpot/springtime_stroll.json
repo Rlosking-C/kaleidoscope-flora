@@ -1,4 +1,10 @@
-{
+﻿{
+    "neoforge:conditions": [
+        {
+            "type": "neoforge:mod_loaded",
+            "modid": "vanillabackport"
+        }
+    ],
     "type":  "kaleidoscope_cookery:stockpot",
     "carrier":  {
                     "item":  "kaleidoscope_cookery:empty_cup"
@@ -24,7 +30,7 @@
     "finished_bubble_color":  -7352230,
     "time":  240,
     "result":  {
-                   "count":  8,
+                   "count": 9,
                    "id":  "kaleidoscope_flora:springtime_stroll"
                }
 }

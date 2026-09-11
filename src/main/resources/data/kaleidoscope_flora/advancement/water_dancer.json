@@ -1,0 +1,14 @@
+{
+  "parent": "kaleidoscope_flora:root",
+  "display": {
+    "icon": { "id": "minecraft:lily_pad" },
+    "title": { "translate": "advancement.kaleidoscope_flora.water_dancer" },
+    "description": { "translate": "advancement.kaleidoscope_flora.water_dancer.desc" },
+    "frame": "challenge",
+    "hidden": true
+  },
+  "criteria": {
+    "crossing": { "trigger": "kaleidoscope_flora:flora_event", "conditions": { "event": "water_dancer" } }
+  },
+  "requirements": [["crossing"]]
+}

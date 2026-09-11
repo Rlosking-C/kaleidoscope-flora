@@ -1,4 +1,4 @@
-{
+﻿{
     "type":  "kaleidoscope_cookery:stockpot",
     "carrier":  {
                     "item":  "kaleidoscope_cookery:empty_cup"
@@ -30,7 +30,7 @@
     "finished_bubble_color":  -1538502,
     "time":  240,
     "result":  {
-                   "count":  8,
+                   "count": 9,
                    "id":  "kaleidoscope_flora:autumn_serenade"
                }
 }

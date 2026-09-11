@@ -1,0 +1,14 @@
+{
+  "parent": "kaleidoscope_flora:root",
+  "display": {
+    "icon": { "id": "minecraft:totem_of_undying" },
+    "title": { "translate": "advancement.kaleidoscope_flora.cheated_death" },
+    "description": { "translate": "advancement.kaleidoscope_flora.cheated_death.desc" },
+    "frame": "challenge",
+    "hidden": true
+  },
+  "criteria": {
+    "survived": { "trigger": "kaleidoscope_flora:flora_event", "conditions": { "event": "cheated_death" } }
+  },
+  "requirements": [["survived"]]
+}

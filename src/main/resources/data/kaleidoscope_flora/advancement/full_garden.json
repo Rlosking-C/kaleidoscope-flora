@@ -1,0 +1,13 @@
+{
+  "parent": "kaleidoscope_flora:half_world",
+  "display": {
+    "icon": { "id": "kaleidoscope_flora:coronation" },
+    "title": { "translate": "advancement.kaleidoscope_flora.full_garden" },
+    "description": { "translate": "advancement.kaleidoscope_flora.full_garden.desc" },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "every_cup": { "trigger": "kaleidoscope_flora:drinks_tasted", "conditions": { "count": 26 } }
+  },
+  "requirements": [["every_cup"]]
+}

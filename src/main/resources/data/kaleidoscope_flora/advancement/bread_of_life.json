@@ -1,0 +1,14 @@
+{
+  "parent": "kaleidoscope_flora:root",
+  "display": {
+    "icon": { "id": "minecraft:bread" },
+    "title": { "translate": "advancement.kaleidoscope_flora.bread_of_life" },
+    "description": { "translate": "advancement.kaleidoscope_flora.bread_of_life.desc" },
+    "frame": "goal",
+    "hidden": true
+  },
+  "criteria": {
+    "hungry_sip": { "trigger": "kaleidoscope_flora:flora_event", "conditions": { "event": "bread_of_life" } }
+  },
+  "requirements": [["hungry_sip"]]
+}

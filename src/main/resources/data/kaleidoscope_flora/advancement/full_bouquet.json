@@ -1,0 +1,14 @@
+{
+  "parent": "kaleidoscope_flora:full_garden",
+  "display": {
+    "icon": { "id": "minecraft:chest" },
+    "title": { "translate": "advancement.kaleidoscope_flora.full_bouquet" },
+    "description": { "translate": "advancement.kaleidoscope_flora.full_bouquet.desc" },
+    "frame": "challenge",
+    "hidden": true
+  },
+  "criteria": {
+    "bouquet": { "trigger": "kaleidoscope_flora:flora_event", "conditions": { "event": "full_bouquet" } }
+  },
+  "requirements": [["bouquet"]]
+}

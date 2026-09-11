@@ -1,0 +1,14 @@
+{
+  "parent": "kaleidoscope_flora:root",
+  "display": {
+    "icon": { "id": "minecraft:clock" },
+    "title": { "translate": "advancement.kaleidoscope_flora.chasing_sun" },
+    "description": { "translate": "advancement.kaleidoscope_flora.chasing_sun.desc" },
+    "frame": "challenge",
+    "hidden": true
+  },
+  "criteria": {
+    "dawn_to_dusk": { "trigger": "kaleidoscope_flora:flora_event", "conditions": { "event": "chasing_sun" } }
+  },
+  "requirements": [["dawn_to_dusk"]]
+}

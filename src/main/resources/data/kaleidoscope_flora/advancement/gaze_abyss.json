@@ -1,0 +1,14 @@
+{
+  "parent": "kaleidoscope_flora:root",
+  "display": {
+    "icon": { "id": "minecraft:ender_eye" },
+    "title": { "translate": "advancement.kaleidoscope_flora.gaze_abyss" },
+    "description": { "translate": "advancement.kaleidoscope_flora.gaze_abyss.desc" },
+    "frame": "goal",
+    "hidden": true
+  },
+  "criteria": {
+    "pinned": { "trigger": "kaleidoscope_flora:flora_event", "conditions": { "event": "gaze_abyss" } }
+  },
+  "requirements": [["pinned"]]
+}

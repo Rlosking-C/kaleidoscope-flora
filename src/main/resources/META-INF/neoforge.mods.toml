@@ -39,3 +39,7 @@ effects. An addon for Kaleidoscope Cookery.
     versionRange = "[1.4.0,)"
     ordering = "AFTER"
     side = "BOTH"
+
+[[mixins]]
+config = "kaleidoscope_flora.mixins.json"
+

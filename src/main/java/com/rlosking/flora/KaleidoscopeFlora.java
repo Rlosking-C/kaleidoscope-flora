@@ -32,6 +32,10 @@ public class KaleidoscopeFlora {
         // which only accepts registrations during the mod bus register phase.
         ModEffects.register(modBus);
 
+        // Advancement criteria triggers (vanilla TRIGGER_TYPE registry) and
+        // the tasted-drinks data attachment; same mod-bus window as above.
+        FloraAdvancements.register(modBus);
+
         // Teacup data must be pushed inside the mod constructor: NeoForge
         // constructs ALL mods first, and only afterwards fires RegisterEvent.
         // Cookery's registry event handlers then iterate the whole

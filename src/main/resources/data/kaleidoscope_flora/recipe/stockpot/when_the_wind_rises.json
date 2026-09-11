@@ -1,4 +1,4 @@
-{
+﻿{
     "type":  "kaleidoscope_cookery:stockpot",
     "carrier":  {
                     "item":  "kaleidoscope_cookery:empty_cup"
@@ -27,7 +27,7 @@
     "finished_bubble_color":  -75715,
     "time":  240,
     "result":  {
-                   "count":  8,
+                   "count": 9,
                    "id":  "kaleidoscope_flora:when_the_wind_rises"
                }
 }

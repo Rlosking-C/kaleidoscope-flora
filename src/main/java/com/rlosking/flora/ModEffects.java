@@ -2,14 +2,15 @@ package com.rlosking.flora;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -18,6 +19,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.player.Player;
@@ -38,10 +40,13 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.joml.Vector3f;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -111,7 +116,8 @@ public final class ModEffects {
     public static final DeferredHolder<MobEffect, SproutEffect> SPROUT =
             EFFECTS.register("sprout", SproutEffect::new);
 
-    /** Eyeblossom "The Gaze": highlights every living thing in 25 blocks. */
+    /** Eyeblossom "The Gaze": everything in 25 blocks glows; a straight,
+     * unobstructed stare pins the target (4 s freeze, then slow). */
     public static final DeferredHolder<MobEffect, GazeEffect> GAZE =
             EFFECTS.register("gaze", GazeEffect::new);
 
@@ -129,7 +135,7 @@ public final class ModEffects {
 
     /** Blue orchid "First Bloom": eaten food restores 50% more nutrition. */
     public static final DeferredHolder<MobEffect, MobEffect> TASTEBLOOM =
-            EFFECTS.register("tastebloom", () -> new MarkerEffect(MobEffectCategory.BENEFICIAL, 0xF7E3A1));
+            EFFECTS.register("tastebloom", TastebloomEffect::new);
 
     /** Allium "Fire Waltz": melee hits ignite the target. */
     public static final DeferredHolder<MobEffect, MobEffect> FIREBRAND =
@@ -258,13 +264,70 @@ public final class ModEffects {
     }
 
     /**
+     * Blue orchid "First Bloom": the maxim is literal - "Coffee is our
+     * bread." The cup itself IS the meal: the first sip lands exactly what a
+     * bread would (5 hunger, 6 saturation; refreshes with every cup). While
+     * the bloom lasts, food eaten restores 50% more (that bonus lives in
+     * FloraEvents#onItemUseFinish), and a well-fed drinker - food bar at
+     * vanilla's regeneration line (18) or above - keeps a quiet Haste I:
+     * you reap what the bloom feeds.
+     */
+    public static class TastebloomEffect extends MobEffect {
+        public TastebloomEffect() {
+            super(MobEffectCategory.BENEFICIAL, 0xF7E3A1);
+        }
+
+        @Override
+        public void onEffectStarted(LivingEntity entity, int amplifier) {
+            if (entity.level().isClientSide || !(entity instanceof Player player)) {
+                return;
+            }
+            player.getFoodData().eat(5, 6.0F);
+        }
+
+        @Override
+        public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
+            return duration % 20 == 0;
+        }
+
+        @Override
+        public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+            if (entity.level().isClientSide || !(entity instanceof Player player)) {
+                return true;
+            }
+            if (player.getFoodData().getFoodLevel() >= 18) {
+                entity.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 40, 0, true, false));
+            }
+            return true;
+        }
+    }
+
+    /**
      * Poppy aura: the drowsiness is a continuously refreshed aura - hostiles
      * that wander INTO the 7 block radius while you walk away pick it up too.
      * Slowed to a crawl (they still chase - they just cannot catch up),
-     * phantoms lose their lock, and the drinker's insomnia clock resets so
-     * no new phantoms spawn.
+     * phantoms drop their lock. Drinking NEVER touches insomnia: phantoms
+     * keep spawning exactly as vanilla intends - the aura only makes the
+     * ones hunting you lose interest for as long as it plays. Each cup adds
+     * a fresh 180 seconds ON TOP of whatever aura time is still running, so
+     * a whole pot (9 cups) can be stockpiled for one long night.
      */
     public static class DrowsyAuraEffect extends MobEffect {
+
+        /** Seconds of aura one cup pours in; cups stack additively. */
+        private static final int CUP_SECONDS = 180;
+
+        /**
+         * [gameTime of last cup, total aura duration after it], per drinker.
+         * Vanilla's refresh rule only keeps the LONGER duration, so cups do
+         * not stack by themselves; between drinks the remaining time is
+         * extrapolated from this clock (duration decrements 1 per tick).
+         */
+        private static final Map<UUID, long[]> LAST_CUP = new HashMap<>();
+
+        /** Guards the nested addEffect below against re-entering this hook. */
+        private static boolean stacking;
+
         public DrowsyAuraEffect() {
             super(MobEffectCategory.BENEFICIAL, 0x9C8FB8);
         }
@@ -291,13 +354,48 @@ public final class ModEffects {
                     phantom.setTarget(null);
                 }
             }
-            // "A cup before bed": phantom spawning is driven by the
-            // TIME_SINCE_REST statistic, so resetting it is the vanilla way
-            // to promise a phantom-free night.
-            if (entity instanceof Player player && level.getGameTime() % 160 == 0) {
-                player.resetStat(Stats.CUSTOM.get(Stats.TIME_SINCE_REST));
-            }
             return true;
+        }
+
+        /**
+         * Vanilla fires this hook on every successful addEffect - new cups AND
+         * refreshes while the aura still plays - which is exactly "once per
+         * cup". By hook time vanilla has already applied its longer-duration
+         * rule, so the pre-drink remainder is reconstructed from LAST_CUP and
+         * the full cup is re-poured on top via a guarded nested addEffect.
+         */
+        @Override
+        public void onEffectStarted(LivingEntity entity, int amplifier) {
+            if (entity.level().isClientSide || stacking) {
+                return;
+            }
+            if (!(entity instanceof Player player)) {
+                return;
+            }
+            MobEffectInstance active = player.getEffect(ModEffects.DROWSY);
+            if (active == null) {
+                return;
+            }
+            long now = entity.level().getGameTime();
+            long[] last = LAST_CUP.get(player.getUUID());
+            if (last == null) {
+                LAST_CUP.put(player.getUUID(), new long[] {now, active.getDuration()});
+                return;
+            }
+            long remaining = Math.max(0L, last[1] - (now - last[0]));
+            if (remaining == 0) {
+                LAST_CUP.put(player.getUUID(), new long[] {now, active.getDuration()});
+                return;
+            }
+            int desired = (int) Math.min(remaining + (long) CUP_SECONDS * 20, Integer.MAX_VALUE);
+            stacking = true;
+            try {
+                player.addEffect(new MobEffectInstance(ModEffects.DROWSY, desired,
+                        active.getAmplifier()));
+            } finally {
+                stacking = false;
+            }
+            LAST_CUP.put(player.getUUID(), new long[] {now, desired});
         }
     }
 
@@ -330,8 +428,18 @@ public final class ModEffects {
      * film sways the view exactly like walking on land.</p>
      */
     public static class PetalWalkEffect extends MobEffect {
-        /** The film holds the feet this far above the fluid, keeping the hitbox clear of water. */
-        private static final double HOVER_GAP = 0.05;
+        /**
+         * Wall-clock gate for the splash footsteps: never more than four per
+         * second per entity, whatever the server tick rate is doing - a
+         * per-tick sound can exhaust the 247-handle client sound pool when
+         * the tick rate is raised for testing.
+         */
+        private static final Map<UUID, Long> SPLASH_CLOCK = new HashMap<>();
+
+        /** Frees the splash gate when the entity leaves the game. */
+        public static void clearPlayer(UUID uuid) {
+            SPLASH_CLOCK.remove(uuid);
+        }
 
         /**
          * Descending faster than this (blocks per tick) is a plunge from the
@@ -348,7 +456,7 @@ public final class ModEffects {
          * through it. Only a gentle one-block step-off (-0.447) still boards
          * the film, the way walking onto water should.</p>
          */
-        private static final double PLUNGE_SPEED = 0.55;
+        public static final double PLUNGE_SPEED = 0.55;
 
         public PetalWalkEffect() {
             super(MobEffectCategory.BENEFICIAL, 0xEBA2C8);
@@ -356,119 +464,58 @@ public final class ModEffects {
 
         @Override
         public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
-            return true; // the water surface pin needs every tick
+            return true; // strides need per-tick petal and splash cadence
         }
 
         @Override
         public boolean applyEffectTick(LivingEntity entity, int amplifier) {
-            // Runs on BOTH sides: the local player's movement is client-owned,
-            // so a server-side fix alone would never be felt in game.
+            // The film is real geometry now: PetalFilmMixin lends the water
+            // block under the drinker a collision box, so boarding a bank,
+            // wading ashore and jumping in place are plain vanilla physics -
+            // no pin, no teleport, nothing for the engine to fight. This
+            // tick only decorates the film with petals and splash.
             Level level = entity.level();
-            Vec3 motion = entity.getDeltaMovement();
-            // The support block tracks the vertical motion: while FALLING it
-            // probes one tick ahead (where the feet are about to be), so a
-            // descent is caught before it can ever dip below the surface;
-            // while rising or standing it is simply the block under the feet.
-            BlockPos support = BlockPos.containing(entity.getX(),
-                    motion.y < 0.0 ? entity.getY() + motion.y - 0.2 : entity.getY() - 0.2, entity.getZ());
-            FluidState fluid = level.getFluidState(support);
-            if (!fluid.is(FluidTags.WATER) || entity.isShiftKeyDown() || entity.isPassenger()) {
+            if (level.isClientSide()) {
                 return true;
             }
-            // The film only forms on the TOPMOST water layer: any water above
-            // the support block means the drinker is inside the body of water,
-            // not standing on it - underwater the effect simply stands back.
-            if (level.getFluidState(support.above()).is(FluidTags.WATER)) {
+            // Splashes belong on the film: on dry land the effect is silent.
+            BlockPos under = BlockPos.containing(entity.getX(), entity.getY() - 0.15, entity.getZ());
+            if (!entity.onGround() || !level.getFluidState(under).is(FluidTags.WATER)) {
                 return true;
             }
-            // Real blocks beat the film: a lily pad riding the surface is a
-            // thing you stand ON - the film must not fight its collision box.
-            if (!level.getBlockState(support.above()).getCollisionShape(level, support.above()).isEmpty()) {
-                return true;
-            }
-
-            double surface = support.getY() + fluid.getHeight(level, support);
-            double pinY = surface + HOVER_GAP;
-            double feet = entity.getY();
-            double vy = motion.y;
-            // A plunge from the air SINKS: while descending faster than a
-            // stride jump lands, the film must not engage at all - the faller
-            // passes straight through the surface and swims. Gentle motion
-            // still boards the film: stepping off a shore, landing a stride
-            // jump back onto it, or rising while swimming.
-            if (vy < -PLUNGE_SPEED) {
-                return true;
-            }
-
-            // Coming down onto the film from above: brake THIS tick's motion so
-            // Entity#move settles the feet exactly on the film, the way a block
-            // collision would - never a teleport. vy is pre-gravity (air
-            // physics subtracts 0.08 and scales by 0.98 before the move), so it
-            // is compensated to land precisely. Without the clamp the feet dip
-            // below the surface for a frame, the touching-water state flickers
-            // on, and every held-space landing converts into a swim stroke
-            // (jumpInFluid) instead of a real jump - the takeoff "eaten".
-            if (feet > pinY + 0.1) {
-                if (vy < 0.0 && feet + vy < pinY) {
-                    entity.setDeltaMovement(motion.x, (pinY - feet) / 0.98 + 0.08, motion.z);
-                    entity.fallDistance = 0.0f;
-                }
-                return true;
-            }
-            // Swimming up from below: vanilla water physics carries the rise
-            // untouched; only the final step is clamped so the feet arrive
-            // level with the film instead of tunneling past it. A resurfacing
-            // drinker therefore rises continuously onto the film - no snap,
-            // no pop, one natural hop if the swim key is still held.
-            if (feet < pinY - 0.1) {
-                if (vy > 0.0 && feet + vy > pinY) {
-                    entity.setDeltaMovement(motion.x, pinY - feet, motion.z);
-                }
-                return true;
-            }
-
-            // On the film: pin the feet just above the surface: the bounding
-            // box never touches the fluid, so buoyancy, water drag and the swim
-            // state all stay off - walking, sprinting and jumping behave
-            // exactly like on land. Zeroing motion.y every tick cancels
-            // gravity, a rock-steady hover with no bobbing.
-            entity.setPos(entity.getX(), pinY, entity.getZ());
-            entity.setDeltaMovement(motion.x, 0.0, motion.z);
-            entity.setOnGround(true);
-            entity.fallDistance = 0.0f;
-            if (!level.isClientSide) {
-                ServerLevel server = (ServerLevel) level;
-                // Player movement is client authoritative: on the server the
-                // real step is read from the position diff (deltaMovement
-                // stays ~0 for players); non-player mobs keep using motion.
-                double strideDist = entity instanceof Player walker
-                        ? Math.hypot(FloraEvents.lastMove(walker)[0], FloraEvents.lastMove(walker)[1])
-                        : motion.horizontalDistance();
-                boolean striding = strideDist > 0.01;
-                if (striding) {
-                    // A stride kicks petals off the film while water splashes
-                    // up through it around every step.
-                    if (entity.getRandom().nextInt(2) == 0) {
-                        server.sendParticles(ParticleTypes.CHERRY_LEAVES,
-                                entity.getX(), entity.getY() + 0.1, entity.getZ(), 2, 0.3, 0.02, 0.3, 0.01);
-                    }
-                    server.sendParticles(ParticleTypes.SPLASH,
-                            entity.getX(), entity.getY() + 0.1, entity.getZ(), 8, 0.4, 0.1, 0.4, 0.05);
-                    server.sendParticles(ParticleTypes.FALLING_WATER,
-                            entity.getX(), entity.getY() + 0.4, entity.getZ(), 2, 0.3, 0.05, 0.3, 0.0);
-                    // Footsteps on water: a light splash roughly every step,
-                    // throttled by the actual distance walked (stateless - the
-                    // trigger chance scales with the per-tick step so it fires
-                    // at the same rate walking or sprinting).
-                    if (entity.getRandom().nextFloat() < (float) (strideDist * 0.8)) {
-                        level.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_SPLASH,
-                                SoundSource.PLAYERS, 0.12f, 1.0f + entity.getRandom().nextFloat() * 0.3f);
-                    }
-                } else if (entity.getRandom().nextInt(4) == 0) {
-                    // Standing still: petals just keep drifting off the film.
+            ServerLevel server = (ServerLevel) level;
+            // Player movement is client authoritative: on the server the
+            // real step is read from the position diff (deltaMovement
+            // stays ~0 for players); non-player mobs keep using motion.
+            double strideDist = entity instanceof Player walker
+                    ? Math.hypot(FloraEvents.lastMove(walker)[0], FloraEvents.lastMove(walker)[1])
+                    : entity.getDeltaMovement().horizontalDistance();
+            boolean striding = strideDist > 0.01;
+            if (striding) {
+                // A stride kicks petals off the film while water splashes
+                // up through it around every step.
+                if (entity.getRandom().nextInt(2) == 0) {
                     server.sendParticles(ParticleTypes.CHERRY_LEAVES,
                             entity.getX(), entity.getY() + 0.1, entity.getZ(), 2, 0.3, 0.02, 0.3, 0.01);
                 }
+                server.sendParticles(ParticleTypes.SPLASH,
+                        entity.getX(), entity.getY() + 0.1, entity.getZ(), 8, 0.4, 0.1, 0.4, 0.05);
+                server.sendParticles(ParticleTypes.FALLING_WATER,
+                        entity.getX(), entity.getY() + 0.4, entity.getZ(), 2, 0.3, 0.05, 0.3, 0.0);
+                // Footsteps on water: a light splash at most every 250ms,
+                // gated by wall clock rather than ticks so an accelerated
+                // tick rate cannot flood the 247-handle client sound
+                // pool with one sound per tick.
+                Long lastSplash = SPLASH_CLOCK.get(entity.getUUID());
+                if (lastSplash == null || System.currentTimeMillis() - lastSplash >= 250L) {
+                    SPLASH_CLOCK.put(entity.getUUID(), System.currentTimeMillis());
+                    level.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_SPLASH,
+                            SoundSource.PLAYERS, 0.12f, 1.0f + entity.getRandom().nextFloat() * 0.3f);
+                }
+            } else if (entity.getRandom().nextInt(4) == 0) {
+                // Standing still: petals just keep drifting off the film.
+                server.sendParticles(ParticleTypes.CHERRY_LEAVES,
+                        entity.getX(), entity.getY() + 0.1, entity.getZ(), 2, 0.3, 0.02, 0.3, 0.01);
             }
             return true;
         }
@@ -570,6 +617,12 @@ public final class ModEffects {
             if (level.isDay() && level.canSeeSky(entity.blockPosition())) {
                 // Refreshed every second while the sun finds you.
                 entity.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, 0, true, false));
+                // "夸父逐日" (Kuafu Chases the Sun): the bookkeeping only runs
+                // while the day form is actually active - clouds, night or a
+                // roof between the drinker and the sky pause the chase.
+                if (entity instanceof ServerPlayer player) {
+                    FloraAdvancements.sunwardDayForm(player);
+                }
             } else if (!level.isDay()) {
                 entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0, true, false));
             }
@@ -599,12 +652,17 @@ public final class ModEffects {
             }
             ServerLevel server = (ServerLevel) entity.level();
             BlockPos center = entity.blockPosition();
-            for (BlockPos pos : BlockPos.betweenClosed(center.offset(-3, -3, -3), center.offset(3, 3, 3))) {
+            for (BlockPos pos : BlockPos.betweenClosed(center.offset(-5, -5, -5), center.offset(5, 5, 5))) {
                 BlockState state = server.getBlockState(pos);
                 if (state.getBlock() instanceof CropBlock crop && !crop.isMaxAge(state)) {
                     if (entity.getRandom().nextFloat() < 0.25f) {
                         int age = state.getValue(CropBlock.AGE);
                         server.setBlock(pos, state.setValue(CropBlock.AGE, age + 1), 2);
+                        // "相信整个春天" (Believe in the Whole Spring): every
+                        // ripened crop counts toward fifty per effect.
+                        if (entity instanceof ServerPlayer player) {
+                            FloraAdvancements.sproutCropRipened(player);
+                        }
                     }
                 }
             }
@@ -612,15 +670,42 @@ public final class ModEffects {
         }
     }
 
-    /** Eyeblossom: every living thing inside 25 blocks is made to glow. */
+    /**
+     * Eyeblossom: every living thing inside 25 blocks is made to glow, and
+     * whatever the drinker looks STRAIGHT AT (unobstructed line of sight
+     * inside a ~15 degree cone) is pinned by the gaze: the first 4 seconds
+     * of continuous eye contact freeze the target in place (slowness VII
+     * zeroes ground movement), after that it may move again but stays
+     * slowed for as long as the stare holds. Break the stare - or let the
+     * effect lapse - and the tally resets to zero.
+     */
     public static class GazeEffect extends MobEffect {
+
+        /** Continuous stare ticks before the target may move again (4 s). */
+        private static final int FREEZE_TICKS = 80;
+
+        /** No gaze tick for this long means a fresh activation: tallies reset. */
+        private static final long STALE_GAP_TICKS = 5;
+
+        /** Continuous stare ticks per (drinker, target) pair. */
+        private static final Map<UUID, Map<UUID, Integer>> STARE = new HashMap<>();
+
+        /** Game time of each drinker's last gaze tick, for the staleness reset. */
+        private static final Map<UUID, Long> STARE_CLOCK = new HashMap<>();
+
+        /** Frees stare tracking when a player leaves. */
+        public static void clearPlayer(UUID uuid) {
+            STARE.remove(uuid);
+            STARE_CLOCK.remove(uuid);
+        }
+
         public GazeEffect() {
             super(MobEffectCategory.BENEFICIAL, 0x9FB6D9);
         }
 
         @Override
         public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
-            return duration % 20 == 0;
+            return true; // the stare must be followed tick by tick
         }
 
         @Override
@@ -628,20 +713,64 @@ public final class ModEffects {
             if (entity.level().isClientSide) {
                 return true;
             }
-            for (LivingEntity other : entity.level().getEntitiesOfClass(LivingEntity.class,
+            ServerLevel server = (ServerLevel) entity.level();
+            UUID drinker = entity.getUUID();
+            long now = server.getGameTime();
+
+            Map<UUID, Integer> stares = STARE.computeIfAbsent(drinker, k -> new HashMap<>());
+            Long lastTick = STARE_CLOCK.get(drinker);
+            if (lastTick == null || now - lastTick > STALE_GAP_TICKS) {
+                stares.clear(); // fresh activation of the gaze: pinning restarts
+            }
+            STARE_CLOCK.put(drinker, now);
+
+            Set<UUID> stared = new HashSet<>();
+            Vec3 eye = entity.getEyePosition();
+            Vec3 look = entity.getViewVector(1.0F);
+            for (LivingEntity other : server.getEntitiesOfClass(LivingEntity.class,
                     entity.getBoundingBox().inflate(25.0))) {
                 if (other == entity) {
                     continue;
                 }
-                other.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0, true, false));
+                // The glow itself refreshes twice a second, continuous but cheap.
+                if (now % 10 == 0) {
+                    other.addEffect(new MobEffectInstance(MobEffects.GLOWING, 25, 0, true, false));
+                }
+                // Pinned only when the eyes are locked straight on it, with
+                // nothing in between.
+                Vec3 toOther = other.getEyePosition().subtract(eye);
+                double distance = toOther.length();
+                boolean seen = distance < 0.5
+                        || (look.dot(toOther.normalize()) >= 0.966 && entity.hasLineOfSight(other));
+                if (!seen) {
+                    continue;
+                }
+                stared.add(other.getUUID());
+                // "凝视深渊" (Gaze into the Abyss): pinning an Enderman is
+                // the maxim made literal - the abyss that cannot stare back.
+                if (other instanceof EnderMan && entity instanceof ServerPlayer starer) {
+                    FloraAdvancements.award(starer, FloraAdvancements.EVENT_GAZE_ABYSS);
+                }
+                int ticks = stares.getOrDefault(other.getUUID(), 0) + 1;
+                stares.put(other.getUUID(), ticks);
+                if (ticks < FREEZE_TICKS) {
+                    // Held rigid: slowness VII zeroes all ground movement.
+                    other.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 30, 6, true, true));
+                } else {
+                    // Past the first four seconds the stare only drags.
+                    other.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 30, 1, true, true));
+                }
             }
+            // A stare that wandered resets - pinning must be continuous.
+            stares.keySet().retainAll(stared);
             return true;
         }
     }
 
     /**
      * Golden dandelion: the flower opens into ONE random tier-II blessing -
-     * strength, speed, resistance or haste - for three minutes.
+     * strength, speed, resistance or haste - or plain luck, for three
+     * minutes.
      */
     public static class WishEffect extends MobEffect {
         public WishEffect() {
@@ -662,10 +791,11 @@ public final class ModEffects {
                     new MobEffectInstance(MobEffects.DAMAGE_BOOST, 3 * 60 * 20, 1),
                     new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 3 * 60 * 20, 1),
                     new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 3 * 60 * 20, 1),
-                    new MobEffectInstance(MobEffects.DIG_SPEED, 3 * 60 * 20, 1)};
+                    new MobEffectInstance(MobEffects.DIG_SPEED, 3 * 60 * 20, 1),
+                    new MobEffectInstance(MobEffects.LUCK, 3 * 60 * 20, 0)};
             entity.addEffect(pool[entity.getRandom().nextInt(pool.length)]);
             if (entity.level() instanceof ServerLevel server) {
-                server.sendParticles(ParticleTypes.WAX_ON,
+                server.sendParticles(new DustParticleOptions(new Vector3f(1.0F, 0.84F, 0.0F), 0.9F),
                         entity.getX(), entity.getY() + 1.0, entity.getZ(), 30, 0.4, 0.6, 0.4, 0.05);
             }
             return true;

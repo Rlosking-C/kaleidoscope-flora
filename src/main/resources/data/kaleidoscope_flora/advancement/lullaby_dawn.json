@@ -1,0 +1,14 @@
+{
+  "parent": "kaleidoscope_flora:root",
+  "display": {
+    "icon": { "id": "kaleidoscope_flora:lullaby" },
+    "title": { "translate": "advancement.kaleidoscope_flora.lullaby_dawn" },
+    "description": { "translate": "advancement.kaleidoscope_flora.lullaby_dawn.desc" },
+    "frame": "goal",
+    "hidden": true
+  },
+  "criteria": {
+    "dawn": { "trigger": "kaleidoscope_flora:flora_event", "conditions": { "event": "lullaby_dawn" } }
+  },
+  "requirements": [["dawn"]]
+}

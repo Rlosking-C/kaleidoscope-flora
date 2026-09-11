@@ -1,4 +1,4 @@
-{
+﻿{
     "type":  "kaleidoscope_cookery:stockpot",
     "carrier":  {
                     "item":  "kaleidoscope_cookery:empty_cup"
@@ -24,7 +24,7 @@
     "finished_bubble_color":  -2700364,
     "time":  240,
     "result":  {
-                   "count":  8,
+                   "count": 9,
                    "id":  "kaleidoscope_flora:echo_of_the_end"
                }
 }

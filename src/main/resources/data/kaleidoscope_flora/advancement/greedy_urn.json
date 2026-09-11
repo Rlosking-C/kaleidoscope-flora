@@ -1,0 +1,14 @@
+{
+  "parent": "kaleidoscope_flora:root",
+  "display": {
+    "icon": { "id": "kaleidoscope_flora:voracious_urn" },
+    "title": { "translate": "advancement.kaleidoscope_flora.greedy_urn" },
+    "description": { "translate": "advancement.kaleidoscope_flora.greedy_urn.desc" },
+    "frame": "goal",
+    "hidden": true
+  },
+  "criteria": {
+    "triple_double": { "trigger": "kaleidoscope_flora:flora_event", "conditions": { "event": "greedy_urn" } }
+  },
+  "requirements": [["triple_double"]]
+}

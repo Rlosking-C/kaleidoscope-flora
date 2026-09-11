@@ -1,0 +1,14 @@
+{
+  "parent": "kaleidoscope_flora:root",
+  "display": {
+    "icon": { "id": "kaleidoscope_flora:vernal_awakening" },
+    "title": { "translate": "advancement.kaleidoscope_flora.believe_spring" },
+    "description": { "translate": "advancement.kaleidoscope_flora.believe_spring.desc" },
+    "frame": "challenge",
+    "hidden": true
+  },
+  "criteria": {
+    "fifty_crops": { "trigger": "kaleidoscope_flora:flora_event", "conditions": { "event": "believe_spring" } }
+  },
+  "requirements": [["fifty_crops"]]
+}
