@@ -33,23 +33,35 @@ Grab the latest jar from [Releases](https://github.com/Rlosking-C/kaleidoscope-f
 
 ## Roadmap
 
-- **v0.2.0** (current)
+- **v0.2.0**
   - 26 flower drinks: recipes, effects, item/cup/teapot textures, stockpot surface animations
   - 23 custom effects (auras, gaze, sniffer-dig archaeology, water-walking, drop magnet, and more)
   - VanillaBackport crossover: 4 bonus drinks with 1.21.4+ flowers (recipes and drinks both gated cleanly)
   - 15 advancements
   - Rosy Stride reworked into true surface physics - smooth boarding of banks and shores
+- **v0.3.0** (current)
+  - Server config: effect duration multiplier, aura range multiplier, vampiric heal percent, harvest drop cap
+  - JEI info pages for every drink (maxim + effect description)
 - **Next**
   - Balance pass from first player feedback (drop rates, aura ranges, cooldowns)
-  - Config options for the most requested knobs (effect durations, dye-free purity mode)
   - Golden dandelion port; As-You-Wish swaps back from gold nuggets once it lands
+  - Teacup texture polish pass
 - **Later / exploratory**
-  - Considered, not promised: additional drink families (herbal? mushroom?), EMI/JEI recipe viewing for the stockpot, localizations beyond en/zh
+  - Considered, not promised: additional drink families (herbal? mushroom?), EMI recipe viewing for the stockpot, localizations beyond en/zh
 
 ## License
 
 - Code: [MIT](LICENSE)
 - Art assets: [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+## Porting & forks
+
+Yes, you may port this mod - both the license and the author are fine with it:
+
+- **Code is MIT**: port, modify, and redistribute freely; just keep the copyright notice.
+- **Art is CC BY-NC-SA 4.0**: reuse requires credit and non-commercial use; adaptations must use the same license. If you would rather not carry those terms, redraw the textures.
+- **Porting targets**: a Forge 1.20.1 port is welcome. Mind the two hard dependencies on modern APIs - Cookery's `TeacupRegistry` push-registration (runs in the mod constructor) and NeoForge's damage pipeline (`LivingIncomingDamageEvent` / `LivingDamageEvent.Pre`); both need Forge-era equivalents (RegistryObject flow / `LivingHurtEvent` + `LivingDamageEvent`).
+- Please open an issue or ping the author so the port can be linked from this README.
 
 ## Credits
 

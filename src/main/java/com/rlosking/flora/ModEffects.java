@@ -245,16 +245,17 @@ public final class ModEffects {
             if (entity.level().isClientSide) {
                 return true;
             }
+            double range = 24.0 * FloraConfig.auraRangeMultiplier();
             // 24 blocks covers anything that is actually pathing towards you.
             for (Monster monster : entity.level().getEntitiesOfClass(Monster.class,
-                    entity.getBoundingBox().inflate(24.0))) {
+                    entity.getBoundingBox().inflate(range))) {
                 if (monster.getTarget() == entity) {
                     monster.setTarget(null);
                 }
             }
             // Phantoms are FlyingMobs, not Monsters, so they need their own sweep.
             for (Phantom phantom : entity.level().getEntitiesOfClass(Phantom.class,
-                    entity.getBoundingBox().inflate(24.0))) {
+                    entity.getBoundingBox().inflate(range))) {
                 if (phantom.getTarget() == entity) {
                     phantom.setTarget(null);
                 }
@@ -343,13 +344,14 @@ public final class ModEffects {
                 return true;
             }
             Level level = entity.level();
+            double range = 7.0 * FloraConfig.auraRangeMultiplier();
             for (Monster monster : level.getEntitiesOfClass(Monster.class,
-                    entity.getBoundingBox().inflate(7.0))) {
+                    entity.getBoundingBox().inflate(range))) {
                 monster.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 30, 2));
             }
             // Phantoms are FlyingMobs, not Monsters, so they need their own sweep.
             for (Phantom phantom : level.getEntitiesOfClass(Phantom.class,
-                    entity.getBoundingBox().inflate(7.0))) {
+                    entity.getBoundingBox().inflate(range))) {
                 if (phantom.getTarget() == entity) {
                     phantom.setTarget(null);
                 }
@@ -579,8 +581,9 @@ public final class ModEffects {
                 return true;
             }
             ServerLevel server = (ServerLevel) entity.level();
+            double range = 7.0 * FloraConfig.auraRangeMultiplier();
             for (LivingEntity other : server.getEntitiesOfClass(LivingEntity.class,
-                    entity.getBoundingBox().inflate(7.0))) {
+                    entity.getBoundingBox().inflate(range))) {
                 if (other == entity) {
                     continue;
                 }
@@ -727,8 +730,9 @@ public final class ModEffects {
             Set<UUID> stared = new HashSet<>();
             Vec3 eye = entity.getEyePosition();
             Vec3 look = entity.getViewVector(1.0F);
+            double gazeRange = 25.0 * FloraConfig.auraRangeMultiplier();
             for (LivingEntity other : server.getEntitiesOfClass(LivingEntity.class,
-                    entity.getBoundingBox().inflate(25.0))) {
+                    entity.getBoundingBox().inflate(gazeRange))) {
                 if (other == entity) {
                     continue;
                 }

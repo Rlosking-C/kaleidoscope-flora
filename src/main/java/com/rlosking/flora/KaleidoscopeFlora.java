@@ -5,7 +5,9 @@ import com.mojang.logging.LogUtils;
 import com.rlosking.flora.soupbase.MilkSoupBase;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import org.slf4j.Logger;
 
 /**
@@ -27,7 +29,10 @@ public class KaleidoscopeFlora {
     public static final ResourceLocation MILK_SOUP_BASE =
             ResourceLocation.fromNamespaceAndPath(MOD_ID, "milk");
 
-    public KaleidoscopeFlora(IEventBus modBus) {
+    public KaleidoscopeFlora(IEventBus modBus, ModContainer container) {
+        // Register the COMMON config so server admins can tune gameplay knobs
+        // (effect durations, aura ranges, combat percentages) without code edits.
+        container.registerConfig(ModConfig.Type.COMMON, FloraConfig.SPEC);
         // Custom MobEffects must go through the vanilla MOB_EFFECT registry,
         // which only accepts registrations during the mod bus register phase.
         ModEffects.register(modBus);

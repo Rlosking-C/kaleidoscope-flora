@@ -514,7 +514,7 @@ public final class FloraEvents {
         // lifesteal healing announces itself exactly the way vanilla food
         // does (nothing shows at full health, matching vanilla behaviour).
         if (attacker != null && attacker.hasEffect(ModEffects.VAMPIRIC)) {
-            attacker.heal(damage * 0.20f);
+            attacker.heal(damage * (float) (FloraConfig.vampiricHealPercent() / 100.0));
         }
 
         // Allium "Fire Waltz": the drinker's melee hits set targets ablaze.
@@ -862,9 +862,10 @@ public final class FloraEvents {
         if (!(event.getBreaker() instanceof Player breaker) || !breaker.hasEffect(ModEffects.HARVEST)) {
             return;
         }
-        // One random multiplier of 2, 3 or 4 per harvest; spawn the extra
-        // copies of every drop entity (count-1 more copies of each stack).
-        int multiplier = 2 + breaker.getRandom().nextInt(3);
+        // One random multiplier of 2 up to the configured max per harvest;
+        // spawn the extra copies of every drop entity.
+        int maxMult = FloraConfig.harvestMaxDropMultiplier();
+        int multiplier = 2 + breaker.getRandom().nextInt(maxMult - 1);
         List<ItemEntity> drops = List.copyOf(event.getDrops());
         for (int i = 1; i < multiplier; i++) {
             for (ItemEntity drop : drops) {

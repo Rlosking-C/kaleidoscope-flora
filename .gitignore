@@ -43,6 +43,15 @@ libs/
 # GitHub's language bar).
 tools/
 
+# docs/: local-only art research and collaboration materials (reference
+# photos, palette generators, art guides embedding third-party textures) -
+# only the published banner.png is tracked.
+docs/*
+!docs/banner.png
+
+# TRAE agent tooling artifacts
+.trae-html-share-packages/
+
 # OS
 Thumbs.db
 .DS_Store

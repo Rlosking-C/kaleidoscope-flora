@@ -43,6 +43,9 @@ repositories {
         }
         filter { includeGroup 'maven.modrinth' }
     }
+
+    // BlameJared maven hosts JEI API jars for compile-time use.
+    maven { url = 'https://maven.blamejared.com' }
 }
 
 dependencies {
@@ -57,6 +60,13 @@ dependencies {
     // the integration checks ModList before calling any of its classes,
     // so the mod is never required (neoforge-1.21.1-1.0.10).
     compileOnly 'maven.modrinth:sodium-dynamic-lights:XI0WLXdn'
+
+    // JEI (soft dependency): compile against the API jar, and load the full
+    // JEI jar in the dev runs so the FloraJeiPlugin info pages can be
+    // tested with runClient. At runtime for players, JEI stays optional -
+    // the plugin class is only loaded by JEI's own service loader.
+    compileOnly "mezz.jei:jei-1.21.1-neoforge-api:${jei_version}"
+    runtimeOnly "mezz.jei:jei-1.21.1-neoforge:${jei_version}"
 }
 
 tasks.withType(JavaCompile).configureEach {
