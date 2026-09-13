@@ -13,15 +13,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -42,6 +41,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -107,7 +107,7 @@ public final class FloraEvents {
 
     /**
      * Chorus echo grace: game time (inclusive) until which a saved player
-     * cannot drop below one heart. Entry exists only during the 5 second
+     * cannot drop below one heart. Entry exists only during the 5-second
      * window after an echo rescue.
      */
     private static final Map<UUID, Long> ECHO_GRACE_UNTIL = new HashMap<>();
@@ -125,18 +125,12 @@ public final class FloraEvents {
     /** Per-player horizontal movement vector (dx, dz) of the last server tick. */
     private static final Map<UUID, double[]> MOVE_DELTA = new HashMap<>();
 
-    /** Sniffer brush-dig progress per player: ticks held on dirt-family ground. */
-    private static final Map<UUID, Integer> BRUSH_PROGRESS = new HashMap<>();
-
-    /** The ground block each player is currently brushing (follows the crosshair). */
-    private static final Map<UUID, BlockPos> BRUSH_TARGET = new HashMap<>();
-
     /**
-     * Game time of the last brush event per player. While the use key is
-     * held, the client re-fires {@code RightClickBlock} every 4 ticks and
-     * keeps this fresh; once it goes stale the dig is discarded.
+     * The ground block each player's dig is currently unearthing (follows
+     * the crosshair). A UUID present in this map means that player has an
+     * active sniffer-soul brush-dig session.
      */
-    private static final Map<UUID, Long> BRUSH_LAST_EVENT = new HashMap<>();
+    private static final Map<UUID, BlockPos> BRUSH_TARGET = new HashMap<>();
 
     /** Petal veil costs 10 seconds of duration per blocked projectile. */
     private static final int PETAL_VEIL_BLOCK_COST_TICKS = 200;
@@ -146,26 +140,11 @@ public final class FloraEvents {
 
     /**
      * Brushing a relic out of the ground takes this many ticks of holding
-     * (2.4 s, advanced one tick per tick in {@link #onPlayerTick}).
+     * (2.4 s). Applied as the server-side use duration in
+     * {@link #onBrushUseStart}; the use-item flag sync carries the early
+     * end of the use to the client's brush animation.
      */
     private static final int BRUSH_DIG_TICKS = 48;
-
-    /**
-     * Silence threshold for the brush-dig session. The interaction event
-     * renews the session every 4 ticks while the use key is held; if this
-     * many ticks pass without renewal, the key was released and the dig
-     * is discarded.
-     */
-    private static final int BRUSH_EVENT_TIMEOUT = 10;
-
-    /**
-     * After a find, the brush rests for this long (4 seconds) as the VANILLA
-     * item cooldown - the familiar white sweep on the hotbar slot. Being a
-     * real {@code ItemCooldowns} entry, it also stops the client from firing
-     * the use key at all while it lasts, server and client stay in sync for
-     * free, and other mods/datapacks can read it like any vanilla cooldown.
-     */
-    private static final int BRUSH_COOLDOWN_TICKS = 80;
 
     /** Length of the one-heart echo grace window (12 seconds). */
     private static final int ECHO_GRACE_TICKS = 240;
@@ -252,9 +231,7 @@ public final class FloraEvents {
         if (event.getHand() != InteractionHand.MAIN_HAND) {
             return;
         }
-        if (!(event.getLevel() instanceof Level level)) {
-            return;
-        }
+        Level level = event.getLevel();
         if (!(level.getBlockEntity(event.getPos()) instanceof StockpotBlockEntity pot)) {
             return;
         }
@@ -324,9 +301,7 @@ public final class FloraEvents {
         if (event.getHand() != InteractionHand.MAIN_HAND) {
             return;
         }
-        if (!(event.getLevel() instanceof Level level)) {
-            return;
-        }
+        Level level = event.getLevel();
         if (!(level.getBlockEntity(event.getPos()) instanceof StockpotBlockEntity pot)) {
             return;
         }
@@ -370,7 +345,7 @@ public final class FloraEvents {
 
         // Drain the pot exactly like Cookery's takeOutProduct on its last
         // cup: status back to empty, inputs cleared, everything reset.
-        drainStockpot(pot, level);
+        drainStockpot(pot);
 
         level.playSound(null, event.getPos(), SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1.0f, 1.0f);
     }
@@ -383,7 +358,7 @@ public final class FloraEvents {
      * piece of state exactly like Cookery's own "last cup taken out"
      * branch in {@code takeOutProduct}.
      */
-    private static void drainStockpot(StockpotBlockEntity pot, Level level) {
+    private static void drainStockpot(StockpotBlockEntity pot) {
         try {
             Class<?> cls = pot.getClass();
             findField(cls, "takeoutCount").set(pot, 0);
@@ -703,12 +678,22 @@ public final class FloraEvents {
     private static void orbitParticles(ServerLevel server, LivingEntity entity, ParticleOptions particle) {
         long time = server.getGameTime();
         for (int i = 0; i < 2; i++) {
-            double angle = time / 10.0 + i * Math.PI;
-            double x = entity.getX() + Math.cos(angle) * 0.9;
-            double z = entity.getZ() + Math.sin(angle) * 0.9;
-            double y = entity.getY() + 1.0 + Math.sin(time / 12.0 + i * 2.0) * 0.2;
-            server.sendParticles(particle, x, y, z, 1, 0.0, 0.0, 0.0, 0.0);
+            double[] pos = orbitPos(entity, time, i);
+            server.sendParticles(particle, pos[0], pos[1], pos[2], 1, 0.0, 0.0, 0.0, 0.0);
         }
+    }
+
+    /**
+     * Shared orbit geometry of the circling effect particles: a 0.9-block
+     * ring at shoulder height whose y bobs gently over time. Both orbit
+     * users draw from this one formula, so their rings stay identical.
+     */
+    private static double[] orbitPos(LivingEntity entity, long time, int i) {
+        double angle = time / 10.0 + i * Math.PI;
+        return new double[]{
+                entity.getX() + Math.cos(angle) * 0.9,
+                entity.getY() + 1.0 + Math.sin(time / 12.0 + i * 2.0) * 0.2,
+                entity.getZ() + Math.sin(angle) * 0.9};
     }
 
     /** When each lucky one's luck began, for the fade-in ramp. */
@@ -723,12 +708,7 @@ public final class FloraEvents {
      */
     private static void coronationMotes(ServerLevel server, LivingEntity entity) {
         long time = server.getGameTime();
-        UUID uuid = entity.getUUID();
-        Long started = LUCK_START.get(uuid);
-        if (started == null) {
-            started = time;
-            LUCK_START.put(uuid, started);
-        }
+        long started = LUCK_START.computeIfAbsent(entity.getUUID(), k -> time);
         MobEffectInstance luck = entity.getEffect(MobEffects.LUCK);
         if (luck == null) {
             return;
@@ -741,11 +721,8 @@ public final class FloraEvents {
             if (entity.getRandom().nextDouble() > density * 0.5) {
                 continue;
             }
-            double angle = time / 10.0 + i * Math.PI;
-            double x = entity.getX() + Math.cos(angle) * 0.9;
-            double z = entity.getZ() + Math.sin(angle) * 0.9;
-            double y = entity.getY() + 1.0 + Math.sin(time / 12.0 + i * 2.0) * 0.2;
-            server.sendParticles(gold, x, y, z, 1, 0.05, 0.05, 0.05, 0.0);
+            double[] pos = orbitPos(entity, time, i);
+            server.sendParticles(gold, pos[0], pos[1], pos[2], 1, 0.05, 0.05, 0.05, 0.0);
         }
     }
 
@@ -889,8 +866,10 @@ public final class FloraEvents {
      */
     @SubscribeEvent
     public static void onMobEffectApplicable(MobEffectEvent.Applicable event) {
-        if (event.getEntity().hasEffect(ModEffects.ABSOLVE)
-                && event.getEffectInstance().getEffect().value().getCategory() == MobEffectCategory.HARMFUL) {
+        MobEffectInstance applying = event.getEffectInstance();
+        if (applying != null
+                && event.getEntity().hasEffect(ModEffects.ABSOLVE)
+                && applying.getEffect().value().getCategory() == MobEffectCategory.HARMFUL) {
             event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
         }
     }
@@ -903,138 +882,138 @@ public final class FloraEvents {
      * While the sniffer soul is active, HOLDING a brush against diggable
      * ground (dirt family, mosses, mud, sand, red sand, gravel - but NEVER
      * vanilla suspicious sand/gravel, those stay pure vanilla archaeology)
-     * digs for ancient relics - no sneaking required. A single click does
-     * nothing.
+     * digs for ancient relics - no sneaking required.
      *
-     * <p><b>Why the event is cancelled on BOTH logical sides:</b> vanilla
-     * {@code BrushItem#useOn} returns CONSUME and calls
-     * {@code player.startUsingItem(...)} for <i>any</i> aimed block (verified
-     * in the bytecode - it is not limited to suspicious sand). Once the
-     * client thinks the brush is being used, {@code isUsingItem()} goes true
-     * and {@code Minecraft#handleKeybinds} stops re-firing the use key -
-     * so the server receives exactly ONE interaction packet per press and a
-     * hold-based dig can never accumulate. Cancelling the client-side
-     * prediction event keeps the use-key loop alive: one
-     * {@code ServerboundUseItemOnPacket} reaches the server every 4 ticks
-     * for as long as the key is held, and each one renews the dig session
-     * that {@link #onPlayerTick} advances tick by tick.</p>
+     * <p><b>The dig rides the VANILLA brush-use pipeline end to end.</b>
+     * {@code BrushItem#useOn} calls {@code startUsingItem} for any aimed
+     * block; the resulting use state drives the first-person brush sweep,
+     * the directional dust particles and the generic brush sounds, and the
+     * server keeps every client's view of it in sync through the
+     * LIVING_ENTITY_FLAGS entity data. This mod only hooks the NeoForge
+     * {@link LivingEntityUseItemEvent} lifecycle:</p>
      *
-     * <p>Every find spends brush durability, a 4 second VANILLA item cooldown
-     * (the white sweep on the hotbar slot) and buff duration according to
-     * the find's value (the drink starts with 5 minutes). Loot table
-     * (weights sum to 120): torchflower seeds 30 / pitcher pod 12 / coal 16
-     * / iron nugget 14 / gold nugget 8 / bone 8 / bone meal 12 / pottery
-     * sherd 10 - region-locked, see {@link SherdPool} / Immortalers Delight
-     * ancient seed 8 / sniffer egg 2.</p>
+     * <ul>
+     * <li>{@code onBrushUseStart} - brush in the main hand + sniffer soul +
+     * diggable ground under the crosshair (the same view-vector clip
+     * {@code BrushItem} itself uses): open a session, play the sniffer
+     * digging rumble right away, and shorten the vanilla 200-tick use to
+     * {@link #BRUSH_DIG_TICKS}.</li>
+     * <li>{@link #onBrushUseTick} - follow the crosshair; abandon the dig if
+     * the soul runs out, the brush leaves the hand or the aim leaves
+     * diggable ground.</li>
+     * <li>{@link #onBrushUseFinish} - the use ran its course, a relic is
+     * found: roll loot, spend brush durability, and pay for the find out
+     * of the soul's remaining duration according to its value (the drink
+     * starts with 5 minutes). Digs chain freely while the use key is held;
+     * the soul's remaining duration is the only limiter.</li>
+     * <li>{@link #onBrushUseStop} - the player let go early: cut the rumble
+     * and play the sniffer's own digging-stop cue.</li>
+     * </ul>
+     *
+     * <p>Because the server's use flag syncs to the client, ending the use
+     * server-side (finish or guard failure) ends the client's brush
+     * animation in the same beat - no wiggle left over after the item has
+     * popped out. Loot table (weights sum to 120): torchflower seeds 30 /
+     * pitcher pod 12 / coal 16 / iron nugget 14 / gold nugget 8 / bone 8 /
+     * bone meal 12 / pottery sherd 10 - region-locked, see
+     * {@link SherdPool} / Immortalers Delight ancient seed 8 / sniffer egg 2.</p>
      */
     @SubscribeEvent
-    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        Player player = event.getEntity();
-        if (event.getHand() != InteractionHand.MAIN_HAND
-                || !player.hasEffect(ModEffects.SNIFFER_SOUL)
-                || !event.getItemStack().is(Items.BRUSH)
-                || !isSnifferGround(player.level().getBlockState(event.getPos()))) {
+    public static void onBrushUseStart(LivingEntityUseItemEvent.Start event) {
+        if (!(event.getEntity() instanceof Player player)
+                || event.getHand() != InteractionHand.MAIN_HAND
+                || !event.getItem().is(Items.BRUSH)
+                || !player.hasEffect(ModEffects.SNIFFER_SOUL)) {
             return;
         }
-        event.setCanceled(true);
-
+        HitResult hit = brushAim(player);
+        if (hit.getType() != HitResult.Type.BLOCK
+                || !(hit instanceof BlockHitResult blockHit)
+                || !isSnifferGround(player.level().getBlockState(blockHit.getBlockPos()))) {
+            return; // idle brushing or vanilla archaeology - not a dig
+        }
         if (player.level().isClientSide()) {
-            // A local arm sweep every 4 ticks so holding the key visibly
-            // "brushes" the ground instead of looking dead.
-            player.swing(InteractionHand.MAIN_HAND);
+            return; // client prediction: let vanilla set up its 200-tick use
+        }
+        if (!(player instanceof ServerPlayer serverPlayer)) {
             return;
         }
-
-        ServerLevel server = (ServerLevel) player.level();
-        UUID uuid = player.getUUID();
-        long now = server.getGameTime();
-
-        // Rest after a find: the vanilla item cooldown on the brush keeps the
-        // client from re-firing the use key anyway, so no new session can
-        // start while it lasts.
-        if (player.getCooldowns().isOnCooldown(Items.BRUSH)) {
-            return;
-        }
-
-        // Renew the session: a fresh dig when idle, otherwise keep the
-        // accumulated progress and follow wherever the crosshair sweeps.
-        // A brand-new session plays the digging rustle RIGHT AWAY, the way
-        // the vanilla sniffer does when it starts digging - playing it only
-        // at completion made the dig sound arrive after the item had already
+        BRUSH_TARGET.put(player.getUUID(), blockHit.getBlockPos());
+        // The sniffer's own digging rumble, right away - playing it only at
+        // completion made the dig sound arrive after the item had already
         // popped out, which read as the sound lagging one dig behind.
-        boolean freshDig = !BRUSH_PROGRESS.containsKey(uuid);
-        BRUSH_TARGET.put(uuid, event.getPos());
-        BRUSH_LAST_EVENT.put(uuid, now);
-        BRUSH_PROGRESS.putIfAbsent(uuid, 0);
-        if (freshDig) {
-            server.playSound(null, event.getPos(), SoundEvents.SNIFFER_DIGGING,
-                    SoundSource.BLOCKS, 1.0f, 1.0f);
-        }
+        serverPlayer.serverLevel().playSound(null, blockHit.getBlockPos(), SoundEvents.SNIFFER_DIGGING,
+                SoundSource.BLOCKS, 1.0f, 1.0f);
+        // Turn the vanilla 200-tick brush use into a 48-tick dig; the
+        // use-flag sync carries this early end to the client animation.
+        event.setDuration(BRUSH_DIG_TICKS);
+    }
+
+    /** The view-vector clip {@code BrushItem} uses for its own use ticks. */
+    private static HitResult brushAim(Player player) {
+        return ProjectileUtil.getHitResultOnViewVector(
+                player, e -> !e.isSpectator() && e.isPickable(), player.blockInteractionRange());
     }
 
     /**
-     * Advances an active brush-dig session once per tick and finishes it
-     * when the hold time is reached. The session dies the moment the use
-     * key is released: {@code RightClickBlock} stops renewing it, and after
-     * {@link #BRUSH_EVENT_TIMEOUT} ticks of silence the leftovers are
-     * discarded.
+     * The player behind an active dig session in this use-item event, or
+     * null when the use is client-side, not a brush, or has no session
+     * (vanilla archaeology or idle brushing).
+     */
+    private static ServerPlayer digSessionPlayer(LivingEntityUseItemEvent event) {
+        if (event.getEntity().level().isClientSide()
+                || !(event.getEntity() instanceof ServerPlayer player)
+                || !event.getItem().is(Items.BRUSH)
+                || !BRUSH_TARGET.containsKey(player.getUUID())) {
+            return null;
+        }
+        return player;
+    }
+
+    /**
+     * Keeps an active dig session pointed at whatever diggable ground the
+     * crosshair sweeps over (one clip per tick, smoother than the old
+     * every-4-ticks packet renewal). Any guard failing ends the dig the
+     * same beat: the rumble is cut, the sniffer's digging-stop cue plays,
+     * and cancelling this event makes vanilla's own use pipeline finish
+     * the use - which stops the client animation through the flag sync.
      */
     @SubscribeEvent
-    public static void onPlayerTick(PlayerTickEvent.Post event) {
-        Player player = event.getEntity();
-        if (player.level().isClientSide()) {
+    public static void onBrushUseTick(LivingEntityUseItemEvent.Tick event) {
+        ServerPlayer player = digSessionPlayer(event);
+        if (player == null) {
+            return; // vanilla archaeology or idle brushing - not a dig
+        }
+        UUID uuid = player.getUUID();
+        HitResult hit = brushAim(player);
+        if (!player.hasEffect(ModEffects.SNIFFER_SOUL)
+                || !player.getMainHandItem().is(Items.BRUSH)
+                || hit.getType() != HitResult.Type.BLOCK
+                || !(hit instanceof BlockHitResult blockHit)
+                || !isSnifferGround(player.level().getBlockState(blockHit.getBlockPos()))) {
+            clearBrushSession(player, false);
+            event.setCanceled(true);
+            return;
+        }
+        BRUSH_TARGET.put(uuid, blockHit.getBlockPos());
+    }
+
+    /**
+     * The use duration ran out: the dig succeeded. {@code Finish} also
+     * fires for vanilla's full 200-tick idle brushing and archaeology, so
+     * the session map is the marker of a real dig.
+     */
+    @SubscribeEvent
+    public static void onBrushUseFinish(LivingEntityUseItemEvent.Finish event) {
+        ServerPlayer player = digSessionPlayer(event);
+        if (player == null) {
             return;
         }
         UUID uuid = player.getUUID();
-
-        // Measure the real per-tick step for the server-side effects (see
-        // LAST_XZ): must run before any early return below.
-        double[] last = LAST_XZ.get(uuid);
-        double x = player.getX();
-        double z = player.getZ();
-        MOVE_DELTA.put(uuid, last == null ? new double[]{0.0, 0.0} : new double[]{x - last[0], z - last[1]});
-        LAST_XZ.put(uuid, new double[]{x, z});
-
-        if (!BRUSH_TARGET.containsKey(uuid)) {
-            return;
-        }
-        ServerLevel server = (ServerLevel) player.level();
-        long now = server.getGameTime();
-
-        // Released the use key: too long since the last interaction event.
-        if (now - BRUSH_LAST_EVENT.getOrDefault(uuid, now) > BRUSH_EVENT_TIMEOUT) {
-            clearBrushSession(uuid);
-            return;
-        }
-        // Swapped the brush away or lost the buff mid-dig.
-        if (!player.hasEffect(ModEffects.SNIFFER_SOUL)
-                || !player.getMainHandItem().is(Items.BRUSH)) {
-            clearBrushSession(uuid);
-            return;
-        }
-        // Rest after a find: refuse to dig while the vanilla brush cooldown lasts.
-        if (player.getCooldowns().isOnCooldown(Items.BRUSH)) {
-            clearBrushSession(uuid);
-            return;
-        }
-
+        ServerLevel server = player.serverLevel();
         BlockPos pos = BRUSH_TARGET.get(uuid);
-        int progress = BRUSH_PROGRESS.getOrDefault(uuid, 0) + 1;
-        if (progress < BRUSH_DIG_TICKS) {
-            BRUSH_PROGRESS.put(uuid, progress);
-            // Work-in-progress feedback every 6 ticks: soil crumbs + hiss.
-            if (progress % 6 == 0) {
-                server.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, server.getBlockState(pos)),
-                        pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, 4, 0.3, 0.05, 0.3, 0.0);
-                server.playSound(null, pos, SoundEvents.BRUSH_GENERIC, SoundSource.BLOCKS, 0.4f, 1.0f);
-            }
-            return;
-        }
+        clearBrushSession(player, true);
 
-        clearBrushSession(uuid);
-        // The vanilla cooldown: white sweep on the hotbar slot, use key
-        // blocked client-side, sync handled by ServerItemCooldowns.
-        player.getCooldowns().addCooldown(Items.BRUSH, BRUSH_COOLDOWN_TICKS);
         player.getMainHandItem().hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
 
         server.playSound(null, pos, SoundEvents.SNIFFER_DROP_SEED, SoundSource.BLOCKS, 1.0f, 1.0f);
@@ -1051,11 +1030,68 @@ public final class FloraEvents {
         shortenEffect(player, ModEffects.SNIFFER_SOUL, loot.costTicks());
     }
 
-    /** Discards every trace of a player's brush-dig session. */
-    private static void clearBrushSession(UUID uuid) {
-        BRUSH_PROGRESS.remove(uuid);
-        BRUSH_TARGET.remove(uuid);
-        BRUSH_LAST_EVENT.remove(uuid);
+    /**
+     * The player let go of the use key mid-dig (or vanilla released the
+     * use, e.g. the aim left every block). Cut the rumble and play the
+     * sniffer's own "dig ended" cue.
+     */
+    @SubscribeEvent
+    public static void onBrushUseStop(LivingEntityUseItemEvent.Stop event) {
+        ServerPlayer player = digSessionPlayer(event);
+        if (player != null) {
+            clearBrushSession(player, false);
+        }
+    }
+
+    /**
+     * Measures each player's real per-tick horizontal step on the server
+     * (see {@link #LAST_XZ}). Must run every tick with no early return:
+     * effects like Gaze and Harvest read the step later via
+     * {@link #lastMove}, because {@code Entity#move} deltas and
+     * {@code walkDist} stay zero for players on the server.
+     */
+    @SubscribeEvent
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
+        Player player = event.getEntity();
+        if (player.level().isClientSide()) {
+            return;
+        }
+        UUID uuid = player.getUUID();
+
+        double[] last = LAST_XZ.get(uuid);
+        double x = player.getX();
+        double z = player.getZ();
+        MOVE_DELTA.put(uuid, last == null ? new double[]{0.0, 0.0} : new double[]{x - last[0], z - last[1]});
+        LAST_XZ.put(uuid, new double[]{x, z});
+    }
+
+    /**
+     * Discards every trace of a player's brush-dig session - and stops the
+     * digging rumble. {@link SoundEvents#SNIFFER_DIGGING} is a 6.7 s vanilla
+     * one-shot (the vanilla sniffer digs for 120 ticks, matching the file),
+     * but this mod's dig is only {@link #BRUSH_DIG_TICKS} = 48 ticks, so
+     * without an explicit stop the rumble kept playing for another ~4 s
+     * after the session was already gone. A {@link ClientboundStopSoundPacket}
+     * (the /stopsound packet) cuts it on every client in the same level; an
+     * interrupted dig additionally gets the sniffer's own "dig ended" cue
+     * ({@code SNIFFER_DIGGING_STOP}), mirroring the vanilla RISING state.
+     */
+    private static void clearBrushSession(ServerPlayer player, boolean completed) {
+        UUID uuid = player.getUUID();
+        BlockPos pos = BRUSH_TARGET.remove(uuid);
+        if (pos == null) {
+            return;
+        }
+        ServerLevel level = player.serverLevel();
+        ClientboundStopSoundPacket stop = new ClientboundStopSoundPacket(
+                SoundEvents.SNIFFER_DIGGING.getLocation(), SoundSource.BLOCKS);
+        for (ServerPlayer listener : level.players()) {
+            listener.connection.send(stop);
+        }
+        if (!completed) {
+            level.playSound(null, pos, SoundEvents.SNIFFER_DIGGING_STOP,
+                    SoundSource.BLOCKS, 1.0f, 1.0f);
+        }
     }
 
     // ==================================================================
@@ -1407,6 +1443,6 @@ public final class FloraEvents {
         ModEffects.GazeEffect.clearPlayer(uuid);
         ModEffects.PetalWalkEffect.clearPlayer(uuid);
         FloraAdvancements.clearPlayer(uuid);
-        clearBrushSession(uuid);
+        clearBrushSession((ServerPlayer) event.getEntity(), false);
     }
 }
