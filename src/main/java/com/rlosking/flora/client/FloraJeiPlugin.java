@@ -26,9 +26,12 @@ import java.util.List;
  *
  * <p>This plugin fills that gap: it registers an info page for every
  * flower drink item, so players browsing JEI can press [u] / right-click
- * "Information" and read both the mechanical description and the
- * poetic maxim in one place - the same two lines they would see on
- * the item tooltip, just brought into JEI's recipe browser.</p>
+ * "Information" and read the mechanical description and the poetic maxim
+ * in one place - plus the maxim's source attribution (each maxim draws
+ * on a different world civilization's poetry, proverbs or myth - the
+ * 26 quotes span 26 civilizations with zero repeats). The source line is
+ * deliberately JEI-only: the inventory tooltip keeps just the bare maxim,
+ * and the deeper provenance waits for players who go looking for it.</p>
  *
  * <p>Soft dependency: the class is annotated with {@link JeiPlugin}
  * and loaded by JEI's own service loader only when JEI is present.
@@ -92,12 +95,15 @@ public final class FloraJeiPlugin implements IModPlugin {
             // uses color 0xFF000000 with no shadow) on a light-gray panel, so
             // ChatFormatting.GRAY here would be nearly invisible. The mechanical
             // description keeps the default black for maximum contrast; the maxim
-            // uses italic dark purple - the classic "flavor text" look that still
-            // reads clearly on the light background.
+            // uses italic dark purple - the classic "flavor text" look; the maxim's
+            // source attribution uses italic dark gray - the classic "quote
+            // attribution" look, still readable on the light background.
             Component maxim = Component.translatable("tooltip." + KaleidoscopeFlora.MOD_ID + "." + id + ".maxim")
                     .withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_PURPLE);
+            Component source = Component.translatable("tooltip." + KaleidoscopeFlora.MOD_ID + "." + id + ".source")
+                    .withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY);
             Component desc = Component.translatable("tooltip." + KaleidoscopeFlora.MOD_ID + "." + id + ".desc");
-            registration.addItemStackInfo(stack, maxim, Component.literal(" "), desc);
+            registration.addItemStackInfo(stack, maxim, source, Component.literal(" "), desc);
             registered++;
         }
         KaleidoscopeFlora.LOGGER.info("Registered JEI info pages for {} flower drinks.", registered);
