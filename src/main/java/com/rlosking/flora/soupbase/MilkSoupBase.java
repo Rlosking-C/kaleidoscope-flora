@@ -12,6 +12,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.sounds.SoundEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 /**
  * Milk as a stockpot soup base. Cookery ships no milk base (only water, lava
@@ -73,8 +75,13 @@ public class MilkSoupBase implements ISoupBase {
         return new ItemStack(Items.MILK_BUCKET);
     }
 
-    /** Our own renderer: milk waves for the ingredient stage, recipe visuals after. */
+    /**
+     * Our own renderer: milk waves for the ingredient stage, recipe visuals after.
+     * Marked client-only like Cookery's own soup bases: RuntimeDistCleaner strips
+     * this method on the dedicated server so the render class is never loaded there.
+     */
     @Override
+    @OnlyIn(Dist.CLIENT)
     public ISoupBaseRender getRender() {
         return new MilkSoupBaseRender();
     }

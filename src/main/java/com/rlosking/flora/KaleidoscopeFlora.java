@@ -53,7 +53,8 @@ public class KaleidoscopeFlora {
         // Milk as a stockpot soup base for Hanami Tale (poured from a milk
         // bucket, empty bucket returned, milk-white bubbling surface). Runs
         // after Cookery's registerAll() by the same mod-construction ordering
-        // guarantee documented above.
+        // guarantee documented above. MilkSoupBase.getRender() is @OnlyIn(CLIENT),
+        // so the dedicated server strips it and never touches render classes.
         SoupBaseManager.registerSoupBase(new MilkSoupBase());
     }
 }
