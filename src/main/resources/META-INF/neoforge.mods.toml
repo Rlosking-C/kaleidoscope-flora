@@ -43,3 +43,9 @@ effects. An addon for Kaleidoscope Cookery.
 [[mixins]]
 config = "kaleidoscope_flora.mixins.json"
 
+# LambDynamicLights soft integration: LDL reads this top-level modproperties
+# table (keyed by mod id) via FML's IModInfo#getModProperties and instantiates
+# the initializer itself, only when the mod is installed on the client.
+[modproperties.kaleidoscope_flora]
+"yumi:entrypoints" = { "lambdynlights:initializer" = "com.rlosking.flora.client.FloraDynamicLightsInitializer" }
+

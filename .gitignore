@@ -52,6 +52,11 @@ docs/*
 # TRAE agent tooling artifacts
 .trae-html-share-packages/
 
+# release-docs/: local-only platform release notes (Modrinth/CurseForge/
+# MCMod descriptions and changelog drafts) - published content is pasted
+# to the platforms directly, not shipped in the repo.
+release-docs/
+
 # OS
 Thumbs.db
 .DS_Store

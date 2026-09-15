@@ -23,6 +23,7 @@ Gather flowers, brew them in the stockpot, drink and gain the flower's blessing.
 | NeoForge | 21.1.248 | Yes |
 | [Kaleidoscope Cookery](https://modrinth.com/mod/kaleidoscope-cookery) | 1.4.1 | Yes |
 | [Sodium Dynamic Lights](https://modrinth.com/mod/sodium-dynamic-lights) | 1.0.10 | No (full glow effect at night) |
+| [LambDynamicLights](https://modrinth.com/mod/lambdynamiclights) | 4.8.11+ | No (full glow effect at night) |
 | [Vanilla Backport](https://modrinth.com/mod/vanillabackport) | - | No (unlocks 4 crossover drinks brewed from 1.21.4+ flowers) |
 
 ## Download
@@ -39,9 +40,13 @@ Grab the latest jar from [Releases](https://github.com/Rlosking-C/kaleidoscope-f
   - VanillaBackport crossover: 4 bonus drinks with 1.21.4+ flowers (recipes and drinks both gated cleanly)
   - 15 advancements
   - Rosy Stride reworked into true surface physics - smooth boarding of banks and shores
-- **v0.3.0** (current)
+- **v0.3.0**
   - Server config: effect duration multiplier, aura range multiplier, vampiric heal percent, harvest drop cap
   - JEI info pages for every drink (maxim + effect description)
+  - Breath of the Ancients rework: vanilla brush animation, continuous digging
+- **v0.3.1** (current)
+  - LambDynamicLights integration: The Sunward lights up the night through LDL or Sodium Dynamic Lights
+  - Dedicated server startup crash fix (milk soup base)
 - **Next**
   - Balance pass from first player feedback (drop rates, aura ranges, cooldowns)
   - Golden dandelion port; As-You-Wish swaps back from gold nuggets once it lands

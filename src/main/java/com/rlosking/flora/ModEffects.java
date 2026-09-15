@@ -599,7 +599,8 @@ public final class ModEffects {
     /**
      * Sunflower duality: under the open day sky the drinker slowly mends;
      * at night they shine - the flower keeps glowing for the extinguished
-     * sun (dynamic light via the SodiumDynamicLights integration).
+     * sun (dynamic light via the SodiumDynamicLights or LambDynamicLights
+     * integration, whichever is installed).
      */
     public static class SunwardEffect extends MobEffect {
         public SunwardEffect() {

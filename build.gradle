@@ -30,6 +30,10 @@ neoForge {
             systemProperty 'forge.logging.markers', 'REGISTRIES'
         }
         client { client() }
+        server {
+            server()
+            programArgument '--nogui'
+        }
     }
 }
 
@@ -46,7 +50,17 @@ repositories {
 
     // BlameJared maven hosts JEI API jars for compile-time use.
     maven { url = 'https://maven.blamejared.com' }
+
+    // Gegy maven hosts LambDynamicLights' API and runtime jars, each with
+    // intermediary and mojmap variants selectable via the net.minecraft.mappings
+    // attribute (official LDL dev-environment setup).
+    maven { url = 'https://maven.gegy.dev' }
 }
+
+// Selects the mojmap variants of LambDynamicLights artifacts, matching the
+// Mojang-mapped Minecraft that NeoForge ModDev runs against.
+def minecraftMappings = Attribute.of('net.minecraft.mappings', String)
+dependencies.attributesSchema { attribute(minecraftMappings) }
 
 dependencies {
     // Kaleidoscope Cookery: compile against AND load the published NeoForge
@@ -60,6 +74,21 @@ dependencies {
     // the integration checks ModList before calling any of its classes,
     // so the mod is never required (neoforge-1.21.1-1.0.10).
     compileOnly 'maven.modrinth:sodium-dynamic-lights:XI0WLXdn'
+
+    // LambDynamicLights v4 API (soft dependency): compile-only against the
+    // mojmap variant. At runtime LDL itself instantiates our initializer via
+    // the yumi entrypoint declared in neoforge.mods.toml, so the mod is
+    // never required (4.8.11 = latest for mc1.21.1).
+    compileOnly('dev.lambdaurora.lambdynamiclights:lambdynamiclights-api:4.8.11+1.21.1') {
+        attributes { attribute(minecraftMappings, 'mojmap') }
+    }
+
+    // Load LDL in the dev runs so the Sunward integration can be tested;
+    // the project ships no Maven metadata, so runtimeOnly stays unpublished
+    // (players bring their own copy from Modrinth/CurseForge).
+    runtimeOnly('dev.lambdaurora.lambdynamiclights:lambdynamiclights-runtime:4.8.11+1.21.1') {
+        attributes { attribute(minecraftMappings, 'mojmap') }
+    }
 
     // JEI (soft dependency): compile against the API jar, and load the full
     // JEI jar in the dev runs so the FloraJeiPlugin info pages can be
