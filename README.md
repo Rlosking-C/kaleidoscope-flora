@@ -26,6 +26,8 @@ Gather flowers, brew them in the stockpot, drink and gain the flower's blessing.
 | [LambDynamicLights](https://modrinth.com/mod/lambdynamiclights) | 4.8.11+ | No (full glow effect at night) |
 | [Vanilla Backport](https://modrinth.com/mod/vanillabackport) | - | No (unlocks 4 crossover drinks brewed from 1.21.4+ flowers) |
 
+Note: the two dynamic lights mods are incompatible with each other — install one or the other, not both.
+
 ## Download
 
 Grab the latest jar from [Releases](https://github.com/Rlosking-C/kaleidoscope-flora/releases) and drop it into your `mods` folder.
