@@ -21,7 +21,7 @@ Gather flowers, brew them in the stockpot, drink and gain the flower's blessing.
 |---|---|---|
 | Minecraft | 1.21.1 | Yes |
 | NeoForge | 21.1.248 | Yes |
-| [Kaleidoscope Cookery](https://modrinth.com/mod/kaleidoscope-cookery) | 1.4.1 | Yes |
+| [Kaleidoscope Cookery](https://modrinth.com/mod/kaleidoscope-cookery) | 1.5.0 – 1.5.x | Yes |
 | [Sodium Dynamic Lights](https://modrinth.com/mod/sodium-dynamic-lights) | 1.0.10 | No (full glow effect at night) |
 | [LambDynamicLights](https://modrinth.com/mod/lambdynamiclights) | 4.8.11+ | No (full glow effect at night) |
 | [Vanilla Backport](https://modrinth.com/mod/vanillabackport) | - | No (unlocks 4 crossover drinks brewed from 1.21.4+ flowers) |
@@ -46,9 +46,11 @@ Grab the latest jar from [Releases](https://github.com/Rlosking-C/kaleidoscope-f
   - Server config: effect duration multiplier, aura range multiplier, vampiric heal percent, harvest drop cap
   - JEI info pages for every drink (maxim + effect description)
   - Breath of the Ancients rework: vanilla brush animation, continuous digging
-- **v0.3.1** (current)
+- **v0.3.1**
   - LambDynamicLights integration: The Sunward lights up the night through LDL or Sodium Dynamic Lights
   - Dedicated server startup crash fix (milk soup base)
+- **v0.3.2** (current)
+  - Cookery 1.5.0 compatibility: teacup/stockpot/teapot verified unchanged; milk soup base now reuses Cookery's native `minecraft:milk`, dependency range tightened to [1.5.0, 1.6.0)
 - **Next**
   - Balance pass from first player feedback (drop rates, aura ranges, cooldowns)
   - Golden dandelion port; As-You-Wish swaps back from gold nuggets once it lands

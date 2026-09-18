@@ -67,8 +67,8 @@ dependencies {
     // jar. Its TeacupRegistry / TeacupData API is public and meant for
     // addons, and the jar is already in Mojang mappings, so no
     // deobfuscation is needed. The coordinate is a Modrinth version id
-    // (1.4.1-neoforge+mc1.21.1).
-    implementation 'maven.modrinth:kaleidoscope-cookery:TqaHu4Ma'
+    // (1.5.0-neoforge+mc1.21.1).
+    implementation 'maven.modrinth:kaleidoscope-cookery:v62omIkI'
 
     // SodiumDynamicLights API (soft dependency): compile-only; at runtime
     // the integration checks ModList before calling any of its classes,
@@ -86,9 +86,11 @@ dependencies {
     // Load LDL in the dev runs so the Sunward integration can be tested;
     // the project ships no Maven metadata, so runtimeOnly stays unpublished
     // (players bring their own copy from Modrinth/CurseForge).
-    runtimeOnly('dev.lambdaurora.lambdynamiclights:lambdynamiclights-runtime:4.8.11+1.21.1') {
-        attributes { attribute(minecraftMappings, 'mojmap') }
-    }
+    // Currently commented out to test the SDL integration instead - LDL and
+    // SDL are mutually exclusive, uncomment to switch back.
+    //runtimeOnly('dev.lambdaurora.lambdynamiclights:lambdynamiclights-runtime:4.8.11+1.21.1') {
+    //    attributes { attribute(minecraftMappings, 'mojmap') }
+    //}
 
     // JEI (soft dependency): compile against the API jar, and load the full
     // JEI jar in the dev runs so the FloraJeiPlugin info pages can be

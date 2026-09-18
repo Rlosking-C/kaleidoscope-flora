@@ -20,7 +20,7 @@
                             "item":  "minecraft:honey_bottle"
                         }
                     ],
-    "soup_base":  "kaleidoscope_flora:milk",
+    "soup_base":  "minecraft:milk",
     "cooking_texture":  "kaleidoscope_flora:stockpot/hanami_tale_cooking",
     "finished_texture":  "kaleidoscope_flora:stockpot/hanami_tale_finished",
     "cooking_bubble_color":  -538919,

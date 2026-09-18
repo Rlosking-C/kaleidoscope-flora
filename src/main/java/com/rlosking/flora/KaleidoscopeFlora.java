@@ -2,7 +2,7 @@ package com.rlosking.flora;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.soupbase.SoupBaseManager;
 import com.mojang.logging.LogUtils;
-import com.rlosking.flora.soupbase.MilkSoupBase;
+import com.rlosking.flora.soupbase.LegacyMilkSoupBase;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -25,7 +25,7 @@ public class KaleidoscopeFlora {
     public static final String MOD_ID = "kaleidoscope_flora";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    /** Soup base id for milk: Hanami Tale is a latte, so its base is milk, not water. */
+    /** Legacy soup base id for milk, stored by stockpots in worlds saved with Flora 0.3.1 and earlier. */
     public static final ResourceLocation MILK_SOUP_BASE =
             ResourceLocation.fromNamespaceAndPath(MOD_ID, "milk");
 
@@ -50,11 +50,15 @@ public class KaleidoscopeFlora {
         // kaleidoscope_cookery with ordering = "AFTER" and type = "required".
         FloraDrinks.registerAll();
 
-        // Milk as a stockpot soup base for Hanami Tale (poured from a milk
-        // bucket, empty bucket returned, milk-white bubbling surface). Runs
-        // after Cookery's registerAll() by the same mod-construction ordering
-        // guarantee documented above. MilkSoupBase.getRender() is @OnlyIn(CLIENT),
-        // so the dedicated server strips it and never touches render classes.
-        SoupBaseManager.registerSoupBase(new MilkSoupBase());
+        // Since 0.3.2 the Hanami Tale recipe uses Cookery 1.5.0's native
+        // minecraft:milk. Worlds saved by 0.3.1 may still hold
+        // kaleidoscope_flora:milk inside a stockpot; alias that id to the
+        // native milk base so those pots keep rendering and can be scooped
+        // out. Registered unconditionally here: the alias resolves its
+        // delegate lazily, so it does not depend on Cookery's own
+        // registration timing (Cookery registers its bases during
+        // FMLCommonSetupEvent, after all mod constructors).
+        SoupBaseManager.registerSoupBase(new LegacyMilkSoupBase());
+        LOGGER.info("Legacy milk soup base registered as an alias for Cookery's minecraft:milk");
     }
 }
