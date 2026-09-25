@@ -18,8 +18,8 @@ import java.util.List;
  * JEI integration for Kaleidoscope Flora flower drinks.
  *
  * <p>Cookery's own JEI plugin (ModJeiPlugin) already registers a
- * StockpotRecipeCategory that shows every stockpot recipe - including
- * all 26 of our flower drinks - with their ingredients. What it does
+ * TeapotRecipeCategory that shows every teapot recipe - including all of
+ * our flower teas - with their ingredients. What it does
  * <b>not</b> show is each drink's mechanical description and its maxim,
  * because those are addon-specific flavour text that lives in our lang
  * files, not Cookery's recipe data.</p>

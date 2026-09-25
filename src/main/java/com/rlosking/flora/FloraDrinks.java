@@ -19,13 +19,16 @@ import java.util.function.Supplier;
  * right-click to drink (32 ticks), returns an empty cup, shows effect
  * tooltips. We only describe WHAT a drink does, not HOW it works.</p>
  *
- * <p><b>Brewing is stockpot-based (author decision, 2026-08-29):</b> all
- * drinks are brewed in Cookery's STOCKPOT, not the teapot. The stockpot
- * matches 1-9 ingredients in any order, supports a soup base (water by
- * default; lava and even live fish buckets exist) and hands out one teacup
- * per empty cup used as carrier. Because the teapot is not involved at all,
- * there is zero overlap with Cookery's own teapot recipes - no overrides,
- * no ingredient tags, no conflicts.</p>
+ * <p><b>Brewing is teapot-based, and that is the only route (author decision,
+ * 2026-09-22):</b> a tea bag brews a full 12-cup pot in Cookery's TEAPOT. Every
+ * drink is one flower's tea, so the production line reads flower -> tea
+ * bag -> teapot: the bag is a vanilla shaped recipe with Cookery's dried tea
+ * leaves in the middle and the flower plus that drink's old stockpot ingredients
+ * around it, the flower filling the top row. There is no dried-flower step any
+ * more - see {@link FloraTeas}. The earlier stockpot route was deleted whole on
+ * 2026-09-22: its 26 recipes, its bubble textures, and the Java that supported it
+ * (the honey-bottle container work-around, the teapot scoop-out and the
+ * reflection that drained a finished pot) are gone.</p>
  *
  * <p><b>HOW TO ADD A NEW DRINK (checklist):</b>
  * <ol>
@@ -33,9 +36,12 @@ import java.util.function.Supplier;
  *       effects. Vanilla effects via {@link MobEffects}, Cookery effects via
  *       {@link #cookeryEffect(String, int, int)}, this mod's effects via the
  *       holders in {@link ModEffects}.</li>
- *   <li>Stockpot recipe at
- *       {@code data/kaleidoscope_flora/recipe/stockpot/<id>.json}
- *       (copy any existing one; the carrier is always the empty cup).</li>
+ *   <li>Reachability needs a flower: add the flower to {@link FloraTeas} and to
+ *       {@code tools/gen_tea_chain.py}'s TABLE, along with that drink's old
+ *       stockpot ingredients, then run that generator - it writes the tea bag
+ *       recipe and the teapot recipe together (tea_fluid defaults to
+ *       {@code minecraft:water}; a drink that should brew in milk goes into that
+ *       script's FLUID table).</li>
  *   <li>Item model at {@code assets/kaleidoscope_flora/models/item/<id>.json}
  *       plus a 16x16 texture at
  *       {@code assets/kaleidoscope_flora/textures/item/<id>.png}.</li>
@@ -44,8 +50,10 @@ import java.util.function.Supplier;
  *       (10 count models), copy a blockstate JSON, and add a 32x32 texture at
  *       {@code assets/kaleidoscope_flora/textures/block/teacup/<id>.png}.
  *       All model JSONs are geometry-identical; only the texture path
- *       differs, so search-and-replace is enough (tools/generate.ps1 does
- *       all of this).</li>
+ *       differs, so search-and-replace is enough. Do this one by hand: the
+ *       script that used to do it, {@code tools/generate.ps1}, is retired
+ *       because it overwrote finished art with placeholders and rewrote the
+ *       whole lang files - see {@code tools/_superseded/README.md}.</li>
  *   <li>Lang entries in en_us.json / zh_cn.json:
  *       {@code block.kaleidoscope_flora.<id>} (name) and
  *       {@code tooltip.kaleidoscope_flora.<id>.maxim} (the flavour quote
@@ -229,7 +237,10 @@ public final class FloraDrinks {
                     .addEffect(() -> new MobEffectInstance(ModEffects.GAZE, ticks(180))));
 
             // Golden dandelion "As You Wish": one random tier-II blessing.
-            // Maxim: One Thousand and One Nights.
+            // Maxim: One Thousand and One Nights. VanillaBackport has not ported
+            // the golden dandelion yet, so its tea bag is built on gold nuggets
+            // instead (see FloraTeas) - the drink itself is a normal, reachable
+            // tea with no special handling here.
             register("as_you_wish", TeacupRegistry.TeacupData.create(4)
                     .addEffect(() -> new MobEffectInstance(ModEffects.WISH, 1, 0)));
 

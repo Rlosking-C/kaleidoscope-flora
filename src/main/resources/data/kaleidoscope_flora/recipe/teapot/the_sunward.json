@@ -1,0 +1,13 @@
+{
+  "type": "kaleidoscope_cookery:teapot",
+  "ingredient": {
+    "item": "kaleidoscope_flora:sunflower_tea_bag"
+  },
+  "ingredient_count": 1,
+  "result": {
+    "count": 1,
+    "id": "kaleidoscope_flora:the_sunward"
+  },
+  "tea_fluid": "minecraft:water",
+  "time": 240
+}

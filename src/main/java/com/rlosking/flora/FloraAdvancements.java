@@ -38,8 +38,10 @@ import java.util.UUID;
  * first drink) -&gt; "半盏世界" (9 distinct drinks) -&gt; "满园春色" (every
  * drink there is); the hidden collector award "花开满园" fires when every
  * drink of this install is held in the inventory at the same moment. The
- * eleven hidden meme awards hang off {@link FloraEventTrigger} and are
- * fired from existing hooks in {@link FloraEvents} / {@link ModEffects}.</p>
+ * thirteen hidden meme awards hang off {@link FloraEventTrigger} and are
+ * fired from existing hooks in {@link FloraEvents} / {@link ModEffects} -
+ * the newest, "我欲乘风归去", is the mooncake's air-swimming distance and
+ * is accumulated in {@link #tick}.</p>
  *
  * <p><b>Why a data attachment instead of pure JSON:</b> vanilla advancement
  * requirements are AND-of-ORs with no "at least N of M" operator, so
@@ -73,6 +75,7 @@ public final class FloraAdvancements {
     public static final String EVENT_BELIEVE_SPRING = "believe_spring";
     public static final String EVENT_LULLABY_DAWN = "lullaby_dawn";
     public static final String EVENT_FULL_BOUQUET = "full_bouquet";
+    public static final String EVENT_RIDE_THE_WIND = "ride_the_wind";
 
     /**
      * The set of drink ids a player has ever tasted. Serialized with the
@@ -215,6 +218,9 @@ public final class FloraAdvancements {
      *   <li>"轻功水上漂": accumulates Rosy Stride distance walked on the
      *       petal film; the counter resets the moment the feet leave the
      *       film (continuous crossing only, no wading breaks);</li>
+     *   <li>"我欲乘风归去": accumulates mooncake air-swimming distance the
+     *       same way - the tally resets the moment the drift ends, so the
+     *       award is for one unbroken flight, not a sum of hops;</li>
      *   <li>"花开满园": once per second, checks whether every drink of
      *       this install is present in the inventory at the same time.</li>
      * </ul>
@@ -250,6 +256,22 @@ public final class FloraAdvancements {
             WATER_WALKED.remove(uuid); // back on land: the crossing broke
         }
 
+        // Mooncake: continuous distance swum through the air, by the same
+        // contract - landing, or the Floating effect lapsing, starts over.
+        Double flown = AIR_SWUM.get(uuid);
+        if (!ModEffects.isAirborne(player)) {
+            AIR_SWUM.remove(uuid);
+        } else {
+            double[] step = FloraEvents.lastMove(player);
+            double total = (flown == null ? 0.0 : flown) + Math.hypot(step[0], step[1]);
+            if (total >= RIDE_THE_WIND_BLOCKS) {
+                award(player, EVENT_RIDE_THE_WIND);
+                AIR_SWUM.remove(uuid);
+            } else {
+                AIR_SWUM.put(uuid, total);
+            }
+        }
+
         if (player.level().getGameTime() % 20 == 0 && holdingFullBouquet(player)) {
             award(player, EVENT_FULL_BOUQUET);
         }
@@ -257,6 +279,14 @@ public final class FloraAdvancements {
 
     /** "轻功水上漂" distance: fifty blocks of water in one crossing. */
     private static final double WATER_DANCER_BLOCKS = 50.0;
+
+    /**
+     * "我欲乘风归去" distance: a hundred blocks of air in one unbroken
+     * mooncake flight. Air-swimming is roughly as fast as water-swimming,
+     * so a hundred blocks is about a minute of the five the cake grants -
+     * far inside the window, and far outside what an accidental hop covers.
+     */
+    private static final double RIDE_THE_WIND_BLOCKS = 100.0;
 
     /** "挡箭牌" threshold: five projectiles inside one Petal Veil. */
     private static final int ARROW_SHIELD_BLOCKS = 5;
@@ -271,6 +301,7 @@ public final class FloraAdvancements {
     private static final Map<UUID, Integer> URN_DOUBLES = new HashMap<>();
     private static final Map<UUID, Integer> SPROUT_CROPS = new HashMap<>();
     private static final Map<UUID, Double> WATER_WALKED = new HashMap<>();
+    private static final Map<UUID, Double> AIR_SWUM = new HashMap<>();
     private static final Map<UUID, List<DrinkStamp>> RECENT_DRINKS = new HashMap<>();
     private static final Map<UUID, long[]> SUN_CHASE = new HashMap<>();
 
@@ -366,6 +397,7 @@ public final class FloraAdvancements {
         URN_DOUBLES.remove(uuid);
         SPROUT_CROPS.remove(uuid);
         WATER_WALKED.remove(uuid);
+        AIR_SWUM.remove(uuid);
         RECENT_DRINKS.remove(uuid);
         SUN_CHASE.remove(uuid);
         FOOD_AT_SIP.remove(uuid);

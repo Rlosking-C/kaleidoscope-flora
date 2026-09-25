@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "T": {
+      "item": "kaleidoscope_cookery:dried_tea_leaves"
+    },
+    "A": {
+      "item": "minecraft:pitcher_plant"
+    },
+    "B": {
+      "item": "minecraft:spider_eye"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "BTB",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "kaleidoscope_flora:pitcher_plant_tea_bag"
+  }
+}

@@ -1,23 +1,13 @@
 package com.rlosking.flora;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.IStockpot;
-import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.StockpotBlockEntity;
-import com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer.StockpotRecipeSerializer;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
-import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoupBases;
-import com.github.ysbbbbbb.kaleidoscopecookery.item.TeacupItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
@@ -43,11 +33,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -72,10 +60,10 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerWakeUpEvent;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,6 +89,10 @@ import org.joml.Vector3f;
  */
 @EventBusSubscriber(modid = KaleidoscopeFlora.MOD_ID)
 public final class FloraEvents {
+
+    /** Level clock: a full day is 24000 ticks and night starts at 12000. */
+    private static final long DAY_TICKS = 24000L;
+    private static final long NIGHT_START = 12000L;
 
     /** Lily-of-the-valley poison cloud cooldown per player (5 seconds). */
     private static final Map<UUID, Long> KISS_COOLDOWN = new HashMap<>();
@@ -187,212 +179,12 @@ public final class FloraEvents {
     private FloraEvents() {
     }
 
-    // ==================================================================
-    // Stockpot: honey bottles
-    // ==================================================================
-
-    /**
-     * Honey bottles and the stockpot have a container quirk: Cookery's
-     * {@code getContainerItem} checks the FOOD component first, and vanilla
-     * honey's FOOD has no {@code usingConvertsTo} (the drink-back-bottle logic
-     * lives in HoneyBottleItem instead) - so it returns AIR and the pot never
-     * returns a glass bottle on insertion, nor demands one on take-out.
-     * Stripping FOOD from the copy that lands in the pot fixes both: the
-     * lookup falls through to the item's crafting remainder (glass bottle),
-     * and every container rule below becomes native Cookery behaviour.
-     * <ul>
-     *   <li>Insert honey bottle -> Cookery hands back exactly one glass
-     *       bottle (we must NOT give one ourselves - that was the old
-     *       double-bottle bug).</li>
-     *   <li>Take it back out -> Cookery's containerIsMatch demands a glass
-     *       bottle held in the main hand and consumes it, otherwise it shows
-     *       its own "need container" action bar tip.</li>
-     * </ul>
-     * Slot placement: Cookery gives the bottle back BEFORE shrinking the input,
-     * so with the honey still in hand the bottle lands in the next free slot
-     * instead of the one it came from. Its {@code getItemToLivingEntity} puts
-     * the bottle straight into the main hand when that slot is empty - so for a
-     * single bottle we vacate the hand FIRST (Cookery refills it in place,
-     * exactly like drinking a honey bottle); for a stack we keep vanilla
-     * semantics (honey stays in hand, bottle goes to the inventory).
-     * <p>
-     * This handler deliberately runs on BOTH sides. If it ran server-only,
-     * the client would still execute Cookery's own useItemOn with the bare
-     * (FOOD-less) honey in hand - whose crafting-remainder lookup also yields
-     * a glass bottle - and hand itself a ghost bottle as a prediction. The
-     * server never knows about that ghost, the two inventories diverge, and
-     * every insert/take-out cycle materialises another phantom bottle (the
-     * infinite-bottle dupe). Cancelling the event on both sides and running
-     * the identical logic on both sides keeps the two simulations in lock
-     * step, so no ghost is ever created.
-     */
-    @SubscribeEvent
-    public static void onRightClickStockpot(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getHand() != InteractionHand.MAIN_HAND) {
-            return;
-        }
-        Level level = event.getLevel();
-        if (!(level.getBlockEntity(event.getPos()) instanceof StockpotBlockEntity pot)) {
-            return;
-        }
-        if (pot.hasLid() || pot.getStatus() != IStockpot.PUT_INGREDIENT) {
-            return;
-        }
-        ItemStack held = event.getItemStack();
-        if (!held.is(Items.HONEY_BOTTLE)) {
-            return;
-        }
-        event.setCanceled(true);
-        ItemStack bare = held.copy();
-        bare.remove(DataComponents.FOOD);
-        if (held.getCount() == 1) {
-            // Vacate the hand slot first: Cookery's getItemToLivingEntity then
-            // places the returned glass bottle directly into the empty main
-            // hand - the same slot the honey bottle just left.
-            held.setCount(0);
-            if (!pot.addIngredient(level, event.getEntity(), bare)) {
-                held.setCount(1); // pot refused it (e.g. all 9 slots full)
-            }
-        } else {
-            if (pot.addIngredient(level, event.getEntity(), bare)) {
-                held.shrink(1); // remaining honey stays put, bottle to inventory
-            }
-        }
-    }
-
-    // ==================================================================
-    // Stockpot: teapot scooping
-    // ==================================================================
-
-    /**
-     * Scooping the finished pot into Cookery's teapot.
-     *
-     * <p>The teapot was built for a 12-cup brew; the stockpot caps at 9.
-     * A full pot (9 cups) fits inside one teapot with room to spare, so a
-     * player who wants the vanilla "carry the pot, pour cup by cup"
-     * ritual can do it with our flower drinks too:</p>
-     * <ol>
-     *   <li>Brew a drink in the stockpot (our recipes yield 9 cups).</li>
-     *   <li>Right-click the FINISHED pot with an EMPTY teapot.</li>
-     *   <li>The whole pot is transferred into the teapot item as Cookery's
-     *       native "Result" block-entity data (Status 2 + Result stack).
-     *       From here on everything is vanilla Cookery behaviour: the
-     *       teapot tooltip shows the contents, the durability-style bar
-     *       shows 9/12, and pouring into empty cups / stacked teacup
-     *       blocks works exactly like brewing in the teapot itself.</li>
-     * </ol>
-     *
-     * <p><b>Rules (author decision, 2026-09-01):</b> only drinks whose
-     * item is a Cookery {@code TeacupItem} may be scooped (a teapot full
-     * of soup could never be poured into cups), and the teapot must be
-     * completely empty - no water, no leftover tea.</p>
-     *
-     * <p><b>Reflection note:</b> the pot's public API can read
-     * {@code getResult()} and {@code getTakeoutCount()} but has no
-     * setter, so draining the pot touches Cookery's private fields
-     * {@code takeoutCount}, {@code result}, {@code recipeId},
-     * {@code soupBaseId}, {@code status}, {@code inputs} and
-     * {@code currentTick} directly - mirroring exactly what Cookery's own
-     * {@code takeOutProduct} does when its takeout count hits zero. Field
-     * names are verified against the decompiled 1.4.1 jar.</p>
-     */
-    @SubscribeEvent
-    public static void onRightClickStockpotWithTeapot(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getHand() != InteractionHand.MAIN_HAND) {
-            return;
-        }
-        Level level = event.getLevel();
-        if (!(level.getBlockEntity(event.getPos()) instanceof StockpotBlockEntity pot)) {
-            return;
-        }
-        if (pot.hasLid() || pot.getStatus() != IStockpot.FINISHED) {
-            return;
-        }
-        ItemStack held = event.getItemStack();
-        if (!held.is(ModItems.TEAPOT)) {
-            return;
-        }
-        event.setCanceled(true);
-        if (level.isClientSide()) {
-            return; // prediction-friendly: server is authoritative
-        }
-
-        // Rule 2: the teapot must be completely empty - no fluid and no
-        // leftover tea from a previous scoop.
-        CustomData data = held.get(DataComponents.BLOCK_ENTITY_DATA);
-        if (data != null && !data.copyTag().isEmpty()) {
-            event.getEntity().displayClientMessage(
-                    Component.translatable("tip.kaleidoscope_flora.teapot_scoop.not_empty"), true);
-            return;
-        }
-
-        // Rule 1: only teacup drinks may be scooped into a teapot.
-        ItemStack potResult = pot.getResult();
-        if (potResult.isEmpty() || !(potResult.getItem() instanceof TeacupItem)) {
-            event.getEntity().displayClientMessage(
-                    Component.translatable("tip.kaleidoscope_flora.teapot_scoop.not_drink"), true);
-            return;
-        }
-
-        // Transfer the whole pot into the teapot as Cookery-native data:
-        // Status 2 ("tea ready") + a Result stack of the drink. The count
-        // is capped at 12 like a real teapot brew.
-        CompoundTag tag = new CompoundTag();
-        tag.putInt("Status", 2);
-        ItemStack teaStack = potResult.copyWithCount(Math.min(potResult.getCount(), TEAPOT_MAX_CUPS));
-        tag.put("Result", teaStack.saveOptional(level.registryAccess()));
-        BlockItem.setBlockEntityData(held, ModBlocks.TEAPOT_BE.get(), tag);
-
-        // Drain the pot exactly like Cookery's takeOutProduct on its last
-        // cup: status back to empty, inputs cleared, everything reset.
-        drainStockpot(pot);
-
-        level.playSound(null, event.getPos(), SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1.0f, 1.0f);
-    }
-
-    /** Cookery's teapot capacity, {@code TeapotRecipe.OUTPUT_COUNT}. */
-    private static final int TEAPOT_MAX_CUPS = 12;
-
-    /**
-     * Empties a finished stockpot after a teapot scoop, resetting every
-     * piece of state exactly like Cookery's own "last cup taken out"
-     * branch in {@code takeOutProduct}.
-     */
-    private static void drainStockpot(StockpotBlockEntity pot) {
-        try {
-            Class<?> cls = pot.getClass();
-            findField(cls, "takeoutCount").set(pot, 0);
-            findField(cls, "result").set(pot, ItemStack.EMPTY);
-            findField(cls, "recipeId").set(pot, StockpotRecipeSerializer.EMPTY_ID);
-            findField(cls, "soupBaseId").set(pot, ModSoupBases.WATER);
-            findField(cls, "status").set(pot, 0);
-            Field inputsField = findField(cls, "inputs");
-            if (inputsField.get(pot) instanceof NonNullList<?> inputs) {
-                inputs.clear();
-            }
-            findField(cls, "currentTick").set(pot, -1);
-            findField(cls, "renderEntity").set(pot, null);
-            pot.refresh();
-        } catch (ReflectiveOperationException e) {
-            KaleidoscopeFlora.LOGGER.error("Failed to drain stockpot after teapot scoop", e);
-        }
-    }
-
-    /** Cached field lookup helper for Cookery's private stockpot fields. */
-    private static Field findField(Class<?> cls, String name) throws NoSuchFieldException {
-        try {
-            Field f = cls.getDeclaredField(name);
-            f.setAccessible(true);
-            return f;
-        } catch (NoSuchFieldException e) {
-            // StockpotBlockEntity extends BaseBlockEntity - search parents
-            Class<?> parent = cls.getSuperclass();
-            if (parent != null) {
-                return findField(parent, name);
-            }
-            throw e;
-        }
-    }
+    // The stockpot route was deleted on 2026-09-22 (author decision): flower
+    // drinks are brewed in the teapot and nowhere else. Three pieces of
+    // support code went with the 26 stockpot recipes - the honey-bottle
+    // container work-around, the teapot scoop-out, and the reflection that
+    // drained a finished pot - because all three existed only to serve
+    // drinks brewed in a stockpot. See the v0.4.0 design doc, section 8.
 
     @SubscribeEvent
     public static void onIncomingDamage(LivingIncomingDamageEvent event) {
@@ -763,6 +555,18 @@ public final class FloraEvents {
             FloraAdvancements.drinkFinished(player, event.getItem());
         }
 
+        // Mid-Autumn: a 「安眠曲」Lullaby drunk at night brings one mooncake
+        // out of the kitchen. It fires as the cup empties, so a whole pot
+        // drunk through the night hands over one cake per cup.
+        if (entity instanceof ServerPlayer player
+                && player.level().getDayTime() % DAY_TICKS >= NIGHT_START
+                && isLullaby(event.getItem())) {
+            ItemStack cake = new ItemStack(BlossomMooncakes.ITEM.get());
+            if (!player.getInventory().add(cake)) {
+                player.drop(cake, false);
+            }
+        }
+
         if (!entity.hasEffect(ModEffects.TASTEBLOOM) || !(entity instanceof Player eater)) {
             return;
         }
@@ -770,6 +574,15 @@ public final class FloraEvents {
         if (food != null) {
             eater.getFoodData().eat(Math.round(food.nutrition() * 0.5f), food.saturation() * 0.5f);
         }
+    }
+
+    /**
+     * True for the poppy's 「安眠曲」Lullaby specifically - the one drink that
+     * calls a mooncake out at night.
+     */
+    private static boolean isLullaby(ItemStack stack) {
+        return FloraAdvancements.isFloraDrink(stack)
+                && BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath().equals("lullaby");
     }
 
     @SubscribeEvent
@@ -827,7 +640,8 @@ public final class FloraEvents {
     }
 
     // ==================================================================
-    // Orange tulip "Autumn Serenade": mature crops drop x2-x4
+    // Orange tulip "Autumn Serenade": mature crops drop x2-x4, and farmland
+    // is not destroyed underfoot
     // ==================================================================
 
     @SubscribeEvent
@@ -851,6 +665,23 @@ public final class FloraEvents {
                 copy.setDefaultPickUpDelay();
                 event.getLevel().addFreshEntity(copy);
             }
+        }
+    }
+
+    /**
+     * The same drink's second clause: walking the fields does not ruin them.
+     * Vanilla turns farmland back into dirt the moment something lands on it
+     * hard enough, which an ordinary stride across a field clears easily - and
+     * a harvest drinker crossing their own land is exactly who would do it.
+     * NeoForge fires {@link BlockEvent.FarmlandTrampleEvent} for the attempt
+     * and honours a cancellation, so the soil is left alone for as long as the
+     * effect plays. Nothing else changes: drinkers without the effect, and
+     * every mob, trample farmland exactly as they did.
+     */
+    @SubscribeEvent
+    public static void onFarmlandTrample(BlockEvent.FarmlandTrampleEvent event) {
+        if (event.getEntity() instanceof LivingEntity walker && walker.hasEffect(ModEffects.HARVEST)) {
+            event.setCanceled(true);
         }
     }
 
@@ -1336,13 +1167,21 @@ public final class FloraEvents {
      *       vanilla potion tooltip prints no time for those - they get an
      *       "(instant)" label so every effect line notes how long it lasts.</li>
      * </ul>
+     *
+     * <p><b>Drinks only.</b> Everything else this mod registers - the tea bags
+     * and the mooncake - is a plain item with no {@code .desc}
+     * key, and a translatable component whose key is missing renders as the raw
+     * key text. That is how the tea bags came to show
+     * {@code tooltip.kaleidoscope_flora.<id>.desc} in their own tooltip. Hence the
+     * {@link FloraAdvancements#isFloraDrink} gate: a namespace check alone is
+     * not enough to keep a newly added item out of this handler.</p>
      */
     @SubscribeEvent
     public static void onItemTooltip(ItemTooltipEvent event) {
-        ResourceLocation id = BuiltInRegistries.ITEM.getKey(event.getItemStack().getItem());
-        if (!id.getNamespace().equals(KaleidoscopeFlora.MOD_ID)) {
+        if (!FloraAdvancements.isFloraDrink(event.getItemStack())) {
             return;
         }
+        ResourceLocation id = BuiltInRegistries.ITEM.getKey(event.getItemStack().getItem());
         List<Component> tooltip = event.getToolTip();
 
         Component description = Component.translatable(

@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "T": {
+      "item": "kaleidoscope_cookery:dried_tea_leaves"
+    },
+    "A": {
+      "item": "minecraft:open_eyeblossom"
+    },
+    "B": {
+      "item": "minecraft:ghast_tear"
+    },
+    "C": {
+      "item": "minecraft:sugar"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "BTC",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "kaleidoscope_flora:eyeblossom_tea_bag"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "vanillabackport"
+    }
+  ]
+}

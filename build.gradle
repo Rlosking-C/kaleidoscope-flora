@@ -92,6 +92,33 @@ dependencies {
     //    attributes { attribute(minecraftMappings, 'mojmap') }
     //}
 
+    // Kaleidoscope End (soft dependency, dev runs only): its 梦境 effect is
+    // the reference implementation for "swim through the air", borrowed by
+    // the mooncake's Floating effect - see the mixin package. No code here
+    // references its classes; players never need it.
+    //
+    // DISABLED 2026-09-23: the mod as shipped crashes the dev client. Every
+    // KECreativeTabs build walks Kaleidoscope Cookery's FoodBiteRegistry and
+    // hands what it finds straight to the creative tab output; one of those
+    // stacks does not have a count of 1, and NeoForge 21.1.248 rejects it:
+    //
+    //   java.lang.IllegalArgumentException: The stack count must be 1
+    //     at EventHooks.lambda$onCreativeModeTabBuildContents$0
+    //     at CreativeModeTab$Output.accept
+    //     at KECreativeTabs.lambda$static$2 (KECreativeTabs.java:77)
+    //
+    // It is not limited to the creative inventory: InventoryScreen#init also
+    // calls CreativeModeInventoryScreen.tryRebuildTabContents, so pressing E
+    // at all takes the client down. 1.0.13 has the same code path (checked),
+    // and 1.0.14 is the newest build for 1.21.1, so there is no version to
+    // move to. Nothing on our side feeds that registry, and the mooncake's
+    // air swimming only borrows the technique, never the classes - so this
+    // dependency is a convenience, not a requirement.
+    //
+    // Re-enable once Kaleidoscope End ships a fix, then verify by opening the
+    // inventory in a dev run:
+    //runtimeOnly 'maven.modrinth:kaleidoscope-end:BSwZoVQH'
+
     // JEI (soft dependency): compile against the API jar, and load the full
     // JEI jar in the dev runs so the FloraJeiPlugin info pages can be
     // tested with runClient. At runtime for players, JEI stays optional -

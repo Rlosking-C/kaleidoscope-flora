@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "T": {
+      "item": "kaleidoscope_cookery:dried_tea_leaves"
+    },
+    "A": {
+      "item": "minecraft:blue_orchid"
+    },
+    "B": {
+      "item": "minecraft:sugar"
+    },
+    "C": {
+      "item": "minecraft:glow_berries"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "BTC",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "kaleidoscope_flora:blue_orchid_tea_bag"
+  }
+}

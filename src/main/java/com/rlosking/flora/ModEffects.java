@@ -27,6 +27,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
@@ -50,17 +51,18 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * All 23 custom MobEffects of Kaleidoscope Flora.
+ * All 24 custom MobEffects of Kaleidoscope Flora.
  *
  * <p>Two flavours of effects live here:</p>
  * <ul>
- *   <li><b>Ticking / instant effects</b> (11 classes below) - they carry their
+ *   <li><b>Ticking / instant effects</b> (12 classes below) - they carry their
  *       logic inside {@code applyEffectTick} (auras, water walking, crops,
- *       day/night switching, random boons...).</li>
- *   <li><b>Marker effects</b> (12 plain registrations) - they have no code at
- *       all. They only exist so {@code hasEffect(...)} can be checked inside
- *       {@link FloraEvents}, which implements their behaviour through damage
- *       / interact / loot events (thorns, vampirism, looting, petal veil...).</li>
+ *       day/night switching, air swimming, random boons...).</li>
+ *   <li><b>Marker effects</b> (12 further registrations) - most are plain
+ *       markers with no code of their own. They only exist so
+ *       {@code hasEffect(...)} can be checked inside {@link FloraEvents},
+ *       which implements their behaviour through damage / interact / loot
+ *       events (thorns, vampirism, looting, petal veil...).</li>
  * </ul>
  *
  * <p><b>1.21.1 API note:</b> {@code applyEffectTick} returns a boolean and the
@@ -129,6 +131,10 @@ public final class ModEffects {
     public static final DeferredHolder<MobEffect, FlowerPathEffect> FLOWER_PATH =
             EFFECTS.register("flower_path", FlowerPathEffect::new);
 
+    /** Mooncake "Floating": the eater swims through the air. */
+    public static final DeferredHolder<MobEffect, FloatingEffect> FLOATING =
+            EFFECTS.register("floating", FloatingEffect::new);
+
     // ------------------------------------------------------------------
     // Marker effects (no code; behaviour lives in FloraEvents)
     // ------------------------------------------------------------------
@@ -145,7 +151,12 @@ public final class ModEffects {
     public static final DeferredHolder<MobEffect, MobEffect> VAMPIRIC =
             EFFECTS.register("vampiric", () -> new MarkerEffect(MobEffectCategory.BENEFICIAL, 0xB02E26));
 
-    /** Orange tulip "Autumn Serenade": breaking mature crops multiplies the drops (x2-x4). */
+    /**
+     * Orange tulip "Autumn Serenade": breaking mature crops multiplies the
+     * drops (x2-x4), and farmland is not destroyed underfoot - the harvest
+     * walk leaves the soil as it found it (see
+     * {@link FloraEvents#onFarmlandTrample}).
+     */
     public static final DeferredHolder<MobEffect, MobEffect> HARVEST =
             EFFECTS.register("harvest", () -> new MarkerEffect(MobEffectCategory.BENEFICIAL, 0xE8A13A));
 
@@ -198,6 +209,16 @@ public final class ModEffects {
     /** Called from the mod constructor with the mod event bus. */
     public static void register(IEventBus modBus) {
         EFFECTS.register(modBus);
+    }
+
+    /**
+     * True while the entity drifts on the mooncake's effect AND is off the
+     * ground. On the ground the drinker walks, jumps and runs like anyone
+     * else - only the air is turned into water (the reference effect from
+     * Kaleidoscope End slows land movement instead; this does not).
+     */
+    public static boolean isAirborne(LivingEntity entity) {
+        return !entity.onGround() && entity.hasEffect(FLOATING);
     }
 
     // ==================================================================
@@ -635,9 +656,31 @@ public final class ModEffects {
     }
 
     /**
-     * Spore blossom: crops in a true cube of 3 blocks radius around the
-     * drinker (7x7x7, player-centered) ripen randomly, like a permanent
+     * Spore blossom: crops in a true cube of 5 blocks radius around the
+     * drinker (11x11x11, player-centered) ripen randomly, like a permanent
      * drizzle of bone meal wherever they stand.
+     *
+     * <p><b>Two growth paths.</b> Vanilla crops (wheat, carrots, ...) are
+     * {@link CropBlock}s and get exactly one age step, as before. Everything
+     * else has to go through {@link BonemealableBlock}, and Farmer's Delight's
+     * rice is why that branch exists: {@code RiceBlock extends BushBlock}, so
+     * the plain {@code instanceof CropBlock} test walked straight past it and
+     * the effect did nothing at all for rice (player report, 2026-09-23). Going
+     * through the block's own {@code performBonemeal} means a modded crop grows
+     * by its own rules instead of us poking a property by hand.</p>
+     *
+     * <p>Farmer's Delight's rice needs BOTH paths, which is how the two reports
+     * on it (2026-09-23) arose: the base {@code rice} is a
+     * {@link BonemealableBlock} that is not a {@link CropBlock} at all, while
+     * the grain head above it, {@code rice_panicles}, IS a {@link CropBlock} but
+     * carries an age property of its own instead of {@code CropBlock.AGE}. The
+     * first report was the effect doing nothing for rice; the second was it
+     * throwing on the panicles. Both are handled by {@code ripenOne}.</p>
+     *
+     * <p>The integer {@code age} property test in {@code ripenOne} is deliberate:
+     * {@link BonemealableBlock} is also implemented by grass, saplings and other
+     * non-crops, and a spore blossom should not start carpeting the world in
+     * flowers.</p>
      */
     public static class SproutEffect extends MobEffect {
         public SproutEffect() {
@@ -657,20 +700,89 @@ public final class ModEffects {
             ServerLevel server = (ServerLevel) entity.level();
             BlockPos center = entity.blockPosition();
             for (BlockPos pos : BlockPos.betweenClosed(center.offset(-5, -5, -5), center.offset(5, 5, 5))) {
-                BlockState state = server.getBlockState(pos);
-                if (state.getBlock() instanceof CropBlock crop && !crop.isMaxAge(state)) {
-                    if (entity.getRandom().nextFloat() < 0.25f) {
-                        int age = state.getValue(CropBlock.AGE);
-                        server.setBlock(pos, state.setValue(CropBlock.AGE, age + 1), 2);
-                        // "相信整个春天" (Believe in the Whole Spring): every
-                        // ripened crop counts toward fifty per effect.
-                        if (entity instanceof ServerPlayer player) {
-                            FloraAdvancements.sproutCropRipened(player);
-                        }
-                    }
+                if (entity.getRandom().nextFloat() >= 0.25f) {
+                    continue;
+                }
+                if (!ripenOne(server, pos, entity)) {
+                    continue;
+                }
+                // "相信整个春天" (Believe in the Whole Spring): every ripened
+                // crop counts toward fifty per effect.
+                if (entity instanceof ServerPlayer player) {
+                    FloraAdvancements.sproutCropRipened(player);
                 }
             }
             return true;
+        }
+
+        /**
+         * Advances one crop by a single step. Returns false when the block is not
+         * a crop, is already ripe, or its own bonemeal rules refuse to grow it.
+         *
+         * <p><b>Never assume {@link CropBlock#AGE} is on the state.</b> A
+         * {@code CropBlock} is free to carry a property of its own instead:
+         * Farmer's Delight's {@code rice_panicles} (the grain head above its
+         * rice) extends {@code CropBlock} but swaps the age property for its own
+         * {@code rice_age}. Poking {@code CropBlock.AGE} on that state threw
+         * straight out of the effect tick - {@code IllegalArgumentException:
+         * Cannot get property IntegerProperty{name=age, values=[0..7]} as it does
+         * not exist in Block{farmersdelight:rice_panicles}} (player crash,
+         * 2026-09-23). The block's own accessor is {@code protected}, so the
+         * property cannot simply be asked for.</p>
+         *
+         * <p>So the one-step shortcut is taken only for a crop that genuinely
+         * carries {@code age}; everything else - Farmer's Delight's rice, its
+         * rice panicles, and any other modded crop - is grown through the
+         * block's own {@link BonemealableBlock} rules, exactly as bone meal
+         * would. That keeps each mod's crop growing by its own conventions and
+         * leaves no way for this tick to throw.</p>
+         */
+        private static boolean ripenOne(ServerLevel level, BlockPos pos, LivingEntity entity) {
+            BlockState state = level.getBlockState(pos);
+            boolean cropLike = state.getBlock() instanceof CropBlock || ageProperty(state) != null;
+            if (!cropLike) {
+                // Grass, saplings and the other bonemeal-accepting non-crops stay
+                // untouched: a spore blossom should not carpet the world.
+                return false;
+            }
+            if (state.getBlock() instanceof CropBlock && state.hasProperty(CropBlock.AGE)) {
+                int age = state.getValue(CropBlock.AGE);
+                if (age >= MAX_CROP_AGE) {
+                    return false;
+                }
+                level.setBlock(pos, state.setValue(CropBlock.AGE, age + 1), 2);
+                return true;
+            }
+            if (!(state.getBlock() instanceof BonemealableBlock growable)) {
+                return false;
+            }
+            if (!growable.isValidBonemealTarget(level, pos, state)
+                    || !growable.isBonemealSuccess(level, entity.getRandom(), pos, state)) {
+                return false;
+            }
+            growable.performBonemeal(level, entity.getRandom(), pos, state);
+            return true;
+        }
+
+        /**
+         * The top of {@link CropBlock#AGE}. The bound is read off the property
+         * itself so an increment can never be handed an out-of-range value.
+         */
+        private static final int MAX_CROP_AGE = CropBlock.AGE.getPossibleValues().stream()
+                .mapToInt(Integer::intValue).max().orElse(7);
+
+        /**
+         * The integer {@code age} property of a block state, or null when the
+         * state has none - which is how actual crops are told apart from the
+         * other things that accept bonemeal (grass, saplings, ...).
+         */
+        private static IntegerProperty ageProperty(BlockState state) {
+            for (Property<?> property : state.getProperties()) {
+                if (property instanceof IntegerProperty age && "age".equals(property.getName())) {
+                    return age;
+                }
+            }
+            return null;
         }
     }
 
@@ -993,6 +1105,41 @@ public final class ModEffects {
                 server.sendParticles(ParticleTypes.CHERRY_LEAVES,
                         pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 4, 0.3, 0.15, 0.3, 0.02);
             }
+        }
+    }
+
+    /**
+     * Mooncake: while the moon is in the eater, the air turns into water -
+     * no falling, look where you want to go, hold the swim key to rise.
+     *
+     * <p>The movement is not written here: the engine is convinced instead.
+     * Four small mixins (see {@code com.rlosking.flora.mixin}) make NeoForge's
+     * EMPTY fluid report a height, make it swimmable, and let the vanilla swim
+     * state engage, so {@code LivingEntity#travel} takes its ordinary water
+     * branch in mid-air. That approach is lifted from Kaleidoscope End's 梦境
+     * effect (the reference implementation for air swimming).</p>
+     *
+     * <p>This tick only keeps the fall meter at zero: vanilla's fall damage
+     * measures the block underfoot, which is still plain air, so a landing
+     * after a long drift would otherwise hurt.</p>
+     */
+    public static class FloatingEffect extends MobEffect {
+        public FloatingEffect() {
+            super(MobEffectCategory.BENEFICIAL, 0xBBD4F5);
+        }
+
+        @Override
+        public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
+            return true; // the meter has to be cleared before every landing
+        }
+
+        @Override
+        public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+            if (entity.level().isClientSide) {
+                return true;
+            }
+            entity.resetFallDistance();
+            return true;
         }
     }
 }

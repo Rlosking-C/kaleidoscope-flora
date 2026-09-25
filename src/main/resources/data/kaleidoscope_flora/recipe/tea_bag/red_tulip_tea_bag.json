@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "T": {
+      "item": "kaleidoscope_cookery:dried_tea_leaves"
+    },
+    "A": {
+      "item": "minecraft:red_tulip"
+    },
+    "B": {
+      "item": "minecraft:sweet_berries"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "BTB",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "kaleidoscope_flora:red_tulip_tea_bag"
+  }
+}

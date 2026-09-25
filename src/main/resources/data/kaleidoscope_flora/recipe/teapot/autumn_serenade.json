@@ -1,0 +1,13 @@
+{
+  "type": "kaleidoscope_cookery:teapot",
+  "ingredient": {
+    "item": "kaleidoscope_flora:orange_tulip_tea_bag"
+  },
+  "ingredient_count": 1,
+  "result": {
+    "count": 1,
+    "id": "kaleidoscope_flora:autumn_serenade"
+  },
+  "tea_fluid": "minecraft:water",
+  "time": 240
+}

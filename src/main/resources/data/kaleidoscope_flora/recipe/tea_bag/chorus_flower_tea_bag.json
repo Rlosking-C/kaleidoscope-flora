@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "T": {
+      "item": "kaleidoscope_cookery:dried_tea_leaves"
+    },
+    "A": {
+      "item": "minecraft:chorus_flower"
+    },
+    "B": {
+      "item": "minecraft:ender_pearl"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "BTA",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "kaleidoscope_flora:chorus_flower_tea_bag"
+  }
+}

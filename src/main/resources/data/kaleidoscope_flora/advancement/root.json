@@ -3,7 +3,7 @@
     "icon": { "id": "kaleidoscope_flora:when_the_wind_rises" },
     "title": { "translate": "advancement.kaleidoscope_flora.root" },
     "description": { "translate": "advancement.kaleidoscope_flora.root.desc" },
-    "background": "minecraft:textures/block/pink_petals.png",
+    "background": "kaleidoscope_flora:textures/advancement/background.png",
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true

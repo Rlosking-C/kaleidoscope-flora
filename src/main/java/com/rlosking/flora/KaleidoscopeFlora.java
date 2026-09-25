@@ -25,7 +25,11 @@ public class KaleidoscopeFlora {
     public static final String MOD_ID = "kaleidoscope_flora";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    /** Legacy soup base id for milk, stored by stockpots in worlds saved with Flora 0.3.1 and earlier. */
+    /**
+     * Legacy soup base id for milk, stored by stockpots in worlds saved with
+     * Flora 0.3.1 and earlier. See {@link LegacyMilkSoupBase}: this is a save
+     * compatibility alias, NOT part of the stockpot brewing route.
+     */
     public static final ResourceLocation MILK_SOUP_BASE =
             ResourceLocation.fromNamespaceAndPath(MOD_ID, "milk");
 
@@ -41,6 +45,25 @@ public class KaleidoscopeFlora {
         // the tasted-drinks data attachment; same mod-bus window as above.
         FloraAdvancements.register(modBus);
 
+        // The flower tea bags: one per drink, crafted from the flower itself
+        // plus Cookery's dried tea leaves, brewed in the teapot. Plain items
+        // with no behaviour - see FloraTeas.
+        FloraTeas.register(modBus);
+
+        // The 0.3.3 Mid-Autumn mooncake: a tray block that stacks up to five
+        // mooncakes, edible in its item form (see BlossomMooncakes).
+        BlossomMooncakes.register(modBus);
+
+        // Own creative tab (tea bags, mooncake, all drinks), and the drinks
+        // leave Cookery's food tab - see FloraCreativeTab for the mechanism.
+        FloraCreativeTab.register(modBus);
+
+        if (net.neoforged.fml.loading.FMLEnvironment.dist.isClient()) {
+            // Mod-list "Configure" button: NeoForge's built-in screen for our
+            // COMMON config (no hand-rolled GUI to maintain).
+            com.rlosking.flora.client.FloraConfigScreen.register(container);
+        }
+
         // Teacup data must be pushed inside the mod constructor: NeoForge
         // constructs ALL mods first, and only afterwards fires RegisterEvent.
         // Cookery's registry event handlers then iterate the whole
@@ -50,15 +73,15 @@ public class KaleidoscopeFlora {
         // kaleidoscope_cookery with ordering = "AFTER" and type = "required".
         FloraDrinks.registerAll();
 
-        // Since 0.3.2 the Hanami Tale recipe uses Cookery 1.5.0's native
-        // minecraft:milk. Worlds saved by 0.3.1 may still hold
-        // kaleidoscope_flora:milk inside a stockpot; alias that id to the
-        // native milk base so those pots keep rendering and can be scooped
-        // out. Registered unconditionally here: the alias resolves its
-        // delegate lazily, so it does not depend on Cookery's own
-        // registration timing (Cookery registers its bases during
-        // FMLCommonSetupEvent, after all mod constructors).
+        // Save compatibility, unrelated to the stockpot brewing route that was
+        // deleted on 2026-09-22: worlds saved by Flora 0.3.1 and earlier can
+        // still hold kaleidoscope_flora:milk as a stockpot's soup base. Cookery
+        // dereferences that lookup without a null check, so without this alias
+        // such a pot throws "soupBase is null" the moment it is rendered.
+        // Registered unconditionally: the delegate resolves lazily, so it does
+        // not depend on Cookery's own registration timing (Cookery registers
+        // its bases during FMLCommonSetupEvent, after all mod constructors).
         SoupBaseManager.registerSoupBase(new LegacyMilkSoupBase());
-        LOGGER.info("Legacy milk soup base registered as an alias for Cookery's minecraft:milk");
+        LOGGER.info("Legacy milk soup base registered as a save-compat alias for Cookery's minecraft:milk");
     }
 }

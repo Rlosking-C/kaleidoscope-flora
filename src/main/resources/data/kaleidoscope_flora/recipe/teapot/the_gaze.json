@@ -1,0 +1,19 @@
+{
+  "type": "kaleidoscope_cookery:teapot",
+  "ingredient": {
+    "item": "kaleidoscope_flora:eyeblossom_tea_bag"
+  },
+  "ingredient_count": 1,
+  "result": {
+    "count": 1,
+    "id": "kaleidoscope_flora:the_gaze"
+  },
+  "tea_fluid": "minecraft:water",
+  "time": 240,
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "vanillabackport"
+    }
+  ]
+}

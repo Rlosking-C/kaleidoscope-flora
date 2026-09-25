@@ -1,0 +1,13 @@
+{
+  "type": "kaleidoscope_cookery:teapot",
+  "ingredient": {
+    "item": "kaleidoscope_flora:pink_petals_tea_bag"
+  },
+  "ingredient_count": 1,
+  "result": {
+    "count": 1,
+    "id": "kaleidoscope_flora:hanami_tale"
+  },
+  "tea_fluid": "minecraft:milk",
+  "time": 240
+}
