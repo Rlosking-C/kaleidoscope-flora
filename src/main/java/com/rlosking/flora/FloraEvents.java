@@ -327,8 +327,19 @@ public final class FloraEvents {
          * is explicit in the design - and because a player who just got the
          * effect from a cake is exactly the player likely to be aiming at
          * water.</p>
+         *
+         * <p><b>Both the fluid and the floor of it have to be excluded.</b> The
+         * block check below only rejects the fluid's <em>surface</em>; a player
+         * who sinks and stands on the bottom of a pond is on sand, so that check
+         * passes and the attack fired. Reported in testing: "touching the ground
+         * underwater also causes the fall attack". {@code isInFluidType} (any
+         * fluid, including modded ones) plus powder snow is what makes "landing
+         * in water" mean the whole body of water.</p>
          */
         static boolean landsOnSolidGround(Player player) {
+            if (player.isInFluidType() || player.isInPowderSnow) {
+                return false;
+            }
             BlockPos below = BlockPos.containing(player.getX(), player.getY() - 0.2, player.getZ());
             if (!player.level().getFluidState(below).isEmpty()) {
                 return false;
