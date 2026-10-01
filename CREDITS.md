@@ -49,6 +49,15 @@ involved, so no separate attribution is required.
 > more. The transform is recorded only because it is how those interim files were
 > made.
 
+## Who made what
+
+- **Programming and design: Rlosking.**
+- **Art: jiasudu** — the drink and flower cake item icons, the placed-cake
+  models and block textures, the effect icons and the creative tab's section
+  sprites.
+
+Both names are also in `credits` in `neoforge.mods.toml`.
+
 ## This mod's own licence
 
 `license = "MIT"` in `neoforge.mods.toml` covers this mod's own code and assets,

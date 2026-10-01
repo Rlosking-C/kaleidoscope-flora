@@ -15,7 +15,7 @@ authors = "Rlosking-C"
 # Attribution required by the MIT licence of the mod this feature's design came
 # from. Only its layout and behaviour were reused - none of its assets ship.
 # See CREDITS.md.
-credits = "Creative tab section column designed after Kaleidoscope World Liquor by 111 (MIT); no assets from it are included"
+credits = "Programming and design: Rlosking. Art: jiasudu. Creative tab section column designed after Kaleidoscope World Liquor by 111 (MIT); no assets from it are included."
 # Shown in the in-game mod list (480x300 banner at the jar root)
 logoFile = "logo.png"
 description = '''

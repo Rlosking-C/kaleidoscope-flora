@@ -1428,14 +1428,6 @@ public final class FloraEvents {
         double drop = stretch.apex - y;
         boolean solid = DewImpact.landsOnSolidGround(player);
         boolean fired = DewImpact.settle(player, drop, stretch.midAirJump, stretch.spamJump);
-        // Logged so "sometimes the landing attack does not happen" can be read
-        // instead of guessed at. Three things decide it: how far the fall was,
-        // whether a second jump happened in mid-air, and whether that jump was
-        // mashed rather than meant.
-        KaleidoscopeFlora.LOGGER.info(
-                "[flora] dew landing: apex={} y={} drop={} midAirJump={} spamJump={} solidGround={} fired={}",
-                String.format("%.2f", stretch.apex), String.format("%.2f", y),
-                String.format("%.2f", drop), stretch.midAirJump, stretch.spamJump, solid, fired);
     }
 
     /**
