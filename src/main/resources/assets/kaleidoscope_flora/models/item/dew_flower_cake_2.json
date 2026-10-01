@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "kaleidoscope_flora:item/dew_flower_cake_2"
+  },
+  "credit": "PLACEHOLDER - byte copy of the flat sprite. Replace this sprite (and the model, if the final art is layered) with the stack-tier art."
+}

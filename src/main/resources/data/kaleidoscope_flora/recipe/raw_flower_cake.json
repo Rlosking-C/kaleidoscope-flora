@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "kaleidoscope_cookery:raw_dough"
+    },
+    {
+      "tag": "kaleidoscope_flora:cake_flowers"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "kaleidoscope_flora:raw_flower_cake"
+  }
+}

@@ -39,11 +39,33 @@ public final class FloraConfig {
     public final ModConfigSpec.DoubleValue vampiricHealPercent;
 
     // ------------------------------------------------------------------
-    // Farming
+    // Flower cakes (v0.3.4)
     // ------------------------------------------------------------------
 
-    /** Maximum crop-drop multiplier for the Autumn Serenade harvest effect (4 = up to 4x). */
-    public final ModConfigSpec.IntValue harvestMaxDropMultiplier;
+    /**
+     * Extra mid-air jumps the Dew Flower Cake grants (1 = a literal double jump).
+     *
+     * <p>The design asked for this to live in the config as the <b>default</b>,
+     * with the effect's own amplifier able to override it per item. That is how
+     * it is wired: {@code FlowerCakeItem} reads this value when it applies the
+     * effect, so the number travels inside the effect instance from then on and
+     * the jump logic itself never reads the config. A future triple-jump item is
+     * therefore a data change - apply the effect with amplifier 2 - and not a
+     * code change.</p>
+     *
+     * <p>0 disables the extra jump while keeping the landing shockwave, which is
+     * the natural way to run the cake as shockwave-only.</p>
+     */
+    public final ModConfigSpec.IntValue doubleJumpCount;
+
+    // ------------------------------------------------------------------
+    // Farming
+    // ------------------------------------------------------------------
+    //
+    // Empty since v0.3.4. The category's only option, harvestMaxDropMultiplier,
+    // went away with the time-based Autumn Serenade effect - see the note in the
+    // constructor. Left as a marked placeholder rather than deleted so the next
+    // reader sees the removal was deliberate.
 
     private FloraConfig(ModConfigSpec.Builder builder) {
         builder.comment("Kaleidoscope Flora - Gameplay Settings",
@@ -77,17 +99,28 @@ public final class FloraConfig {
 
         builder.pop();
 
-        builder.comment("Kaleidoscope Flora - Farming Settings",
-                        "森罗物语：花香四溢 - 农耕设置")
-                .push("farming");
+        builder.comment("Kaleidoscope Flora - Flower Cake Settings",
+                        "森罗物语：花香四溢 - 鲜花饼设置")
+                .push("flower_cakes");
 
-        harvestMaxDropMultiplier = builder
-                .comment("Maximum crop-drop multiplier for the Autumn Serenade harvest effect.",
-                        "4 = up to 4x drops (default), 2 = up to 2x, 8 = up to 8x.",
-                        "秋日小夜曲收割效果的掉落上限倍率。4 = 最高 4 倍掉落（默认），2 = 最高 2 倍，8 = 最高 8 倍。")
-                .defineInRange("harvestMaxDropMultiplier", 4, 2, 8);
+        doubleJumpCount = builder
+                .comment("Extra mid-air jumps granted by the Dew Flower Cake.",
+                        "1 = a literal double jump (default); 0 = no extra jump, shockwave only; up to 8.",
+                        "清露鲜花饼提供的空中额外跳跃次数。1 = 字面意义的二段跳（默认）；0 = 不提供额外跳跃，只保留落地冲击；最高 8。")
+                .defineInRange("doubleJumpCount", 1, 0, 8);
 
         builder.pop();
+
+        // The "farming" category held exactly one option, harvestMaxDropMultiplier,
+        // and v0.3.4 removed it: the Autumn Serenade effect is charge-based now
+        // (20 harvests at a fixed x2-x3), so a configurable upper bound has
+        // nothing left to control. Keeping a dead knob in the config screen would
+        // be worse than removing it - players would move it and see no change.
+        // The category goes with it rather than standing empty.
+        //
+        // Existing config files keep the stale key on disk; NeoForge ignores keys
+        // that the spec no longer defines, so it is harmless and self-cleans if the
+        // file is ever rewritten.
     }
 
     // ------------------------------------------------------------------
@@ -97,5 +130,5 @@ public final class FloraConfig {
     public static double effectDurationMultiplier() { return CONFIG.effectDurationMultiplier.get(); }
     public static double auraRangeMultiplier() { return CONFIG.auraRangeMultiplier.get(); }
     public static double vampiricHealPercent() { return CONFIG.vampiricHealPercent.get(); }
-    public static int harvestMaxDropMultiplier() { return CONFIG.harvestMaxDropMultiplier.get(); }
+    public static int doubleJumpCount() { return CONFIG.doubleJumpCount.get(); }
 }

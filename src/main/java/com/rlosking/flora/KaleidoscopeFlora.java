@@ -54,6 +54,11 @@ public class KaleidoscopeFlora {
         // mooncakes, edible in its item form (see BlossomMooncakes).
         BlossomMooncakes.register(modBus);
 
+        // The 0.3.4 flower cakes: one thrown raw cake and the two things it
+        // cooks into. Plain items plus two markers; the mechanics hang off
+        // events and one mixin - see FlowerCakes.
+        FlowerCakes.register(modBus);
+
         // Own creative tab (tea bags, mooncake, all drinks), and the drinks
         // leave Cookery's food tab - see FloraCreativeTab for the mechanism.
         FloraCreativeTab.register(modBus);

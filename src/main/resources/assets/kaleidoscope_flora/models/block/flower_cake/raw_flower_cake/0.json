@@ -1,0 +1,87 @@
+{
+ "credit": "PLACEHOLDER - the cake boxes are copied from the mooncake models and the texture is the flat item sprite. Replace with the real placed-cake models.",
+ "textures": {
+  "0": "kaleidoscope_flora:item/raw_flower_cake",
+  "particle": "kaleidoscope_flora:item/raw_flower_cake"
+ },
+ "elements": [
+  {
+   "from": [
+    4.62652,
+    2,
+    4.96967
+   ],
+   "to": [
+    9.62652,
+    4,
+    9.96967
+   ],
+   "rotation": {
+    "angle": 45,
+    "axis": "y",
+    "origin": [
+     7.12652,
+     3,
+     7.46967
+    ]
+   },
+   "faces": {
+    "north": {
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "texture": "#0"
+    },
+    "east": {
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "texture": "#0"
+    },
+    "south": {
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "texture": "#0"
+    },
+    "west": {
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "texture": "#0"
+    },
+    "up": {
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "texture": "#0"
+    },
+    "down": {
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "texture": "#0"
+    }
+   }
+  }
+ ],
+ "display": {}
+}

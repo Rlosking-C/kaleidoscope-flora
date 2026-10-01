@@ -13,12 +13,15 @@
     },
     "C": {
       "item": "minecraft:feather"
+    },
+    "D": {
+      "item": "minecraft:nautilus_shell"
     }
   },
   "pattern": [
     "AAA",
     "BTC",
-    "AAA"
+    "DAA"
   ],
   "result": {
     "count": 1,

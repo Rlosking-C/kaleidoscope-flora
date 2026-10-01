@@ -10,11 +10,14 @@
     },
     "B": {
       "item": "minecraft:ender_pearl"
+    },
+    "C": {
+      "item": "minecraft:dragon_breath"
     }
   },
   "pattern": [
     "AAA",
-    "BTA",
+    "BTC",
     "AAA"
   ],
   "result": {

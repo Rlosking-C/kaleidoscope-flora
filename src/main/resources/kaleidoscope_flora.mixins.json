@@ -7,10 +7,16 @@
     "PetalFilmMixin",
     "AirSwimEntityMixin",
     "AirSwimFluidMixin",
-    "AirSwimPlayerMixin"
+    "AirSwimPlayerMixin",
+    "PinJumpMixin",
+    "PinHoldMixin",
+    "ToastedHungerMixin"
   ],
   "client": [
-    "client.AirSwimLocalPlayerMixin"
+    "client.AirSwimLocalPlayerMixin",
+    "client.DoubleJumpLocalPlayerMixin",
+    "client.CreativeModeInventoryScreenAccessor",
+    "client.CreativeModeInventoryScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

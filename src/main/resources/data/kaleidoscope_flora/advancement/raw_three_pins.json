@@ -1,0 +1,14 @@
+{
+  "parent": "kaleidoscope_flora:root",
+  "display": {
+    "icon": { "id": "kaleidoscope_flora:raw_flower_cake" },
+    "title": { "translate": "advancement.kaleidoscope_flora.raw_three_pins" },
+    "description": { "translate": "advancement.kaleidoscope_flora.raw_three_pins.desc" },
+    "frame": "challenge",
+    "hidden": true
+  },
+  "criteria": {
+    "three": { "trigger": "kaleidoscope_flora:flora_event", "conditions": { "event": "raw_three_pins" } }
+  },
+  "requirements": [["three"]]
+}

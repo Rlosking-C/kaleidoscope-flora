@@ -116,7 +116,7 @@ public final class FloraDrinks {
         // Allium "Fire Waltz": fire resistance, and melee hits ignite.
         // Maxim: Dangun myth (Korea).
         register("fire_waltz", TeacupRegistry.TeacupData.create(4)
-                .addEffect(() -> new MobEffectInstance(MobEffects.FIRE_RESISTANCE, ticks(240)))
+                .addEffect(() -> new MobEffectInstance(MobEffects.FIRE_RESISTANCE, ticks(180)))
                 .addEffect(() -> new MobEffectInstance(ModEffects.FIREBRAND, ticks(180))));
 
         // Azure bluet "The Unnoticed": invisibility plus instant aggro drop.
@@ -144,7 +144,7 @@ public final class FloraDrinks {
         // Pink tulip "Rosy Stride": walk on water, leave petals behind.
         // Maxim: Andersen, Thumbelina (Denmark).
         register("rosy_stride", TeacupRegistry.TeacupData.create(4)
-                .addEffect(() -> new MobEffectInstance(ModEffects.PETALWALK, ticks(180))));
+                .addEffect(() -> new MobEffectInstance(ModEffects.PETALWALK, ticks(90))));
 
         // Oxeye daisy "Loves Me Not": regeneration plus a divination roll
         // every 8 seconds. Maxim: European petal divination.
@@ -154,15 +154,22 @@ public final class FloraDrinks {
 
         // Cornflower "The Prussian Leap": jump boost II and no fall damage.
         // Maxim: Leonardo da Vinci (Italy).
+        // v0.3.4 balance: 180 -> 90. Both effects are moved together on
+        // purpose - the feather-fall half exists to make the jump boost safe
+        // to use, so a longer feather-fall than jump boost would leave 90s of
+        // "no fall damage" with nothing to pair it with.
         register("prussian_leap", TeacupRegistry.TeacupData.create(4)
-                .addEffect(() -> new MobEffectInstance(MobEffects.JUMP, ticks(180), 1))
-                .addEffect(() -> new MobEffectInstance(ModEffects.FEATHERFALL, ticks(180))));
+                .addEffect(() -> new MobEffectInstance(MobEffects.JUMP, ticks(90), 1))
+                .addEffect(() -> new MobEffectInstance(ModEffects.FEATHERFALL, ticks(90))));
 
         // Lily of the valley "May Kiss": max hearts up; being hurt releases
         // a poison cloud. Maxim: Song of Songs (ancient Israel).
+        // v0.3.4 balance: 300 -> 135. Both health boost and the kiss cloud are
+        // the same promise ("more hearts, and they bite back"), so they share a
+        // duration.
         register("may_kiss", TeacupRegistry.TeacupData.create(4)
-                .addEffect(() -> new MobEffectInstance(MobEffects.HEALTH_BOOST, ticks(300), 1))
-                .addEffect(() -> new MobEffectInstance(ModEffects.KISS, ticks(300))));
+                .addEffect(() -> new MobEffectInstance(MobEffects.HEALTH_BOOST, ticks(135), 1))
+                .addEffect(() -> new MobEffectInstance(ModEffects.KISS, ticks(135))));
 
         // Wither rose "Les Fleurs du Mal": wither aura around the drinker;
         // the price of the cup is 2 seconds of wither. Maxim: Baudelaire.
@@ -173,6 +180,12 @@ public final class FloraDrinks {
         // Torchflower "Breath of the Ancients": night vision plus the
         // sniffer soul - brush dirt family for ancient relics, paying for
         // every find with buff duration. Maxim: Egyptian Book of the Dead.
+        // v0.3.4 balance: NIGHT VISION STAYS AT 300. An earlier draft of the
+        // spec trimmed it to 180 in parallel with Coronation's luck, but the
+        // authoritative design table (策划案 §2.2) lists both effects of this
+        // drink as "不动": the relic hunting is the point and the whole buff
+        // has to outlive a dig. Reverting the draft trim is deliberate, not an
+        // oversight - do not "fix" this back to 180.
         register("breath_of_ancients", TeacupRegistry.TeacupData.create(4)
                 .addEffect(() -> new MobEffectInstance(ModEffects.SNIFFER_SOUL, ticks(300)))
                 .addEffect(() -> new MobEffectInstance(MobEffects.NIGHT_VISION, ticks(300))));
@@ -195,8 +208,11 @@ public final class FloraDrinks {
         // Peony "Coronation": luck - the hidden vanilla effect, this is its
         // only regular source - plus Hero of the Village I: a crown is worn
         // among people, so traders bow to the crowned one. Maxim: Inca saying.
+        // v0.3.4 balance: luck 300 -> 180, Hero of the Village stays 300.
+        // Luck is the strong half and gets trimmed; the villager discount is
+        // the flavour and keeps the full duration.
         register("coronation", TeacupRegistry.TeacupData.create(4)
-                .addEffect(() -> new MobEffectInstance(MobEffects.LUCK, ticks(300)))
+                .addEffect(() -> new MobEffectInstance(MobEffects.LUCK, ticks(180)))
                 .addEffect(() -> new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, ticks(300), 0)));
 
         // Pitcher plant "The Voracious Urn": kills count as +1 looting level
