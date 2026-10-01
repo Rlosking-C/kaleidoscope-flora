@@ -35,6 +35,31 @@ revenue-sharing programmes. So instead the reference was **measured and redrawn*
   "look, never ship" corpus, under
   `docs/策划文档/美术交付/参考图/森罗系-官方贴图/世界酒__kaleidoscope-world-liquor/`.
 
+## Flower cake block textures — two of the three are program-generated
+
+`textures/block/toasted_flower_cake.png` is the artist's own work. The other two,
+`textures/block/raw_flower_cake.png` and `textures/block/dew_flower_cake.png`,
+are **program-generated colour variants of it** — the same pixels, with a
+hue/saturation/value transform applied per pixel (alpha copied verbatim, so the
+UV layout and every edge stay exactly where the artist put them).
+
+The transform was **derived from the artist's own item icons**, not chosen by
+hand: the mean hue, saturation and value of the chromatic pixels of
+`textures/item/toasted_flower_cake.png` were compared with those of the raw and
+dew item icons, and that ratio was applied to the block texture. The three placed
+cakes therefore read as one object in three states:
+
+| target | hue | saturation | value |
+| --- | --- | --- | --- |
+| raw | +0.8° | ×0.48 | ×1.10 |
+| dew | +124.5° | ×0.46 | ×1.06 |
+
+**They are placeholders.** No hand-drawn block textures for the raw and dew cakes
+have been delivered; when they are, they replace these files and this section
+goes away. The numbers above are recorded so the variants can be regenerated if
+the toasted texture is revised (there is no shipped tool for it — the one-off
+script was not kept).
+
 ## This mod's own licence
 
 `license = "MIT"` in `neoforge.mods.toml` covers this mod's own code and assets,

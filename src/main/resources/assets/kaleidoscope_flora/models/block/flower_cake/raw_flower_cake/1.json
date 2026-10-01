@@ -1,164 +1,48 @@
 {
- "credit": "PLACEHOLDER - the cake boxes are copied from the mooncake models and the texture is the flat item sprite. Replace with the real placed-cake models.",
- "textures": {
-  "0": "kaleidoscope_flora:item/raw_flower_cake",
-  "particle": "kaleidoscope_flora:item/raw_flower_cake"
- },
- "elements": [
-  {
-   "from": [
-    9,
-    2,
-    7
-   ],
-   "to": [
-    14,
-    4,
-    12
-   ],
-   "rotation": {
-    "angle": -22.5,
-    "axis": "y",
-    "origin": [
-     8,
-     2,
-     6
-    ]
-   },
-   "faces": {
-    "north": {
-     "uv": [
-      0,
-      0,
-      16,
-      16
-     ],
-     "texture": "#0"
-    },
-    "east": {
-     "uv": [
-      0,
-      0,
-      16,
-      16
-     ],
-     "texture": "#0"
-    },
-    "south": {
-     "uv": [
-      0,
-      0,
-      16,
-      16
-     ],
-     "texture": "#0"
-    },
-    "west": {
-     "uv": [
-      0,
-      0,
-      16,
-      16
-     ],
-     "texture": "#0"
-    },
-    "up": {
-     "uv": [
-      0,
-      0,
-      16,
-      16
-     ],
-     "texture": "#0"
-    },
-    "down": {
-     "uv": [
-      0,
-      0,
-      16,
-      16
-     ],
-     "texture": "#0"
-    }
-   }
-  },
-  {
-   "from": [
-    2,
-    2,
-    7
-   ],
-   "to": [
-    7,
-    4,
-    12
-   ],
-   "rotation": {
-    "angle": 45,
-    "axis": "y",
-    "origin": [
-     1,
-     2,
-     6
-    ]
-   },
-   "faces": {
-    "north": {
-     "uv": [
-      0,
-      0,
-      16,
-      16
-     ],
-     "texture": "#0"
-    },
-    "east": {
-     "uv": [
-      0,
-      0,
-      16,
-      16
-     ],
-     "texture": "#0"
-    },
-    "south": {
-     "uv": [
-      0,
-      0,
-      16,
-      16
-     ],
-     "texture": "#0"
-    },
-    "west": {
-     "uv": [
-      0,
-      0,
-      16,
-      16
-     ],
-     "texture": "#0"
-    },
-    "up": {
-     "uv": [
-      0,
-      0,
-      16,
-      16
-     ],
-     "texture": "#0"
-    },
-    "down": {
-     "uv": [
-      0,
-      0,
-      16,
-      16
-     ],
-     "texture": "#0"
-    }
-   }
-  }
- ],
- "display": {}
+	"format_version": "26.3",
+	"credit": "Placed flower cake model, copied from the toasted cake's model and re-pointed at this cake's block texture. That block texture is a program-generated colour variant of the toasted one - see CREDITS.md.",
+	"textures": {
+		"0": "kaleidoscope_flora:block/raw_flower_cake",
+		"particle": "kaleidoscope_flora:block/raw_flower_cake"
+	},
+	"elements": [
+		{
+			"from": [8.39419, 2, 8.07297],
+			"to": [13.39419, 4, 13.07297],
+			"faces": {
+				"north": {"uv": [10.5, 0.5, 15, 2.5], "texture": "#0"},
+				"east": {"uv": [10.5, 0.5, 15, 2.5], "texture": "#0"},
+				"south": {"uv": [10.5, 0.5, 15, 2.5], "texture": "#0"},
+				"west": {"uv": [10.5, 0.5, 15, 2.5], "texture": "#0"},
+				"up": {"uv": [10.5, 3, 15, 7.5], "texture": "#0"},
+				"down": {"uv": [10.5, 3, 15, 7.5], "texture": "#0"}
+			}
+		},
+		{
+			"from": [2, 2, 7],
+			"to": [7, 4, 12],
+			"rotation": {"angle": 45, "axis": "y", "origin": [1, 2, 6]},
+			"faces": {
+				"north": {"uv": [10.5, 0.5, 15, 2.5], "texture": "#0"},
+				"east": {"uv": [10.5, 0.5, 15, 2.5], "texture": "#0"},
+				"south": {"uv": [10.5, 0.5, 15, 2.5], "texture": "#0"},
+				"west": {"uv": [10.5, 0.5, 15, 2.5], "texture": "#0"},
+				"up": {"uv": [10.5, 3, 15, 7.5], "texture": "#0"},
+				"down": {"uv": [10.5, 3, 15, 7.5], "texture": "#0"}
+			}
+		},
+		{
+			"from": [1, 0, 1],
+			"to": [15, 2, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 1, 8]},
+			"faces": {
+				"north": {"uv": [16, 8.5, 9, 7.5], "texture": "#0"},
+				"east": {"uv": [16, 8.5, 9, 7.5], "texture": "#0"},
+				"south": {"uv": [9, 8.5, 16, 7.5], "texture": "#0"},
+				"west": {"uv": [9, 8.5, 16, 7.5], "texture": "#0"},
+				"up": {"uv": [16, 9, 9, 16], "texture": "#0"},
+				"down": {"uv": [9, 9, 16, 16], "texture": "#0"}
+			}
+		}
+	]
 }

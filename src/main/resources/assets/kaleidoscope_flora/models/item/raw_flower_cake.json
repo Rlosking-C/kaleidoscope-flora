@@ -2,31 +2,5 @@
   "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "kaleidoscope_flora:item/raw_flower_cake"
-  },
-  "overrides": [
-    {
-      "predicate": {
-        "kaleidoscope_flora:stack_count": 2
-      },
-      "model": "kaleidoscope_flora:item/raw_flower_cake_1"
-    },
-    {
-      "predicate": {
-        "kaleidoscope_flora:stack_count": 3
-      },
-      "model": "kaleidoscope_flora:item/raw_flower_cake_2"
-    },
-    {
-      "predicate": {
-        "kaleidoscope_flora:stack_count": 4
-      },
-      "model": "kaleidoscope_flora:item/raw_flower_cake_3"
-    },
-    {
-      "predicate": {
-        "kaleidoscope_flora:stack_count": 5
-      },
-      "model": "kaleidoscope_flora:item/raw_flower_cake_4"
-    }
-  ]
+  }
 }

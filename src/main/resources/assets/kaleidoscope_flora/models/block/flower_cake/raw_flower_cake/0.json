@@ -1,87 +1,37 @@
 {
- "credit": "PLACEHOLDER - the cake boxes are copied from the mooncake models and the texture is the flat item sprite. Replace with the real placed-cake models.",
- "textures": {
-  "0": "kaleidoscope_flora:item/raw_flower_cake",
-  "particle": "kaleidoscope_flora:item/raw_flower_cake"
- },
- "elements": [
-  {
-   "from": [
-    4.62652,
-    2,
-    4.96967
-   ],
-   "to": [
-    9.62652,
-    4,
-    9.96967
-   ],
-   "rotation": {
-    "angle": 45,
-    "axis": "y",
-    "origin": [
-     7.12652,
-     3,
-     7.46967
-    ]
-   },
-   "faces": {
-    "north": {
-     "uv": [
-      0,
-      0,
-      16,
-      16
-     ],
-     "texture": "#0"
-    },
-    "east": {
-     "uv": [
-      0,
-      0,
-      16,
-      16
-     ],
-     "texture": "#0"
-    },
-    "south": {
-     "uv": [
-      0,
-      0,
-      16,
-      16
-     ],
-     "texture": "#0"
-    },
-    "west": {
-     "uv": [
-      0,
-      0,
-      16,
-      16
-     ],
-     "texture": "#0"
-    },
-    "up": {
-     "uv": [
-      0,
-      0,
-      16,
-      16
-     ],
-     "texture": "#0"
-    },
-    "down": {
-     "uv": [
-      0,
-      0,
-      16,
-      16
-     ],
-     "texture": "#0"
-    }
-   }
-  }
- ],
- "display": {}
+	"format_version": "26.3",
+	"credit": "Placed flower cake model, copied from the toasted cake's model and re-pointed at this cake's block texture. That block texture is a program-generated colour variant of the toasted one - see CREDITS.md.",
+	"texture_size": [8, 8],
+	"textures": {
+		"0": "kaleidoscope_flora:block/raw_flower_cake",
+		"particle": "kaleidoscope_flora:block/raw_flower_cake"
+	},
+	"elements": [
+		{
+			"from": [4.62652, 2, 4.96967],
+			"to": [9.62652, 4, 9.96967],
+			"rotation": {"angle": 45, "axis": "y", "origin": [7.12652, 3, 7.46967]},
+			"faces": {
+				"north": {"uv": [10.5, 0.5, 15, 2.5], "texture": "#0"},
+				"east": {"uv": [10.5, 0.5, 15, 2.5], "texture": "#0"},
+				"south": {"uv": [15, 0.5, 10.5, 2.5], "texture": "#0"},
+				"west": {"uv": [10.5, 0.5, 15, 2.5], "texture": "#0"},
+				"up": {"uv": [10.5, 3, 15, 7.5], "texture": "#0"},
+				"down": {"uv": [10.5, 3, 15, 7.5], "texture": "#0"}
+			}
+		},
+		{
+			"from": [1, 0, 1],
+			"to": [15, 2, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 1, 8]},
+			"faces": {
+				"north": {"uv": [16, 7.5, 9, 8.5], "texture": "#0"},
+				"east": {"uv": [16, 7.5, 9, 8.5], "texture": "#0"},
+				"south": {"uv": [9, 7.5, 16, 8.5], "texture": "#0"},
+				"west": {"uv": [9, 7.5, 16, 8.5], "texture": "#0"},
+				"up": {"uv": [16, 9, 9, 16], "texture": "#0"},
+				"down": {"uv": [9, 9, 16, 16], "texture": "#0"}
+			}
+		}
+	]
 }
