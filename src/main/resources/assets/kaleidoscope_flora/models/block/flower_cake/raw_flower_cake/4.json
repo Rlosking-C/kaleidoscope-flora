@@ -1,6 +1,6 @@
 {
 	"format_version": "26.3",
-	"credit": "Placed flower cake model, copied from the toasted cake's model and re-pointed at this cake's block texture. That block texture is a program-generated colour variant of the toasted one - see CREDITS.md.",
+	"credit": "Placed flower cake model, copied from the toasted cake's model and re-pointed at this cake's own block texture.",
 	"textures": {
 		"0": "kaleidoscope_flora:block/raw_flower_cake",
 		"particle": "kaleidoscope_flora:block/raw_flower_cake"
