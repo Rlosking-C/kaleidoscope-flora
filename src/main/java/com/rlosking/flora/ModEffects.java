@@ -535,22 +535,6 @@ public final class ModEffects {
                     cleared++;
                 }
             }
-            // Logged on purpose. A report of "When the Wind Rises still clears
-            // everything" could not be reproduced or refuted from the code - the
-            // cap is provably in the compiled class - so the next test needs to
-            // be readable: this line states how many were cleared, how many
-            // harmful effects remain, and therefore whether the cap held. Note
-            // that each CUP clears up to three, so two cups clear six; that is
-            // the usual explanation for "it cleared everything".
-            int remaining = 0;
-            for (MobEffectInstance instance : entity.getActiveEffects()) {
-                if (instance.getEffect().value().getCategory() == MobEffectCategory.HARMFUL) {
-                    remaining++;
-                }
-            }
-            KaleidoscopeFlora.LOGGER.info(
-                    "[flora] purge: cleared {} harmful effect(s), {} remaining (cap {})",
-                    cleared, remaining, PURGE_MAX_EFFECTS);
             return true;
         }
     }
