@@ -27,11 +27,13 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.entity.projectile.Snowball;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -45,11 +47,14 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.neoforge.entity.PartEntity;
+import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
@@ -61,6 +66,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerWakeUpEvent;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
@@ -124,8 +130,299 @@ public final class FloraEvents {
      */
     private static final Map<UUID, BlockPos> BRUSH_TARGET = new HashMap<>();
 
+    /**
+     * Autumn Serenade: harvests left before the effect burns out, per player.
+     *
+     * <p>v0.3.4 turned this effect from time-based into <b>charge-based</b>.
+     * Before, the drink ran for a fixed duration and every harvest inside it
+     * rolled an independent multiplier; the only limit was the clock. Now the
+     * effect carries a budget of {@link #HARVEST_CHARGES} harvests and expires
+     * the moment the budget is spent, so the value of the cup is decided by how
+     * the player spends it rather than by how fast they can run between fields.</p>
+     *
+     * <p>The entry is created lazily on the first harvest rather than at drink
+     * time: the drink goes through Cookery's {@code TeacupItem}, which applies
+     * the vanilla effect instance without calling back into this class, so there
+     * is no reliable "just drank it" hook here. Lazy init is also self-healing -
+     * a player who obtained the effect some other way (command, creative) still
+     * gets the full budget.</p>
+     */
+    private static final Map<UUID, Integer> HARVEST_CHARGES_LEFT = new HashMap<>();
+
+    /** Harvests an Autumn Serenade cup pays for before it expires (v0.3.4). */
+    private static final int HARVEST_CHARGES = 20;
+
+    /**
+     * Absolution: harmful effects still refused, per player. Created lazily on
+     * the first refusal for the same reason as the harvest budget above - the
+     * drink applies a vanilla effect instance and never calls back into this
+     * class, so there is no "just drank it" hook to seed the map from.
+     */
+    private static final Map<UUID, Integer> ABSOLVE_CHARGES_LEFT = new HashMap<>();
+
+    /** Harmful effects an Absolution cup refuses before it expires (v0.3.4). */
+    private static final int ABSOLVE_CHARGES = 3;
+
+    // ==================================================================
+    // Dew Flower Cake: the landing shockwave (four tiers)
+    // ==================================================================
+
+    /**
+     * The Dew Flower Cake's landing shockwave: a four-step curve keyed on how
+     * far the player actually fell.
+     *
+     * <p><b>The curve</b> (design section 1.4). Two blocks is the floor - below
+     * that a plain jump is not an attack; twenty is the ceiling, so falling off
+     * a mountain is not strictly better than falling off a tower.</p>
+     *
+     * <table>
+     *   <caption>Impact tiers</caption>
+     *   <tr><th>Drop</th><th>Radius</th><th>Knockback</th><th>Damage</th></tr>
+     *   <tr><td>2-4</td><td>1.5</td><td>0.4</td><td>2</td></tr>
+     *   <tr><td>5-9</td><td>2.5</td><td>0.8</td><td>4</td></tr>
+     *   <tr><td>10-19</td><td>3.5</td><td>1.4</td><td>6</td></tr>
+     *   <tr><td>20+</td><td>5.0</td><td>2.0</td><td>10</td></tr>
+     * </table>
+     *
+     * <p><b>Minimum drop before it counts, and why that is not a bug.</b>
+     * Because the height is measured from the apex of the airborne stretch,
+     * ordinary flat-ground hopping never accumulates two blocks and so never
+     * fires. That is the design's own answer to "can a player farm this by
+     * bunny-hopping" (section 1.4's note) - no extra condition is needed.</p>
+     */
+    static final class DewImpact {
+
+        /** Indexed by tier; [minDrop, radius, knockback, damage]. */
+        private static final double[][] TIERS = {
+                {2.0, 1.5, 0.4, 2.0},
+                {5.0, 2.5, 0.8, 4.0},
+                {10.0, 3.5, 1.4, 6.0},
+                {20.0, 5.0, 2.0, 10.0},
+        };
+
+        /**
+         * Surfaces that already break a fall: powder snow, hay, beds and honey
+         * cushion the landing themselves, so stacking a shockwave on them would
+         * double-count the block's whole purpose.
+         */
+        private static final Set<Block> SOFT_LANDINGS = Set.of(
+                Blocks.POWDER_SNOW, Blocks.HAY_BLOCK, Blocks.HONEY_BLOCK,
+                Blocks.WHITE_BED, Blocks.ORANGE_BED, Blocks.MAGENTA_BED, Blocks.LIGHT_BLUE_BED,
+                Blocks.YELLOW_BED, Blocks.LIME_BED, Blocks.PINK_BED, Blocks.GRAY_BED,
+                Blocks.LIGHT_GRAY_BED, Blocks.CYAN_BED, Blocks.PURPLE_BED, Blocks.BLUE_BED,
+                Blocks.BROWN_BED, Blocks.GREEN_BED, Blocks.RED_BED, Blocks.BLACK_BED);
+
+        /** Radius of the particle burst, independent of the damage tier. */
+        private static final double PARTICLE_RADIUS = 6.0;
+
+        /**
+         * Fall needed when a <em>deliberate</em> mid-air jump was used.
+         *
+         * <p>Below the design's two blocks, because a second jump taken while
+         * already falling lands the whole arc lower - and above a plain jump's
+         * 1.25 so that a single jump can never reach it. See {@link #settle}.</p>
+         */
+        private static final double MIDAIR_JUMP_MIN_DROP = 1.6;
+
+        private DewImpact() {
+        }
+
+        /**
+         * Settles one landing. Returns true when a shockwave actually fired, so
+         * the caller can arm the repeat guard - returns false for every
+         * non-qualifying landing, which must stay retryable.
+         *
+         * <p><b>A mashed jump disqualifies the landing outright.</b> That is the
+         * rule that stops bunny-hopping from being an attack. It has to be an
+         * outright refusal rather than a higher threshold, because the mashed hop
+         * and the deliberate jump are only about half a block apart in height (a
+         * hop mashed on the earliest possible tick peaks near 2.0, a deliberate
+         * one near 2.5, a plain single jump at 1.25) and their ranges overlap the
+         * design's own two-block floor from both sides. The client measures what
+         * the server cannot - whether the player was still shooting upward when
+         * they pressed - so the server does not have to guess. See
+         * {@link AirStretch} and {@link FloraNetwork}.</p>
+         *
+         * <p><b>Two ways to qualify otherwise.</b></p>
+         * <ul>
+         *   <li><b>Fell two blocks or more</b> - the design's "from a height"
+         *       rule, unchanged. This is what makes cliffs, towers and ordinary
+         *       falls work.</li>
+         *   <li><b>Jumped again deliberately and came down at least 1.6</b> -
+         *       covers a second jump taken once the first was mostly spent, which
+         *       is the case the design's two-block floor used to miss.</li>
+         * </ul>
+         *
+         * <p>The tier is clamped to at least the first one, because the mid-air
+         * route can legitimately fire below two blocks and the lookup would
+         * otherwise index {@code TIERS[-1]}.</p>
+         *
+         * @param player     the falling player
+         * @param drop       apex minus landing Y, in blocks
+         * @param midAirJump whether the client reported a second jump
+         * @param spamJump   whether that jump was taken while still rising
+         */
+        static boolean settle(Player player, double drop, boolean midAirJump, boolean spamJump) {
+            if (spamJump) {
+                return false;
+            }
+            boolean qualifies = drop >= TIERS[0][0]
+                    || (midAirJump && drop >= MIDAIR_JUMP_MIN_DROP);
+            if (!qualifies || !landsOnSolidGround(player)) {
+                return false;
+            }
+            int tier = TIERS.length - 1;
+            for (int i = 0; i < TIERS.length; i++) {
+                if (drop < TIERS[i][0]) {
+                    tier = i - 1;
+                    break;
+                }
+            }
+            tier = Math.max(0, tier);
+            double radius = TIERS[tier][1];
+            double knockback = TIERS[tier][2];
+            double damage = TIERS[tier][3];
+
+            // The player is excluded from the sweep rather than filtered later,
+            // which is what makes "the caster never takes their own shockwave"
+            // true by construction instead of by a remembered condition.
+            List<LivingEntity> hit = player.level().getEntitiesOfClass(LivingEntity.class,
+                    player.getBoundingBox().inflate(radius), other -> other != player);
+            for (LivingEntity victim : hit) {
+                victim.hurt(player.damageSources().playerAttack(player), (float) damage);
+                // Horizontal, outward, with 0.6 of that upward - the design's
+                // exact ratio, so targets are lifted off the ground without
+                // being launched.
+                Vec3 away = victim.position().subtract(player.position());
+                Vec3 flat = new Vec3(away.x, 0.0, away.z);
+                Vec3 direction = flat.lengthSqr() < 1.0e-4
+                        ? new Vec3(0.0, 0.0, 1.0)
+                        : flat.normalize();
+                victim.push(direction.x * knockback, knockback * 0.6, direction.z * knockback);
+                victim.hurtMarked = true;
+            }
+            if (player.level() instanceof ServerLevel server) {
+                server.sendParticles(ParticleTypes.CLOUD,
+                        player.getX(), player.getY() + 0.2, player.getZ(),
+                        40, radius * 0.4, 0.2, radius * 0.4, 0.05);
+                server.sendParticles(ParticleTypes.CRIT,
+                        player.getX(), player.getY() + 0.4, player.getZ(),
+                        30, PARTICLE_RADIUS * 0.3, 0.3, PARTICLE_RADIUS * 0.3, 0.1);
+                server.playSound(null, player.getX(), player.getY(), player.getZ(),
+                        SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 1.0f, 1.2f);
+            }
+            // Achievements are earned by connecting, not by landing: an empty
+            // shockwave is not a hit.
+            if (!hit.isEmpty() && player instanceof ServerPlayer serverPlayer) {
+                FloraAdvancements.dewImpact(serverPlayer, drop);
+            }
+            return !hit.isEmpty();
+        }
+
+        /**
+         * Whether the landing surface counts: solid ground, not a fluid, and
+         * not one of the self-cushioning blocks.
+         *
+         * <p>Fluids are checked because "landing in water raises no shockwave"
+         * is explicit in the design - and because a player who just got the
+         * effect from a cake is exactly the player likely to be aiming at
+         * water.</p>
+         */
+        static boolean landsOnSolidGround(Player player) {
+            BlockPos below = BlockPos.containing(player.getX(), player.getY() - 0.2, player.getZ());
+            if (!player.level().getFluidState(below).isEmpty()) {
+                return false;
+            }
+            BlockState state = player.level().getBlockState(below);
+            if (state.isAir() || SOFT_LANDINGS.contains(state.getBlock())) {
+                return false;
+            }
+            return !state.getCollisionShape(player.level(), below).isEmpty();
+        }
+    }
+
+
+    // The pin's duration now lives in ModEffects.PIN_TICKS: the effect that
+    // draws the pin's ring needs to know how far through the pin it is, so the
+    // number has to be shared rather than owned here.
+
+    /**
+     * Slow amplifier for the pin. 6 is Slow VII, which floors ground speed -
+     * the same value the Gaze effect uses for its freeze, so "held in place"
+     * reads identically whether it came from a stare or a cake.
+     */
+    private static final int PIN_SLOW_AMPLIFIER = 6;
+
+    /** Weakness amplifier for the pin: -4 attack damage per level. */
+    private static final int PIN_WEAKNESS_AMPLIFIER = 4;
+
+    /**
+     * Player movement state while a Dew Flower Cake is up: the current airborne
+     * stretch (its peak, and whether a second jump happened in it), plus the
+     * game time of the last settled landing.
+     *
+     * <p>Tracks the peak of the <em>current airborne stretch</em>, not the
+     * launch point - the design is explicit that the height difference is
+     * "highest point of the jump minus the landing point", which is what makes
+     * a normal jump and a fall off a cliff different amounts of damage.</p>
+     */
+    private static final Map<UUID, AirStretch> DEW_AIR = new HashMap<>();
+
+    /**
+     * Players whose client has told us about a mid-air jump, cleared at their
+     * next landing.
+     *
+     * <p>The value is the part that matters: <b>true means the jump was taken
+     * while the player was still shooting upward</b>, i.e. the key was being
+     * hammered rather than a second jump being meant. Those hops must not
+     * produce a shockwave, and - crucially - height cannot make that call. See
+     * {@link FloraNetwork} for the measurements.</p>
+     */
+    private static final Map<UUID, Boolean> MIDAIR_JUMP_REPORTED = new HashMap<>();
+
+    /**
+     * Called from the payload handler when a client reports spending a jump.
+     *
+     * @param stillRising whether the player was still rising when they spent it
+     */
+    public static void noteMidAirJump(ServerPlayer player, boolean stillRising) {
+        // A deliberate report outranks a mashed one: if the player both mashed
+        // and then timed a real second jump in the same airborne stretch, the
+        // real one is the one they meant.
+        MIDAIR_JUMP_REPORTED.merge(player.getUUID(), stillRising,
+                (existing, incoming) -> existing && incoming);
+    }
+
+    // REMOVED (2026-09-29): a 10-tick "same-landing guard" used to live here and
+    // suppressed any landing within half a second of a previous shockwave. It was
+    // redundant and it caused false negatives.
+    //
+    // Redundant: the airborne stretch is consumed at the landing
+    // (`DEW_AIR.remove`), so the next grounded tick has no stretch and returns
+    // before it could ever settle the same impact twice. There was nothing for a
+    // guard to protect.
+    //
+    // False negatives: it skipped the whole settle, not just a repeat, so any
+    // legitimate second landing inside half a second was silently swallowed.
+    // Reported as "sometimes the double jump does not trigger the landing
+    // damage" - and a hop cycle is right around that length, which is why it was
+    // intermittent.
+
+    /** Drops per Autumn Serenade harvest: uniformly 2x or 3x (v0.3.4). */
+    private static final int HARVEST_MIN_MULTIPLIER = 2;
+    private static final int HARVEST_MAX_MULTIPLIER = 3;
+
     /** Petal veil costs 10 seconds of duration per blocked projectile. */
     private static final int PETAL_VEIL_BLOCK_COST_TICKS = 200;
+
+    /**
+     * Petal veil internal cooldown: game time (exclusive) before which further
+     * blocks are free. One volley costs one charge, not one per projectile.
+     */
+    private static final Map<UUID, Long> PETAL_VEIL_COOLDOWN_UNTIL = new HashMap<>();
+
+    /** Length of the petal veil's repeated-block window (0.5 s, v0.3.4). */
+    private static final int PETAL_VEIL_COOLDOWN_TICKS = 10;
 
     /** Lily poison cloud cooldown in ticks (5 seconds). */
     private static final int KISS_COOLDOWN_TICKS = 100;
@@ -222,8 +519,26 @@ public final class FloraEvents {
         // drinker is shattered into petals instead. Each block spends 10
         // seconds of the veil's duration - beauty consumed to protect you.
         // Melee is unaffected.
+        //
+        // v0.3.4 adds a short internal cooldown, because a single volley of
+        // projectiles arrives as many separate damage events in the same tick
+        // (or in a burst of consecutive ticks). Without the gate, one skeleton
+        // salvo would drain several 10-second charges in a fraction of a second
+        // and the veil would read as "gone instantly" rather than "spent". The
+        // cost per block is deliberately unchanged - only rapid repeats are
+        // folded into one charge.
         if (target.hasEffect(ModEffects.PETAL_VEIL)
                 && event.getSource().getDirectEntity() instanceof Projectile projectile) {
+            long now = target.level().getGameTime();
+            Long nextAllowed = PETAL_VEIL_COOLDOWN_UNTIL.get(target.getUUID());
+            if (nextAllowed != null && now < nextAllowed) {
+                // Still inside the window: the projectile is still shattered
+                // (the veil is not bypassed), it just does not cost a charge.
+                event.setCanceled(true);
+                projectile.discard();
+                return;
+            }
+            PETAL_VEIL_COOLDOWN_UNTIL.put(target.getUUID(), now + PETAL_VEIL_COOLDOWN_TICKS);
             event.setCanceled(true);
             projectile.discard();
             if (target instanceof ServerPlayer veiled) {
@@ -399,11 +714,35 @@ public final class FloraEvents {
     @SubscribeEvent
     public static void onLivingFall(LivingFallEvent event) {
         LivingEntity entity = event.getEntity();
-        if (!entity.hasEffect(ModEffects.FEATHERFALL)) {
+        if (entity.hasEffect(ModEffects.FEATHERFALL)) {
+            event.setCanceled(true);
+            playSoftLanding(entity, event.getDistance());
             return;
         }
-        event.setCanceled(true);
-        if (entity.isSilent() || event.getDistance() <= 1.5f) {
+        // Dew Flower Cake, v0.3.4: no fall damage at all while it lasts. This
+        // replaces the design's original "still take the damage but never drop
+        // below half a heart", which the author changed after the sister mod's
+        // own fall-damage mixin turned out to cancel the damage outright - see
+        // the design notes, section 3.4.1.
+        //
+        // Cancelling rather than zeroing the multiplier, for the same reason the
+        // featherfall branch does: a zeroed multiplier still runs the landing
+        // path, and the design wants a clean landing. The shockwave is settled
+        // separately in tickDewLanding, so it is deliberately NOT triggered from
+        // here - this hook may fire for falls that never had an apex tracked.
+        if (entity.hasEffect(ModEffects.DEW_CAKE)) {
+            event.setCanceled(true);
+        }
+    }
+
+    /**
+     * Reproduces vanilla's landing thump for a cancelled fall.
+     *
+     * <p>Vanilla only plays the sound when damage actually lands, so every
+     * cancellation above silences a fall that should still be heard.</p>
+     */
+    private static void playSoftLanding(LivingEntity entity, float distance) {
+        if (entity.isSilent() || distance <= 1.5f) {
             return;
         }
         BlockPos below = BlockPos.containing(entity.getX(), entity.getY() - 0.2F, entity.getZ());
@@ -572,7 +911,10 @@ public final class FloraEvents {
         }
         FoodProperties food = event.getItem().get(net.minecraft.core.component.DataComponents.FOOD);
         if (food != null) {
-            eater.getFoodData().eat(Math.round(food.nutrition() * 0.5f), food.saturation() * 0.5f);
+            // v0.3.4 balance: +50% -> +20%. Half again on top of every meal was
+            // strong enough to make the bloom the default way to eat rather
+            // than a garnish on top of normal food.
+            eater.getFoodData().eat(Math.round(food.nutrition() * 0.2f), food.saturation() * 0.2f);
         }
     }
 
@@ -640,10 +982,25 @@ public final class FloraEvents {
     }
 
     // ==================================================================
-    // Orange tulip "Autumn Serenade": mature crops drop x2-x4, and farmland
-    // is not destroyed underfoot
+    // Orange tulip "Autumn Serenade": mature crops drop x2-x3 for a budget of
+    // twenty harvests, and farmland is not destroyed underfoot
     // ==================================================================
 
+    /**
+     * One harvest against the drink's budget.
+     *
+     * <p><b>Charge-based since v0.3.4.</b> Every mature crop broken while the
+     * effect is up spends exactly one charge and rolls 2x or 3x independently -
+     * so "twenty harvests of double or triple drops" is the whole promise, and
+     * the effect removes itself when the twentieth is spent. The previous
+     * time-based version let a fast player chain far more than twenty.</p>
+     *
+     * <p>The charge is spent <em>before</em> the drops are duplicated on
+     * purpose: the last harvest in the budget still pays out. Decrementing
+     * afterwards would need a special case for "this was the last one", and
+     * an off-by-one here is exactly the kind of thing nobody notices until a
+     * player complains the twentieth harvest gave nothing.</p>
+     */
     @SubscribeEvent
     public static void onBlockDrops(BlockDropsEvent event) {
         BlockState state = event.getState();
@@ -653,10 +1010,26 @@ public final class FloraEvents {
         if (!(event.getBreaker() instanceof Player breaker) || !breaker.hasEffect(ModEffects.HARVEST)) {
             return;
         }
-        // One random multiplier of 2 up to the configured max per harvest;
-        // spawn the extra copies of every drop entity.
-        int maxMult = FloraConfig.harvestMaxDropMultiplier();
-        int multiplier = 2 + breaker.getRandom().nextInt(maxMult - 1);
+        UUID uuid = breaker.getUUID();
+        int left = HARVEST_CHARGES_LEFT.getOrDefault(uuid, HARVEST_CHARGES);
+        if (left <= 0) {
+            // Defensive: the effect should already be gone by now. Belt and
+            // braces so a stale entry can never grant unlimited drops.
+            HARVEST_CHARGES_LEFT.remove(uuid);
+            breaker.removeEffect(ModEffects.HARVEST);
+            return;
+        }
+        left--;
+        if (left <= 0) {
+            HARVEST_CHARGES_LEFT.remove(uuid);
+            breaker.removeEffect(ModEffects.HARVEST);
+        } else {
+            HARVEST_CHARGES_LEFT.put(uuid, left);
+        }
+        // One random multiplier of 2 or 3 per harvest; spawn the extra copies
+        // of every drop entity.
+        int multiplier = HARVEST_MIN_MULTIPLIER
+                + breaker.getRandom().nextInt(HARVEST_MAX_MULTIPLIER - HARVEST_MIN_MULTIPLIER + 1);
         List<ItemEntity> drops = List.copyOf(event.getDrops());
         for (int i = 1; i < multiplier; i++) {
             for (ItemEntity drop : drops) {
@@ -685,8 +1058,76 @@ public final class FloraEvents {
         }
     }
 
+    /**
+     * The walk's flowers are scenery, not a harvest: wildflowers that
+     * {@link ModEffects.FlowerPathEffect} bloomed under an <b>empty</b> hand
+     * give nothing back when broken (v0.3.4).
+     *
+     * <p>Before, the bloom was a free wildflower farm - walk a field, break the
+     * trail, collect stacks. The block still appears and still grows to four
+     * flowers if you linger; only the payout is gone, so the trail stays what it
+     * looked like it was: decoration.</p>
+     *
+     * <p><b>Two ways a trail block can be destroyed, and only one of them has a
+     * breaker.</b> A player breaking the flower directly arrives here with a
+     * breaker, and that alone was the first implementation of this rule. Testing
+     * found the other half: <em>break the dirt underneath</em> and the flower
+     * above is removed by the engine's own neighbour update, which passes no
+     * breaker at all - so the old filter missed it and the flower dropped. The
+     * position is therefore the real test, and {@code isTrailBlock} is asked
+     * first.</p>
+     *
+     * <p><b>Scoped so real wildflowers are untouched.</b> The obvious fix - ship
+     * a loot table override for {@code minecraft:wildflowers} - would stop
+     * <em>every</em> wildflower dropping, for every player, everywhere. Here,
+     * only a position the free bloom actually placed is affected, and laying
+     * flowers <em>with</em> a held carpet or petal stack is a deliberate
+     * placement that keeps its drops.</p>
+     *
+     * <p>{@code BlockDropsEvent} is cancellable and carries a separate experience
+     * field, so both halves of the payout are cleared - leaving the XP behind
+     * would be a strange half-measure for a block that drops no item.</p>
+     */
+    @SubscribeEvent
+    public static void onWalkFlowerDrops(BlockDropsEvent event) {
+        BlockPos pos = event.getPos();
+        boolean trail = ModEffects.FlowerPathEffect.isTrailBlock(event.getLevel(), pos);
+        if (!trail) {
+            // Not a free-bloom block: fall back to the player-based test, which
+            // is what catches a trail block whose position was never recorded
+            // (e.g. laid before the tracking existed in a running world).
+            if (!(event.getBreaker() instanceof Player breaker)
+                    || !breaker.hasEffect(ModEffects.FLOWER_PATH)
+                    || ModEffects.FlowerPathEffect.isSheetItem(breaker.getMainHandItem())) {
+                return;
+            }
+            Block held = event.getState().getBlock();
+            if (held == Blocks.AIR || held != ModEffects.FlowerPathEffect.wildflowers()) {
+                return;
+            }
+        }
+        // Either path means the block is about to be gone: forget the position.
+        ModEffects.FlowerPathEffect.untrackTrail(event.getLevel(), pos);
+        event.setCanceled(true);
+        event.setDroppedExperience(0);
+    }
+
+    /**
+     * Forgets a dimension's trail when it unloads.
+     *
+     * <p>Without this the position set would outlive the world it describes, and
+     * a later world reusing the same dimension could have its own wildflowers
+     * silently stop dropping wherever the old coordinates happen to match.</p>
+     */
+    @SubscribeEvent
+    public static void onLevelUnload(LevelEvent.Unload event) {
+        if (event.getLevel() instanceof ServerLevel server) {
+            ModEffects.FlowerPathEffect.clearTrail(server.dimension());
+        }
+    }
+
     // ==================================================================
-    // White tulip "Absolution": harmful effects cannot land
+    // White tulip "Absolution": harmful effects cannot land - for three of them
     // ==================================================================
 
     /**
@@ -694,14 +1135,39 @@ public final class FloraEvents {
      * applied, so vetoing here stops harmful effects from ever taking hold -
      * already-running ones are untouched on purpose (that cure is "When the
      * Wind Rises").
+     *
+     * <p><b>Charge-based since v0.3.4.</b> The drink used to buy a window of
+     * time during which nothing harmful could land; now it buys
+     * {@link #ABSOLVE_CHARGES} refusals and expires on the last one. The effect
+     * therefore reads as "three cures" rather than "three minutes", which is
+     * what the cup is actually worth to a player who drinks it before a fight
+     * they know is coming.</p>
+     *
+     * <p>The charge is spent only when a refusal actually happens, so an
+     * uneventful cup keeps its full budget - the player is never punished for
+     * drinking early.</p>
      */
     @SubscribeEvent
     public static void onMobEffectApplicable(MobEffectEvent.Applicable event) {
         MobEffectInstance applying = event.getEffectInstance();
-        if (applying != null
-                && event.getEntity().hasEffect(ModEffects.ABSOLVE)
-                && applying.getEffect().value().getCategory() == MobEffectCategory.HARMFUL) {
-            event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+        if (applying == null
+                || !event.getEntity().hasEffect(ModEffects.ABSOLVE)
+                || applying.getEffect().value().getCategory() != MobEffectCategory.HARMFUL) {
+            return;
+        }
+        event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+        LivingEntity warded = event.getEntity();
+        UUID uuid = warded.getUUID();
+        int left = ABSOLVE_CHARGES_LEFT.getOrDefault(uuid, ABSOLVE_CHARGES) - 1;
+        if (left <= 0) {
+            ABSOLVE_CHARGES_LEFT.remove(uuid);
+            warded.removeEffect(ModEffects.ABSOLVE);
+            if (warded.level() instanceof ServerLevel server) {
+                server.sendParticles(ParticleTypes.END_ROD,
+                        warded.getX(), warded.getY() + 1.0, warded.getZ(), 20, 0.4, 0.5, 0.4, 0.05);
+            }
+        } else {
+            ABSOLVE_CHARGES_LEFT.put(uuid, left);
         }
     }
 
@@ -894,6 +1360,282 @@ public final class FloraEvents {
         double z = player.getZ();
         MOVE_DELTA.put(uuid, last == null ? new double[]{0.0, 0.0} : new double[]{x - last[0], z - last[1]});
         LAST_XZ.put(uuid, new double[]{x, z});
+
+        tickDewLanding(player, uuid);
+    }
+
+    /*
+     * The Toasted Flower Cake's doubled hunger drain used to be ticked from
+     * here (one exhaustion point per tick). It now lives in
+     * mixin.ToastedHungerMixin, which doubles the exhaustion vanilla is already
+     * causing - see that class for why the tick version was both far too fast
+     * and wrong while standing still.
+     */
+
+    /**
+     * Dew Flower Cake: remembers how high the player has been since last
+     * touching the ground - and whether they jumped again in mid-air - then
+     * settles a shockwave on the way down.
+     *
+     * <p>See {@link DewImpact} for the curve and the landing conditions, and
+     * {@link AirStretch} for how the mid-air jump is recognised.</p>
+     */
+    private static void tickDewLanding(Player player, UUID uuid) {
+        if (!player.hasEffect(ModEffects.DEW_CAKE)) {
+            // The effect lapsed mid-air: forget the run rather than letting a
+            // stale apex fire the next time the player happens to land.
+            DEW_AIR.remove(uuid);
+            MIDAIR_JUMP_REPORTED.remove(uuid);
+            return;
+        }
+        double y = player.getY();
+        if (!player.onGround()) {
+            AirStretch stretch = DEW_AIR.get(uuid);
+            if (stretch == null) {
+                DEW_AIR.put(uuid, new AirStretch(y));
+            } else {
+                stretch.observe(y);
+            }
+            // The client's own report. The value says whether the jump was taken
+            // while still rising, i.e. whether it was mashed - height cannot tell
+            // the two apart, which is the whole reason the packet exists.
+            Boolean reported = MIDAIR_JUMP_REPORTED.get(uuid);
+            AirStretch live = DEW_AIR.get(uuid);
+            if (reported != null && live != null) {
+                live.midAirJump = true;
+                live.spamJump = reported;
+            }
+            return;
+        }
+        MIDAIR_JUMP_REPORTED.remove(uuid);
+        AirStretch stretch = DEW_AIR.remove(uuid);
+        if (stretch == null) {
+            // Landed without an airborne stretch tracked (effect applied on the
+            // ground): nothing fell, nothing to settle.
+            return;
+        }
+        double drop = stretch.apex - y;
+        boolean solid = DewImpact.landsOnSolidGround(player);
+        boolean fired = DewImpact.settle(player, drop, stretch.midAirJump, stretch.spamJump);
+        // Logged so "sometimes the landing attack does not happen" can be read
+        // instead of guessed at. Three things decide it: how far the fall was,
+        // whether a second jump happened in mid-air, and whether that jump was
+        // mashed rather than meant.
+        KaleidoscopeFlora.LOGGER.info(
+                "[flora] dew landing: apex={} y={} drop={} midAirJump={} spamJump={} solidGround={} fired={}",
+                String.format("%.2f", stretch.apex), String.format("%.2f", y),
+                String.format("%.2f", drop), stretch.midAirJump, stretch.spamJump, solid, fired);
+    }
+
+    /**
+     * One airborne stretch under a Dew Flower Cake: the peak reached, and what
+     * the client said about any mid-air jump taken in it.
+     *
+     * <p><b>Height alone provably cannot decide this, and that is now settled by
+     * measurement rather than assumed.</b> {@code LivingEntity#jumpFromGround}
+     * sets the vertical velocity to the jump power <b>unconditionally</b>, so a
+     * second jump does not add less for being early - it restores the full
+     * impulse from wherever the player had reached. Working the arc out:</p>
+     *
+     * <ul>
+     *   <li>a plain single jump peaks at about <b>1.25</b> blocks;</li>
+     *   <li>a hop with the key mashed, spent on the earliest tick the mixin
+     *       allows, peaks at about <b>2.0</b>;</li>
+     *   <li>a deliberate second jump taken at the top peaks at about
+     *       <b>2.5</b>.</li>
+     * </ul>
+     *
+     * <p>So the two cases the design cares about sit less than half a block
+     * apart, straddling the design's own two-block floor. Two earlier server-side
+     * guesses were tried and each failed at one end of that range - per-tick rise
+     * acceleration (false-fired on a dropped movement packet, so single jumps
+     * fired) and peak-versus-single-jump (cannot see a late jump, and fires on an
+     * early one because an early one clears the bar too). Both are removed.</p>
+     *
+     * <p>What is left is the client's report, which carries the one thing the
+     * server cannot reconstruct: <b>was the player still shooting upward when
+     * they pressed?</b> {@link #spamJump} is that, and {@link DewImpact#settle}
+     * refuses the shockwave when it is set.</p>
+     */
+    private static final class AirStretch {
+
+        /** Where the stretch began. */
+        final double takeoffY;
+        double apex;
+
+        /** The client reported a mid-air jump in this stretch. */
+        boolean midAirJump;
+
+        /**
+         * ... and that jump was taken while still rising, i.e. the key was being
+         * hammered rather than a second jump being meant.
+         */
+        boolean spamJump;
+
+        AirStretch(double y) {
+            this.takeoffY = y;
+            this.apex = y;
+        }
+
+        /** One airborne tick: all this has to do now is track the peak. */
+        void observe(double y) {
+            if (y > apex) {
+                apex = y;
+            }
+        }
+    }
+
+    /**
+     * Applies the one-shot tail of an effect when it runs out.
+     *
+     * <p>Only the Toasted Flower Cake needs it: the design's "乏力" is a Slow
+     * applied <em>after</em> the buff, so it cannot live in the same effect
+     * instance. {@code MobEffectEvent.Expired} fires when the duration reaches
+     * zero.</p>
+     *
+     * <p>Deliberately not fired for {@code /effect clear} - NeoForge routes
+     * that through {@code MobEffectEvent.Remove} instead, and the design already
+     * accepts that a manually cleared effect skips its comedown. Reviving the
+     * penalty there would punish the wrong action, and cancelling the removal
+     * is not something this mod should ever do.</p>
+     */
+    @SubscribeEvent
+    public static void onCakeEffectExpired(MobEffectEvent.Expired event) {
+        MobEffectInstance expired = event.getEffectInstance();
+        if (expired == null || !(event.getEntity() instanceof LivingEntity living)) {
+            return;
+        }
+        if (expired.getEffect().equals(ModEffects.TOASTED_CAKE)) {
+            living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 3 * 20, 0, true, true));
+        }
+    }
+
+    /**
+     * Raw Flower Cake hit: pins whatever a thrown snowball strikes.
+     *
+     * <p><b>The projectile is a plain vanilla snowball</b>, so there is nothing
+     * on the entity itself to hook; the raw cake item only decides what gets
+     * thrown. That makes this the one place the pin can be applied, and it also
+     * means the behaviour rides an event NeoForge already fires for vanilla
+     * projectiles - no entity type of our own, no mixin on {@code Snowball}.</p>
+     *
+     * <p><b>Trade-off, stated plainly:</b> the filter is "a snowball hit a
+     * living entity". A snowball thrown by a dispenser or a command therefore
+     * pins too. Distinguishing them would mean tagging the projectile at launch,
+     * which needs either a custom entity (a permanent cost) or a per-entity map
+     * that has to be cleaned up when a snowball misses and despawns. Neither is
+     * worth it for a cake that a player has to be holding.</p>
+     *
+     * <p>{@code cancel()} stops the snowball's own impact handling - but the
+     * projectile has to be discarded by hand, because a cancelled impact means
+     * vanilla never reaches its own {@code discard()}. Skipping that would leave
+     * the snowball hanging in the air.</p>
+     */
+    @SubscribeEvent
+    public static void onProjectileImpact(ProjectileImpactEvent event) {
+        if (!(event.getProjectile() instanceof Snowball snowball)
+                || !(event.getRayTraceResult() instanceof EntityHitResult hit)) {
+            return;
+        }
+        LivingEntity target = pinTarget(hit.getEntity());
+        if (target == null) {
+            return;
+        }
+        event.setCanceled(true);
+        snowball.discard();
+        if (target.level().isClientSide()) {
+            return;
+        }
+        // One second, and all three meaning of "held": the slow stops the
+        // walking, the weakness stops the hitting, and the marker is what
+        // mixin.PinJumpMixin reads to refuse the jump. The marker also draws the
+        // ring of petals for as long as it lasts - see ModEffects.PinnedEffect.
+        //
+        // The MARKER goes in through forceAddEffect; the two debuffs go through
+        // the ordinary path. The Wither and the Ender Dragon both override
+        // addEffect to return false unconditionally - every effect is refused -
+        // so a plain addEffect left the design's "works on bosses too" silently
+        // unachieved: the cake vanished with its chime and the boss kept walking.
+        // Force is the right tool for the marker, because the marker *is* the pin
+        // (it drives both the freeze in PinHoldMixin and the ring). The debuffs
+        // stay on the normal path deliberately: they are cosmetic next to a
+        // frozen target, and overriding a boss's blanket immunity for them would
+        // be a wider deviation than the design asks for.
+        Entity source = snowball.getOwner();
+        target.forceAddEffect(
+                new MobEffectInstance(ModEffects.PINNED, ModEffects.PIN_TICKS, 0, true, true), source);
+        target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,
+                ModEffects.PIN_TICKS, PIN_SLOW_AMPLIFIER, true, true));
+        target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,
+                ModEffects.PIN_TICKS, PIN_WEAKNESS_AMPLIFIER, true, true));
+        if (target.level() instanceof ServerLevel server) {
+            playPinImpact(server, target);
+        }
+        if (snowball.getOwner() instanceof ServerPlayer shooter) {
+            FloraAdvancements.rawFlowerCakePin(shooter, target.getUUID());
+        }
+    }
+
+    /**
+     * The living thing a thrown raw flower cake just hit, or null if it hit
+     * something that cannot be pinned.
+     *
+     * <p><b>Unwrapping the hit matters for exactly one mob, and it is a boss.</b>
+     * A projectile that strikes the Ender Dragon hits one of its {@link PartEntity}
+     * hitboxes rather than the dragon entity, and {@code EnderDragonPart} is not a
+     * {@code LivingEntity} - so the old
+     * {@code hit.getEntity() instanceof LivingEntity} test failed and the whole
+     * handler returned before it even played the impact sound. The dragon is the
+     * only entity in the game hit this way; the other multipart mobs that matter
+     * here (the ghast, the wither) are plain {@code LivingEntity}s.</p>
+     */
+    private static LivingEntity pinTarget(Entity hit) {
+        if (hit instanceof LivingEntity living) {
+            return living;
+        }
+        if (hit instanceof PartEntity<?> part && part.getParent() instanceof LivingEntity parent) {
+            return parent;
+        }
+        return null;
+    }
+
+    /**
+     * The instant of the pin: an outward burst of white sparks and a glassy
+     * chime.
+     *
+     * <p>Design §1.6 asks for a ring of cold-white {@code CRIT} spreading out
+     * from the target at the moment of the hit, and for the pin to announce
+     * itself with a short chime on top of the snowball's own impact sound (which
+     * vanilla plays and this does not replace).</p>
+     *
+     * <p>The burst is spawned as explicit points on a circle rather than as one
+     * {@code sendParticles} call with a spread, because a spread box reads as a
+     * puff - the ring is the part that says "held", and it needs the points to
+     * actually be on a circle. The vertical spread is deliberately tiny so it
+     * stays a ring seen from the side, not a sphere.</p>
+     *
+     * <p>The radius and the point count come from {@code ModEffects}' pin-ring
+     * helpers - the same ones the pin's own tick uses. The burst has to size
+     * itself to the target for the same reason the ring does, and the two must
+     * agree, or the burst would visibly change size as the persistent ring takes
+     * over from it.</p>
+     */
+    private static void playPinImpact(ServerLevel server, LivingEntity target) {
+        double radius = ModEffects.pinRingRadius(target);
+        int count = ModEffects.pinRingCount(radius);
+        double centreY = target.getY() + target.getBbHeight() * 0.5;
+        for (int i = 0; i < count; i++) {
+            double angle = (i / (double) count) * Math.PI * 2.0;
+            server.sendParticles(ParticleTypes.CRIT,
+                    target.getX() + Math.cos(angle) * radius,
+                    centreY,
+                    target.getZ() + Math.sin(angle) * radius,
+                    1, 0.0, 0.05, 0.0, 0.02);
+        }
+        // A chime, pitched up so it reads as ice rather than as a bell, and at a
+        // volume that sits under the snowball hit instead of covering it.
+        server.playSound(null, target.getX(), target.getY(), target.getZ(),
+                SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 0.7f, 1.6f);
     }
 
     /**
@@ -1168,17 +1910,24 @@ public final class FloraEvents {
      *       "(instant)" label so every effect line notes how long it lasts.</li>
      * </ul>
      *
-     * <p><b>Drinks only.</b> Everything else this mod registers - the tea bags
-     * and the mooncake - is a plain item with no {@code .desc}
-     * key, and a translatable component whose key is missing renders as the raw
-     * key text. That is how the tea bags came to show
+     * <p><b>Drinks, and the three flower cakes.</b> Everything else this mod
+     * registers - the tea bags and the mooncake - is a plain item with no
+     * {@code .desc} key, and a translatable component whose key is missing
+     * renders as the raw key text. That is how the tea bags came to show
      * {@code tooltip.kaleidoscope_flora.<id>.desc} in their own tooltip. Hence the
-     * {@link FloraAdvancements#isFloraDrink} gate: a namespace check alone is
-     * not enough to keep a newly added item out of this handler.</p>
+     * gates: a namespace check alone is not enough to keep a newly added item out
+     * of this handler, and an item must not be let in until its key exists.</p>
+     *
+     * <p>The cakes were added to the gate in v0.3.4 after the plain question "what
+     * does Toasted do?" turned out to have no answer in game: their tooltips said
+     * nothing and JEI carries only the drinks. Their {@code .desc} keys are short
+     * mechanical lines in the same voice as the drinks', not flavour text - the
+     * maxims and quotes remain the designer's.</p>
      */
     @SubscribeEvent
     public static void onItemTooltip(ItemTooltipEvent event) {
-        if (!FloraAdvancements.isFloraDrink(event.getItemStack())) {
+        if (!FloraAdvancements.isFloraDrink(event.getItemStack())
+                && !FloraAdvancements.isFloraCake(event.getItemStack())) {
             return;
         }
         ResourceLocation id = BuiltInRegistries.ITEM.getKey(event.getItemStack().getItem());
@@ -1278,6 +2027,14 @@ public final class FloraEvents {
         LAST_XZ.remove(uuid);
         MOVE_DELTA.remove(uuid);
         LUCK_START.remove(uuid);
+        HARVEST_CHARGES_LEFT.remove(uuid);
+        ABSOLVE_CHARGES_LEFT.remove(uuid);
+        PETAL_VEIL_COOLDOWN_UNTIL.remove(uuid);
+        // Both dew-cake maps are keyed by UUID and would otherwise outlive the
+        // session; a stale "reported a mid-air jump" flag in particular would
+        // arm the next login's first landing.
+        DEW_AIR.remove(uuid);
+        MIDAIR_JUMP_REPORTED.remove(uuid);
         ModEffects.FlowerPathEffect.clearPlayer(uuid);
         ModEffects.GazeEffect.clearPlayer(uuid);
         ModEffects.PetalWalkEffect.clearPlayer(uuid);

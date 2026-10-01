@@ -48,11 +48,15 @@ public final class FloraCreativeTab {
 
     private static void fill(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         // The chain reads top to bottom: the tea bags, then the mooncake,
-        // then every drink they turn into (see FloraTeas).
+        // then the flower cakes, then every drink they turn into (see
+        // FloraTeas / FlowerCakes).
         for (var item : FloraTeas.teaItems()) {
             output.accept(item.get());
         }
         output.accept(BlossomMooncakes.ITEM.get());
+        for (var item : FlowerCakes.cakeItems()) {
+            output.accept(item.get());
+        }
         // Registry iteration follows registration order, which is the
         // catalogue order of FloraDrinks; VB drinks appear only when their
         // mod is loaded, exactly as registered.

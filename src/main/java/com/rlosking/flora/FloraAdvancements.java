@@ -11,6 +11,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
@@ -76,6 +77,36 @@ public final class FloraAdvancements {
     public static final String EVENT_LULLABY_DAWN = "lullaby_dawn";
     public static final String EVENT_FULL_BOUQUET = "full_bouquet";
     public static final String EVENT_RIDE_THE_WIND = "ride_the_wind";
+
+    // v0.3.4 flower cakes. Four achievements, none of them gated on anything:
+    // the dew cake needs no sister mod any more (its double jump is this mod's
+    // own - see the design notes section 3.4.1), so the total is the same for
+    // every install. That matters because a gated achievement would make the
+    // count differ between players who have a given mod and players who do not.
+    public static final String EVENT_RAW_PIN = "raw_pin";
+    public static final String EVENT_DEW_IMPACT = "dew_impact";
+    public static final String EVENT_RAW_THREE_PINS = "raw_three_pins";
+    public static final String EVENT_DEW_HIGH_IMPACT = "dew_high_impact";
+
+    /**
+     * Pin targets and their timestamps, per thrower, for the "three in one
+     * second" challenge.
+     *
+     * <p>A map of UUID to [target UUID, game time] pairs rather than a simple
+     * counter, because the challenge is specifically three <em>different</em>
+     * targets inside a window: hitting the same mob three times must not count,
+     * and the window has to expire on its own if the player stops throwing.</p>
+     */
+    private static final Map<UUID, List<Object[]>> PIN_WINDOW = new HashMap<>();
+
+    /** Length of the three-pin window (1 second, matching the pin's own duration). */
+    private static final int PIN_WINDOW_TICKS = 20;
+
+    /** Distinct targets needed inside the window. */
+    private static final int PIN_WINDOW_TARGETS = 3;
+
+    /** Drop that earns the "from the sky" challenge (design section 5). */
+    private static final double DEW_HIGH_IMPACT_DROP = 20.0;
 
     /**
      * The set of drink ids a player has ever tasted. Serialized with the
@@ -331,6 +362,47 @@ public final class FloraAdvancements {
         }
     }
 
+    // ------------------------------------------------------------------
+    // v0.3.4 flower cakes
+    // ------------------------------------------------------------------
+
+    /**
+     * A raw flower cake pinned something ("花开顷刻").
+     *
+     * <p>Also drives the three-in-a-second challenge: each pin records the
+     * target and the clock, older entries are dropped, and the challenge fires
+     * the moment three <em>distinct</em> targets sit inside the window.</p>
+     */
+    public static void rawFlowerCakePin(ServerPlayer shooter, UUID targetId) {
+        award(shooter, EVENT_RAW_PIN);
+        long now = shooter.level().getGameTime();
+        List<Object[]> window = PIN_WINDOW.computeIfAbsent(shooter.getUUID(), k -> new ArrayList<>());
+        // Two passes on purpose: expire first, then test. Doing it in one pass
+        // would let an about-to-expire pin still count toward the total.
+        window.removeIf(entry -> now - (long) entry[1] > PIN_WINDOW_TICKS);
+        boolean alreadyIn = window.stream().anyMatch(entry -> entry[0].equals(targetId));
+        if (!alreadyIn) {
+            window.add(new Object[]{targetId, now});
+        }
+        long distinct = window.stream().map(entry -> entry[0]).distinct().count();
+        if (distinct >= PIN_WINDOW_TARGETS) {
+            award(shooter, EVENT_RAW_THREE_PINS);
+            window.clear();
+        }
+    }
+
+    /**
+     * A landing shockwave connected ("踏露而落"), and the tall-drop challenge.
+     *
+     * @param drop the height difference the shockwave was keyed on
+     */
+    public static void dewImpact(ServerPlayer player, double drop) {
+        award(player, EVENT_DEW_IMPACT);
+        if (drop >= DEW_HIGH_IMPACT_DROP) {
+            award(player, EVENT_DEW_HIGH_IMPACT);
+        }
+    }
+
     /** One crop ripened by the Sprout effect ("相信整个春天"): fifty per effect. */
     public static void sproutCropRipened(ServerPlayer player) {
         int crops = SPROUT_CROPS.merge(player.getUUID(), 1, Integer::sum);
@@ -391,6 +463,28 @@ public final class FloraAdvancements {
                 && BuiltInRegistries.ITEM.getKey(stack.getItem()).getNamespace().equals(KaleidoscopeFlora.MOD_ID);
     }
 
+    /**
+     * True for the three flower cakes.
+     *
+     * <p>Recognised by their block rather than from a hard-coded id list: a
+     * {@code BlockItem} whose block is a {@link FlowerCakeBlock} can only be one
+     * of ours, so adding a fourth cake later cannot forget to update this.</p>
+     *
+     * <p><b>Why the tooltip handler needs this at all.</b> That handler was gated
+     * to drinks alone, which left the cakes with no description anywhere in the
+     * game - not on the item, and not in JEI either (the JEI plugin carries a
+     * fixed list of the 26 drink ids). Asked plainly "what does Toasted do?",
+     * there was nowhere to point. The gate exists because a translatable
+     * component whose key is missing renders as the raw key text - the tea bags
+     * once showed {@code tooltip.kaleidoscope_flora.<id>.desc} in their own
+     * tooltip for exactly that reason - so every item this handler touches must
+     * actually have its {@code .desc} key.</p>
+     */
+    public static boolean isFloraCake(ItemStack stack) {
+        return !stack.isEmpty() && stack.getItem() instanceof BlockItem blockItem
+                && blockItem.getBlock() instanceof FlowerCakeBlock;
+    }
+
     /** Frees every per-player map when the player logs out. */
     public static void clearPlayer(UUID uuid) {
         PETAL_BLOCKS.remove(uuid);
@@ -401,6 +495,7 @@ public final class FloraAdvancements {
         RECENT_DRINKS.remove(uuid);
         SUN_CHASE.remove(uuid);
         FOOD_AT_SIP.remove(uuid);
+        PIN_WINDOW.remove(uuid);
     }
 
     // ==================================================================

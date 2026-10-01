@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "stack_count=0": {
+   "model": "kaleidoscope_flora:block/flower_cake/raw_flower_cake/0"
+  },
+  "stack_count=1": {
+   "model": "kaleidoscope_flora:block/flower_cake/raw_flower_cake/1"
+  },
+  "stack_count=2": {
+   "model": "kaleidoscope_flora:block/flower_cake/raw_flower_cake/2"
+  },
+  "stack_count=3": {
+   "model": "kaleidoscope_flora:block/flower_cake/raw_flower_cake/3"
+  },
+  "stack_count=4": {
+   "model": "kaleidoscope_flora:block/flower_cake/raw_flower_cake/4"
+  }
+ }
+}

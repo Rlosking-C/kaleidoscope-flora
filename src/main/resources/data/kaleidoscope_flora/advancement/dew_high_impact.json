@@ -1,0 +1,14 @@
+{
+  "parent": "kaleidoscope_flora:root",
+  "display": {
+    "icon": { "id": "kaleidoscope_flora:dew_flower_cake" },
+    "title": { "translate": "advancement.kaleidoscope_flora.dew_high_impact" },
+    "description": { "translate": "advancement.kaleidoscope_flora.dew_high_impact.desc" },
+    "frame": "challenge",
+    "hidden": true
+  },
+  "criteria": {
+    "sky": { "trigger": "kaleidoscope_flora:flora_event", "conditions": { "event": "dew_high_impact" } }
+  },
+  "requirements": [["sky"]]
+}

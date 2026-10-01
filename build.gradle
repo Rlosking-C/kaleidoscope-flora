@@ -67,13 +67,23 @@ dependencies {
     // jar. Its TeacupRegistry / TeacupData API is public and meant for
     // addons, and the jar is already in Mojang mappings, so no
     // deobfuscation is needed. The coordinate is a Modrinth version id
-    // (1.5.0-neoforge+mc1.21.1).
-    implementation 'maven.modrinth:kaleidoscope-cookery:v62omIkI'
+    // (1.6.0-neoforge+mc1.21.1). Bumped from 1.5.0 on 2026-10-01 after a player
+    // reported that the declared range excluded 1.6.0; the API this mod uses
+    // did not change, so the range was widened rather than the code.
+    implementation 'maven.modrinth:kaleidoscope-cookery:g8w0b2ly'
 
     // SodiumDynamicLights API (soft dependency): compile-only; at runtime
     // the integration checks ModList before calling any of its classes,
     // so the mod is never required (neoforge-1.21.1-1.0.10).
     compileOnly 'maven.modrinth:sodium-dynamic-lights:XI0WLXdn'
+
+    // RyoamicLights API (soft dependency, Modrinth version id for
+    // 0.2.11+mc1.21.1-neoforge): compile-only against the same
+    // registerDynamicLightHandler/makeHandler shape as the legacy LBL API,
+    // only under org.thinkingstudio.ryoamiclights.api. At runtime the
+    // integration is gated on the ryoamiclights mod id, so the mod (and its
+    // ObsidianUI dependency) is never required.
+    compileOnly 'maven.modrinth:ryoamiclights:tApwsw9C'
 
     // LambDynamicLights v4 API (soft dependency): compile-only against the
     // mojmap variant. At runtime LDL itself instantiates our initializer via
