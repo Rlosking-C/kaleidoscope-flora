@@ -208,12 +208,13 @@ public final class FloraDrinks {
         // Peony "Coronation": luck - the hidden vanilla effect, this is its
         // only regular source - plus Hero of the Village I: a crown is worn
         // among people, so traders bow to the crowned one. Maxim: Inca saying.
-        // v0.3.4 balance: luck 300 -> 180, Hero of the Village stays 300.
+        // v0.3.4 balance: luck 300 -> 180, and Hero of the Village 300 -> 60
+        // (user 2026-10-01: a one-minute crown, not a five-minute one).
         // Luck is the strong half and gets trimmed; the villager discount is
         // the flavour and keeps the full duration.
         register("coronation", TeacupRegistry.TeacupData.create(4)
                 .addEffect(() -> new MobEffectInstance(MobEffects.LUCK, ticks(180)))
-                .addEffect(() -> new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, ticks(300), 0)));
+                .addEffect(() -> new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, ticks(60), 0)));
 
         // Pitcher plant "The Voracious Urn": kills count as +1 looting level
         // AND drop everything x2-x3.

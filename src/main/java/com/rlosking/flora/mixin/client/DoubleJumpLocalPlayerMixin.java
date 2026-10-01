@@ -1,7 +1,6 @@
 package com.rlosking.flora.mixin.client;
 
 import com.rlosking.flora.FloraNetwork;
-import com.rlosking.flora.KaleidoscopeFlora;
 import com.rlosking.flora.ModEffects;
 import com.rlosking.flora.client.DewJumpFeedback;
 import net.minecraft.client.player.LocalPlayer;
@@ -101,17 +100,7 @@ public abstract class DoubleJumpLocalPlayerMixin {
             // Refill on the ground. Without the climbable clause a player on a
             // ladder would spend their jumps and then be unable to refill
             // without touching down, which reads as a bug.
-            int before = flora$jumpsLeft;
             flora$jumpsLeft = dew == null ? 0 : dew.getAmplifier() + 1;
-            if (dew != null && flora$jumpsLeft != before) {
-                // Diagnostics for the "it still lets me triple jump" report: the
-                // amplifier is baked into the effect when the cake is EATEN, so a
-                // config change alone leaves the effect in play carrying its old
-                // count. One line per landing tells those two cases apart.
-                KaleidoscopeFlora.LOGGER.info(
-                        "[flora] dew jump refill: amplifier={} jumpsLeft={} onGround={} climbable={}",
-                        dew.getAmplifier(), flora$jumpsLeft, onGround, self.onClimbable());
-            }
             flora$wasOnGround = true;
             return;
         }
@@ -131,9 +120,6 @@ public abstract class DoubleJumpLocalPlayerMixin {
         }
         if (jumpPressed) {
             flora$jumpsLeft--;
-            KaleidoscopeFlora.LOGGER.info(
-                    "[flora] dew air jump: amplifier={} left={}",
-                    dew.getAmplifier(), flora$jumpsLeft);
             // Sample the velocity BEFORE the jump resets it: this is the only
             // record of whether the player was still shooting upward, which is
             // what tells a deliberate second jump from a mashed one. See
