@@ -180,15 +180,15 @@ public final class FloraDrinks {
         // Torchflower "Breath of the Ancients": night vision plus the
         // sniffer soul - brush dirt family for ancient relics, paying for
         // every find with buff duration. Maxim: Egyptian Book of the Dead.
-        // v0.3.4 balance: NIGHT VISION STAYS AT 300. An earlier draft of the
-        // spec trimmed it to 180 in parallel with Coronation's luck, but the
-        // authoritative design table (策划案 §2.2) lists both effects of this
-        // drink as "不动": the relic hunting is the point and the whole buff
-        // has to outlive a dig. Reverting the draft trim is deliberate, not an
-        // oversight - do not "fix" this back to 180.
+        // v0.3.4 balance: NIGHT VISION is trimmed 5:00 -> 3:00, while
+        // SNIFFER_SOUL stays at 5:00. The design table (策划案 §2.2) reads
+        // "上古之息 | 夜视 5:00 | 3:00 | 3:00(嗅探者之魂 5 分钟不动)" - only the
+        // night vision moves. (An earlier pass misread that row as "both
+        // unchanged" and left night vision at 300; the release notes and the
+        // acceptance checklist had it right all along.)
         register("breath_of_ancients", TeacupRegistry.TeacupData.create(4)
                 .addEffect(() -> new MobEffectInstance(ModEffects.SNIFFER_SOUL, ticks(300)))
-                .addEffect(() -> new MobEffectInstance(MobEffects.NIGHT_VISION, ticks(300))));
+                .addEffect(() -> new MobEffectInstance(MobEffects.NIGHT_VISION, ticks(180))));
 
         // Sunflower "The Sunward": regeneration under the open day sky,
         // glowing through the night. Maxim: Van Gogh (Netherlands).
