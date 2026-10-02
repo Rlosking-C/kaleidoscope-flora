@@ -53,7 +53,7 @@ involved, so no separate attribution is required.
 
 - **Programming and design: Rlosking.**
 - **Forge 1.20.1 port: jiasudu.**
-- **Art: jiasudu** — the drink and flower cake item icons, the placed-cake
+- **Art: 花草忍** — the drink and flower cake item icons, the placed-cake
   models and block textures, the effect icons and the creative tab's section
   sprites.
 
