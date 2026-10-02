@@ -52,6 +52,7 @@ involved, so no separate attribution is required.
 ## Who made what
 
 - **Programming and design: Rlosking.**
+- **Forge 1.20.1 port: jiasudu.**
 - **Art: jiasudu** — the drink and flower cake item icons, the placed-cake
   models and block textures, the effect icons and the creative tab's section
   sprites.
