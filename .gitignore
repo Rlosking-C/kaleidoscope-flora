@@ -64,3 +64,6 @@ release-docs/
 # OS
 Thumbs.db
 .DS_Store
+
+# Source handover archives (e.g. for the 1.20.1 port) - local only
+/src*.zip
