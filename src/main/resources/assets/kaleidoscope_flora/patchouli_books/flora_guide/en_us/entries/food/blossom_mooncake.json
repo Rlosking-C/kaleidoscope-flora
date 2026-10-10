@@ -1,0 +1,15 @@
+{
+  "name": "Blossom Mooncake",
+  "category": "kaleidoscope_flora:food",
+  "icon": "kaleidoscope_flora:blossom_mooncake",
+  "read_by_default": true,
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:blossom_mooncake",
+      "link_recipe": false,
+      "text": "The Mid-Autumn mooncake. Set it on a wooden tray - up to five stack on one tray, and an empty hand takes them back.$(br2)Eating it grants Floating: while it lasts the air turns to water and you can swim through it.$(br2)Drinking a Lullaby at night earns you one.$(br2)It has no crafting recipe."
+    }
+  ]
+}

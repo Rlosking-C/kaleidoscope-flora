@@ -1,0 +1,7 @@
+{
+  "name": "恢复",
+  "description": "疾病之医者，是自然。$(br2)——希波克拉底学派",
+  "icon": "kaleidoscope_flora:lullaby",
+  "parent": "kaleidoscope_flora:flower_drinks",
+  "sortnum": 10
+}

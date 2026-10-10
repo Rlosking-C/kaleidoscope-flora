@@ -1,0 +1,19 @@
+{
+  "name": "茶壶",
+  "category": "kaleidoscope_flora:intro",
+  "icon": "kaleidoscope_cookery:teapot",
+  "read_by_default": true,
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "茶壶",
+      "text": "茶壶一次放入一个茶包，注入清水或牛奶，煮制 240 秒，即可得到 12 杯花饮。$(br2)用厨房的空杯接取，手持杯子长按右键就能饮用。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_cookery:teapot",
+      "text": "茶壶是「森罗物语：厨房」的方块，它的配方不属于本书能够绘制的类型——本书只能绘制原版的 7 种配方。请在 JEI 中查询 kaleidoscope_cookery:teapot。"
+    }
+  ]
+}

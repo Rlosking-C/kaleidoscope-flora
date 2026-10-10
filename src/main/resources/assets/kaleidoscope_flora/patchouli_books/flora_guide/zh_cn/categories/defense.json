@@ -1,0 +1,7 @@
+{
+  "name": "防护",
+  "description": "无人能伤我而不受罚。$(br2)——苏格兰蓟花勋章铭文",
+  "icon": "kaleidoscope_flora:tender_thorns",
+  "parent": "kaleidoscope_flora:flower_drinks",
+  "sortnum": 20
+}

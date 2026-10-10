@@ -1,0 +1,20 @@
+{
+  "name": "kaleidoscope_flora.guide.name",
+  "landing_text": "kaleidoscope_flora.guide.landing",
+  "subtitle": "",
+  "creative_tab": "kaleidoscope_flora:flora",
+  "use_resource_pack": true,
+  "i18n": false,
+  "show_progress": true,
+  "version": 0,
+  "macros": {},
+  "text_color": "14324A",
+  "header_color": "1E4C73",
+  "nameplate_color": "9FE0FF",
+  "link_color": "0F6FA5",
+  "link_hover_color": "2AA3DE",
+  "progress_bar_color": "4FB3E8",
+  "progress_bar_background": "C6DCEA",
+  "model": "kaleidoscope_flora:flora_guide",
+  "book_texture": "kaleidoscope_flora:textures/gui/flora_book.png"
+}

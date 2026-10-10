@@ -1,0 +1,24 @@
+{
+  "name": "霞光漫步",
+  "category": "kaleidoscope_flora:movement",
+  "icon": "kaleidoscope_flora:rosy_stride",
+  "sortnum": 1,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:rosy_stride",
+      "title": "霞光漫步",
+      "text": "粉红色郁金香 · 花饮$(br2)用粉红色郁金香花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)郁金香花苞里出生的姑娘，乘着花瓣渡过溪流。$(br2)——安徒生《拇指姑娘》"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "在水面行走、奔跑与跳跃，潜行可下沉。$(br2)$(br2)凌波 1:30"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/pink_tulip_tea_bag"
+    }
+  ]
+}

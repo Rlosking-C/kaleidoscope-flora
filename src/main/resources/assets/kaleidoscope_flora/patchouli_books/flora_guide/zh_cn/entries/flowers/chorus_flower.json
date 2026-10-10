@@ -1,0 +1,24 @@
+{
+  "name": "末地回响",
+  "category": "kaleidoscope_flora:movement",
+  "icon": "kaleidoscope_flora:echo_of_the_end",
+  "sortnum": 3,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:echo_of_the_end",
+      "title": "末地回响",
+      "text": "紫颂花 · 花饮$(br2)用紫颂花花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)众神造人时，把死亡赐给人，把生命留在自己手中。$(br2)——《吉尔伽美什》"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "致命一击被化解：随机传送，以一颗心存活；12秒内不死且免疫火焰。$(br2)$(br2)回响 5:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/chorus_flower_tea_bag"
+    }
+  ]
+}

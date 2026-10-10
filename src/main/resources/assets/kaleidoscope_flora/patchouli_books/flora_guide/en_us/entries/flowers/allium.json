@@ -1,0 +1,24 @@
+{
+  "name": "Fire Waltz",
+  "category": "kaleidoscope_flora:buff",
+  "icon": "kaleidoscope_flora:fire_waltz",
+  "sortnum": 3,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:fire_waltz",
+      "title": "Fire Waltz",
+      "text": "Allium · Flower Drink$(br2)Brewed from the Allium Tea Bag in a teapot with water; yields twelve cups.$(br2)$(br2)The bear that ate garlic and mugwort became human.$(br2)— Dangun mythology"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "Melee hits ignite the target.$(br2)$(br2)Fire Resistance 3:00, Fiery Brand 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/allium_tea_bag"
+    }
+  ]
+}

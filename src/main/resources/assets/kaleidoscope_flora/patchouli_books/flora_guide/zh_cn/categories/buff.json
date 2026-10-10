@@ -1,0 +1,7 @@
+{
+  "name": "增益",
+  "description": "幸运眷顾勇者。$(br2)——泰伦提乌斯《福尔弥昂》",
+  "icon": "kaleidoscope_flora:coronation",
+  "parent": "kaleidoscope_flora:flower_drinks",
+  "sortnum": 60
+}

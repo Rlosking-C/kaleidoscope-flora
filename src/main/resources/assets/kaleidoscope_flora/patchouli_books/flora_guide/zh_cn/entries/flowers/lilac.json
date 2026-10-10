@@ -1,0 +1,24 @@
+{
+  "name": "春之圆舞",
+  "category": "kaleidoscope_flora:buff",
+  "icon": "kaleidoscope_flora:spring_waltz",
+  "sortnum": 5,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:spring_waltz",
+      "title": "春之圆舞",
+      "text": "丁香 · 花饮$(br2)用丁香花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)春天回来了。大地像一个熟知诗篇的孩子。$(br2)——里尔克"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "免疫冻结与细雪，火焰与岩浆不灼身。$(br2)$(br2)温暖 4:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/lilac_tea_bag"
+    }
+  ]
+}

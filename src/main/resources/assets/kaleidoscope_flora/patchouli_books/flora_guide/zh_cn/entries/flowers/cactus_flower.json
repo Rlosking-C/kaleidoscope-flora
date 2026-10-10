@@ -1,0 +1,24 @@
+{
+  "name": "刹那芳华",
+  "category": "kaleidoscope_flora:defense",
+  "icon": "kaleidoscope_flora:fleeting_bloom",
+  "sortnum": 5,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:fleeting_bloom",
+      "title": "刹那芳华",
+      "text": "仙人掌花 · 花饮$(br2)用仙人掌花花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)人当真活在大地上吗？不会永远在大地上，只是短暂停留。$(br2)——内萨瓦尔科约特尔"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "同时获得速度、力量、急迫与抗性。$(br2)$(br2)迅捷 1:00、力量 1:00、急迫 1:00、抗性提升 1:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/cactus_flower_tea_bag"
+    }
+  ]
+}

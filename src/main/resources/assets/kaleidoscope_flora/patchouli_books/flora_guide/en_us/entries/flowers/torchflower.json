@@ -1,0 +1,24 @@
+{
+  "name": "Breath of the Ancients",
+  "category": "kaleidoscope_flora:sneak",
+  "icon": "kaleidoscope_flora:breath_of_ancients",
+  "sortnum": 1,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:breath_of_ancients",
+      "title": "Breath of the Ancients",
+      "text": "Torchflower · Flower Drink$(br2)Brewed from the Torchflower Tea Bag in a teapot with water; yields twelve cups.$(br2)$(br2)To speak the name of the dead is to make them live again.$(br2)— Egyptian Book of the Dead"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "Brush dirt-family blocks to excavate artifacts.$(br2)$(br2)Sniffer's Soul 5:00, Night Vision 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/torchflower_tea_bag"
+    }
+  ]
+}

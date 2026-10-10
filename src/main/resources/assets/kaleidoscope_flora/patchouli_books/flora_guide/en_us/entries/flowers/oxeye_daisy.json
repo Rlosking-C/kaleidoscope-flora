@@ -1,0 +1,24 @@
+{
+  "name": "Loves Me Not",
+  "category": "kaleidoscope_flora:recovery",
+  "icon": "kaleidoscope_flora:loves_me_not",
+  "sortnum": 2,
+  "read_by_default": false,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:loves_me_not",
+      "title": "Loves Me Not",
+      "text": "Oxeye Daisy · Flower Drink$(br2)Brewed from the Oxeye Daisy Tea Bag in a teapot with water; yields twelve cups.$(br2)$(br2)Pluck one - loves me; pluck another - loves me not.$(br2)— Petal-plucking divination"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "A small random boon every 8 seconds.$(br2)$(br2)A petal is plucked every 8 seconds, with four outcomes: a heart back, a little food, 3 s of Speed, or nothing at all.$(br2)$(br2)Regeneration 1:30, Divination 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/oxeye_daisy_tea_bag"
+    }
+  ]
+}

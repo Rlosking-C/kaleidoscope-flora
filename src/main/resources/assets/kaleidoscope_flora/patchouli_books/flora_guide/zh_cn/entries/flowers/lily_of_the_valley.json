@@ -1,0 +1,24 @@
+{
+  "name": "五月之吻",
+  "category": "kaleidoscope_flora:defense",
+  "icon": "kaleidoscope_flora:may_kiss",
+  "sortnum": 2,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:may_kiss",
+      "title": "五月之吻",
+      "text": "铃兰 · 花饮$(br2)用铃兰花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)我是沙仑的玫瑰，是谷中的百合。$(br2)——《雅歌》"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "受击时向四周释放毒云。$(br2)$(br2)生命提升 2:15、香吻 2:15"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/lily_of_the_valley_tea_bag"
+    }
+  ]
+}

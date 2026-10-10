@@ -1,0 +1,7 @@
+{
+  "name": "农作",
+  "description": "农夫何其幸，若知其福。$(br2)——维吉尔《农事诗》",
+  "icon": "kaleidoscope_flora:autumn_serenade",
+  "parent": "kaleidoscope_flora:flower_drinks",
+  "sortnum": 50
+}

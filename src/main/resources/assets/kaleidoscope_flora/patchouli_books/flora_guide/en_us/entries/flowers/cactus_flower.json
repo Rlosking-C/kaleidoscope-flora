@@ -1,0 +1,24 @@
+{
+  "name": "Fleeting Bloom",
+  "category": "kaleidoscope_flora:defense",
+  "icon": "kaleidoscope_flora:fleeting_bloom",
+  "sortnum": 5,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:fleeting_bloom",
+      "title": "Fleeting Bloom",
+      "text": "Cactus Flower · Flower Drink$(br2)Brewed from the Cactus Flower Tea Bag in a teapot with water; yields twelve cups.$(br2)$(br2)Do we truly live on earth? Not forever on earth, only a little while here.$(br2)— Nezahualcoyotl"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "Grants Speed, Strength, Haste and Resistance at once.$(br2)$(br2)Speed 1:00, Strength 1:00, Haste 1:00, Resistance 1:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/cactus_flower_tea_bag"
+    }
+  ]
+}

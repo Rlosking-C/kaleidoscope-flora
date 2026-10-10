@@ -1,0 +1,15 @@
+{
+  "name": "Toasted Flower Cake",
+  "category": "kaleidoscope_flora:food",
+  "icon": "kaleidoscope_flora:toasted_flower_cake",
+  "read_by_default": true,
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:toasted_flower_cake",
+      "link_recipe": false,
+      "text": "Made from a raw cake in Cookery's pot.$(br2)Eaten: 40 s of +20% movement speed, +3 attack damage and +10% mining efficiency.$(br2)Hunger drains twice as fast while it lasts, and it ends with 3 s of Slowness.$(br2)See JEI for the recipe."
+    }
+  ]
+}

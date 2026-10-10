@@ -1,0 +1,24 @@
+{
+  "name": "Hanami Tale",
+  "category": "kaleidoscope_flora:movement",
+  "icon": "kaleidoscope_flora:hanami_tale",
+  "sortnum": 4,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:hanami_tale",
+      "title": "Hanami Tale",
+      "text": "Pink Petals · Flower Drink$(br2)Brewed from the Pink Petals Tea Bag in a teapot with milk; yields twelve cups.$(br2)$(br2)Falling cherry blossoms, blossoms yet to fall - all shall fall.$(br2)— Ryōkan, death poem"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "Orbiting petals block incoming projectiles.$(br2)$(br2)Petal Veil 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/pink_petals_tea_bag"
+    }
+  ]
+}

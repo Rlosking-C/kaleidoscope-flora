@@ -1,0 +1,24 @@
+{
+  "name": "Springtime Stroll",
+  "category": "kaleidoscope_flora:farming",
+  "icon": "kaleidoscope_flora:springtime_stroll",
+  "sortnum": 3,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:springtime_stroll",
+      "title": "Springtime Stroll",
+      "text": "Wildflowers · Flower Drink$(br2)Brewed from the Wildflowers Tea Bag in a teapot with water; yields twelve cups.$(br2)$(br2)Wanderer, there is no road; the road is made by walking.$(br2)— Antonio Machado"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "Walking leaves flowers or carpet in your steps.$(br2)$(br2)Flower Path 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/wildflowers_tea_bag"
+    }
+  ]
+}

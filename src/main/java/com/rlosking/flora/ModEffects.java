@@ -175,6 +175,12 @@ public final class ModEffects {
      * <p><b>Why the penalty is a vanilla Slow rather than a custom effect:</b>
      * the point is legibility - the player should be able to look at their
      * effect bar and understand what happened without reading a tooltip.</p>
+     *
+     * <p><b>No icon file, on purpose.</b> This marker is applied with
+     * {@code visible = false} (see {@code FlowerCakeItem.eatToasted}), so it never
+     * takes a slot in the effect bar and its sprite is never drawn. The icon was
+     * deleted on 2026-10-09 at the author's request - do not add one back as a
+     * "fix" for the missing sprite.</p>
      */
     public static final DeferredHolder<MobEffect, MobEffect> TOASTED_CAKE =
             EFFECTS.register("toasted_cake", () -> new MarkerEffect(MobEffectCategory.BENEFICIAL, 0xD9A441));

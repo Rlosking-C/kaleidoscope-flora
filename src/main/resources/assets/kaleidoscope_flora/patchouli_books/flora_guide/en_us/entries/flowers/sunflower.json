@@ -1,0 +1,24 @@
+{
+  "name": "The Sunward",
+  "category": "kaleidoscope_flora:sneak",
+  "icon": "kaleidoscope_flora:the_sunward",
+  "sortnum": 2,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:the_sunward",
+      "title": "The Sunward",
+      "text": "Sunflower · Flower Drink$(br2)Brewed from the Sunflower Tea Bag in a teapot with water; yields twelve cups.$(br2)$(br2)The sunflower is mine.$(br2)— Vincent van Gogh"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "Regenerates under the open day sky; glows at night.$(br2)$(br2)Sunward 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/sunflower_tea_bag"
+    }
+  ]
+}

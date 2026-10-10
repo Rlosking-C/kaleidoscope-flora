@@ -1,0 +1,24 @@
+{
+  "name": "普鲁士之跃",
+  "category": "kaleidoscope_flora:movement",
+  "icon": "kaleidoscope_flora:prussian_leap",
+  "sortnum": 2,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:prussian_leap",
+      "title": "普鲁士之跃",
+      "text": "矢车菊 · 花饮$(br2)用矢车菊花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)尝过飞行滋味的人，行走大地时将永远仰望天空。$(br2)——达·芬奇"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "持续期间免疫坠落伤害。$(br2)$(br2)跳跃提升 1:30、轻身 1:30"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/cornflower_tea_bag"
+    }
+  ]
+}

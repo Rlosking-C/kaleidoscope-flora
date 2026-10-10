@@ -1,0 +1,7 @@
+{
+  "name": "Buffs",
+  "description": "Fortune aids the brave.$(br2)- Terence, Phormion",
+  "icon": "kaleidoscope_flora:coronation",
+  "parent": "kaleidoscope_flora:flower_drinks",
+  "sortnum": 60
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Vernal Awakening",
+  "category": "kaleidoscope_flora:farming",
+  "icon": "kaleidoscope_flora:vernal_awakening",
+  "sortnum": 2,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:vernal_awakening",
+      "title": "Vernal Awakening",
+      "text": "Spore Blossom · Flower Drink$(br2)Brewed from the Spore Blossom Tea Bag in a teapot with water; yields twelve cups.$(br2)$(br2)When you plant a seed, believe in the whole spring.$(br2)— Russian proverb"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "Ripens nearby crops at random.$(br2)$(br2)Sprouting 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/spore_blossom_tea_bag"
+    }
+  ]
+}

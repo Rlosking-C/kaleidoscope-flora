@@ -1,0 +1,24 @@
+{
+  "name": "First Bloom",
+  "category": "kaleidoscope_flora:recovery",
+  "icon": "kaleidoscope_flora:first_bloom",
+  "sortnum": 1,
+  "read_by_default": false,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:first_bloom",
+      "title": "First Bloom",
+      "text": "Blue Orchid · Flower Drink$(br2)Brewed from the Blue Orchid Tea Bag in a teapot with water; yields twelve cups.$(br2)$(br2)Coffee is our bread.$(br2)— Amharic proverb"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "Food restores +20% while it lasts, and a full belly grants Haste.$(br2)$(br2)Taste in Bloom 5:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/blue_orchid_tea_bag"
+    }
+  ]
+}

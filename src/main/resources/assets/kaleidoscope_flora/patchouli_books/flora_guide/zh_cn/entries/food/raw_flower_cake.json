@@ -1,0 +1,19 @@
+{
+  "name": "生鲜花饼",
+  "category": "kaleidoscope_flora:food",
+  "icon": "kaleidoscope_flora:raw_flower_cake",
+  "read_by_default": true,
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:raw_flower_cake",
+      "link_recipe": false,
+      "text": "还没熟的饼。像雪球一样投掷出去，命中的目标被定身 1 秒。$(br2)潜行右键可以把它放下。$(br2)做熟之后才是能吃的鲜花饼。"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:raw_flower_cake"
+    }
+  ]
+}

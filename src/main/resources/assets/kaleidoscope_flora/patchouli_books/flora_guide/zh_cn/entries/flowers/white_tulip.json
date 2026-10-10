@@ -1,0 +1,24 @@
+{
+  "name": "赦免",
+  "category": "kaleidoscope_flora:defense",
+  "icon": "kaleidoscope_flora:absolution",
+  "sortnum": 1,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:absolution",
+      "title": "赦免",
+      "text": "白色郁金香 · 花饮$(br2)用白色郁金香花茶包在茶壶里加牛奶冲泡而成，产出十二杯。$(br2)$(br2)弱者永不宽恕，宽恕是强者的属性。$(br2)——甘地"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "免疫新施加的负面效果。$(br2)$(br2)赦免 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/white_tulip_tea_bag"
+    }
+  ]
+}

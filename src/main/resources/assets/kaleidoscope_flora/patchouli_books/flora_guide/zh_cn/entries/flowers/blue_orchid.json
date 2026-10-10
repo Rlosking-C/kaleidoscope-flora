@@ -1,0 +1,24 @@
+{
+  "name": "初绽",
+  "category": "kaleidoscope_flora:recovery",
+  "icon": "kaleidoscope_flora:first_bloom",
+  "sortnum": 1,
+  "read_by_default": false,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:first_bloom",
+      "title": "初绽",
+      "text": "兰花 · 花饮$(br2)用兰花花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)咖啡即是我们的面包。$(br2)——阿姆哈拉谚语"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "期间进食恢复 +20%，饱腹时获得急迫。$(br2)$(br2)味觉绽放 5:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/blue_orchid_tea_bag"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Les Fleurs du Mal",
+  "category": "kaleidoscope_flora:defense",
+  "icon": "kaleidoscope_flora:fleurs_du_mal",
+  "sortnum": 4,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:fleurs_du_mal",
+      "title": "Les Fleurs du Mal",
+      "text": "Wither Rose · Flower Drink$(br2)Brewed from the Wither Rose Tea Bag in a teapot with water; yields twelve cups.$(br2)$(br2)Some flowers bloom more brightly on graves than in gardens.$(br2)— Charles Baudelaire, Les Fleurs du Mal"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "Nearby beings wither within 7 blocks; you are immune.$(br2)$(br2)Withering Aura 3:00, Wither 0:02"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/wither_rose_tea_bag"
+    }
+  ]
+}

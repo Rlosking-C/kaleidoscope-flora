@@ -1,0 +1,24 @@
+{
+  "name": "花之加冕",
+  "category": "kaleidoscope_flora:buff",
+  "icon": "kaleidoscope_flora:coronation",
+  "sortnum": 1,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:coronation",
+      "title": "花之加冕",
+      "text": "牡丹 · 花饮$(br2)用牡丹花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)黄金是太阳的汗水。$(br2)——印加箴言"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "获得幸运与村庄英雄（村民交易打折），金色粒子环绕。$(br2)$(br2)幸运 3:00、村庄英雄 1:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/peony_tea_bag"
+    }
+  ]
+}

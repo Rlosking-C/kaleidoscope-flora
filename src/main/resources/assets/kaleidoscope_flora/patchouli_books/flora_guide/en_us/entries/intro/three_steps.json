@@ -1,0 +1,19 @@
+{
+  "name": "Conventions",
+  "category": "kaleidoscope_flora:intro",
+  "icon": "minecraft:dandelion",
+  "read_by_default": true,
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "Method",
+      "text": "Making a flower drink takes three steps.$(br2)$(li)Pick the flowers.$(li)Follow that flower's recipe and arrange the flowers and the extra ingredients in the crafting grid to make a tea bag.$(li)Put the tea bag in the teapot, pour in water or milk, and brew for 240 seconds.$(br2)Every flower has its own recipe, so check the Recipe page of the entry you want. One pot yields 12 cups."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Layout",
+      "text": "This book is arranged as follows.$(br2)$(li)Every flower drink is sorted into one of six groups by the effect it leaves behind; browse them under Flower Drinks.$(li)Each entry gives the finished drink, its effect, its recipe and how to drink it.$(li)Recipes are always drawn as real crafting tables.$(li)Each entry closes with a maxim."
+    }
+  ]
+}
