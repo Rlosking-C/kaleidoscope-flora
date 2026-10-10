@@ -4,9 +4,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.TeacupRegistry;
 import com.rlosking.flora.BlossomMooncakes;
 import com.rlosking.flora.KaleidoscopeFlora;
 import com.rlosking.flora.FloraAdvancements;
-import com.rlosking.flora.FlowerPerchItem;
-import com.rlosking.flora.FlowerPerches;
-import com.rlosking.flora.PerchWood;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -45,19 +42,7 @@ public enum FloraTabCategory {
             ResourceLocation.fromNamespaceAndPath(KaleidoscopeFlora.MOD_ID, "lullaby")))),
 
     /** Tea bags, the mooncake and the flower cakes. */
-    OTHER("other", () -> new ItemStack(BlossomMooncakes.ITEM.get())),
-
-    /**
-     * The v0.4.0 Flower Perch family - the empty perches you plant into.
-     *
-     * <p>Added on the author's request for 0.4.0. The class doc's "two sections"
-     * note still explains why the column was two buttons while the perch did not
-     * exist; with a whole block family there is now something to separate.</p>
-     *
-     * <p>Icon: the oak perch, chosen because it is the first wood in the
-     * catalogue and needs no new art.</p>
-     */
-    PERCH("perch", () -> new ItemStack(FlowerPerches.emptyPerchItem(PerchWood.DEFAULT).get()));
+    OTHER("other", () -> new ItemStack(BlossomMooncakes.ITEM.get()));
 
     private final String key;
     private final Supplier<ItemStack> icon;
@@ -79,13 +64,12 @@ public enum FloraTabCategory {
 
     /** Whether an item belongs in this section. */
     public boolean accepts(ItemStack stack) {
-        // Strictly exclusive: a drink shows up in DRINKS only, a perch in PERCH
-        // only, everything else in OTHER only. (A non-exclusive version made
-        // drinks appear in two sections at once.)
+        // Strictly exclusive: a drink shows up in DRINKS only, everything else in
+        // OTHER only. (A non-exclusive version made drinks appear in two sections
+        // at once.)
         if (this == DRINKS) {
             return FloraAdvancements.isFloraDrink(stack);
         }
-        boolean perch = stack.getItem() instanceof FlowerPerchItem;
-        return this == PERCH ? perch : !perch && !FloraAdvancements.isFloraDrink(stack);
+        return !FloraAdvancements.isFloraDrink(stack);
     }
 }

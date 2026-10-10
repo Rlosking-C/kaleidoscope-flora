@@ -65,12 +65,6 @@ public final class FloraCreativeTab {
                 output.accept(item);
             }
         }
-        // v0.4.0: the Flower Perch family, one last group. Only the EMPTY perches
-        // are items - planting replaces the block in place, so a planted perch
-        // has no item form (see FlowerPerches / PlantedFlowerPerchBlock).
-        for (var item : FlowerPerches.emptyPerchItems()) {
-            output.accept(item.get());
-        }
         // v0.3.5: the guide book is NOT added here. Patchouli reads the book's
         // own "creative_tab" field and inserts the guide itself; adding it a
         // second time throws "Itemstack 1 patchouli:guide_book already exists
