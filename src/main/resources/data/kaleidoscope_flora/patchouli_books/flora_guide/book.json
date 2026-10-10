@@ -1,7 +1,7 @@
 {
   "name": "kaleidoscope_flora.guide.name",
   "landing_text": "kaleidoscope_flora.guide.landing",
-  "subtitle": "",
+  "subtitle": "kaleidoscope_flora.guide.subtitle",
   "creative_tab": "kaleidoscope_flora:flora",
   "use_resource_pack": true,
   "i18n": false,
