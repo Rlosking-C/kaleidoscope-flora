@@ -59,17 +59,6 @@ public class KaleidoscopeFlora {
         // events and one mixin - see FlowerCakes.
         FlowerCakes.register(modBus);
 
-        // v0.4.0: the bloom-petal particle TYPE. Particle types are a synced
-        // registry, so this belongs on both sides - and it must be registered
-        // before the client's RegisterParticleProvidersEvent fires, or the
-        // provider lookup hits an unbound ResourceKey and the client crashes
-        // (that is exactly what happened on the first 0.4.0 run).
-        FloraParticleTypes.PARTICLES.register(modBus);
-
-        // v0.4.0 Flower Perch: the empty-perch blocks/items, the 26 planted
-        // perches and the pale-oak variant gated on VanillaBackport.
-        FlowerPerches.register(modBus);
-
         // Own creative tab (tea bags, mooncake, all drinks), and the drinks
         // leave Cookery's food tab - see FloraCreativeTab for the mechanism.
         FloraCreativeTab.register(modBus);
@@ -78,9 +67,6 @@ public class KaleidoscopeFlora {
             // Mod-list "Configure" button: NeoForge's built-in screen for our
             // COMMON config (no hand-rolled GUI to maintain).
             com.rlosking.flora.client.FloraConfigScreen.register(container);
-            // v0.4.0: the bloom petal particle and its client provider. Mod bus,
-            // because RegisterParticleProvidersEvent is a mod-bus event.
-            com.rlosking.flora.client.AromaParticles.register(modBus);
         }
 
         // Teacup data must be pushed inside the mod constructor: NeoForge

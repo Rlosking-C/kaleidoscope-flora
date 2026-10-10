@@ -58,12 +58,6 @@ public final class FloraConfig {
      */
     public final ModConfigSpec.IntValue doubleJumpCount;
 
-    /** Flower Perch (v0.4.0): growth time and the bloom petal shower. */
-    public final ModConfigSpec.DoubleValue perchGrowthMinutesMin;
-    public final ModConfigSpec.DoubleValue perchGrowthMinutesMax;
-    public final ModConfigSpec.DoubleValue perchAromaDensity;
-    public final ModConfigSpec.DoubleValue perchAromaRange;
-
     // ------------------------------------------------------------------
     // Farming
     // ------------------------------------------------------------------
@@ -117,33 +111,6 @@ public final class FloraConfig {
 
         builder.pop();
 
-        builder.comment("Kaleidoscope Flora - Flower Perch Settings",
-                        "森罗物语：花香四溢 - 花居设置")
-                .push("flower_perch");
-
-        perchGrowthMinutesMin = builder
-                .comment("Shortest time a planted flower takes to reach full bloom, in minutes.",
-                        "种植到盛放所需的最短时间（分钟）。")
-                .defineInRange("perchGrowthMinutesMin", 3.0, 0.05, 60.0);
-
-        perchGrowthMinutesMax = builder
-                .comment("Longest time a planted flower takes to reach full bloom, in minutes.",
-                        "种植到盛放所需的最长时间（分钟）；若小于最短值，按最短值处理。")
-                .defineInRange("perchGrowthMinutesMax", 5.0, 0.05, 60.0);
-
-        perchAromaDensity = builder
-                .comment("Bloom petal particles per tick, per perch - the DEFAULT look preset.",
-                        "0 disables the shower; the in-game look presets are 0.5 / 1.5 / 3.0.",
-                        "每座盛放花居每 tick 飘落的花瓣数（默认观感档）。0 = 关闭；档位为 0.5 / 1.5 / 3.0。")
-                .defineInRange("perchAromaDensity", 1.5, 0.0, 4.0);
-
-        perchAromaRange = builder
-                .comment("Horizontal radius of the petal shower, in blocks.",
-                        "花瓣飘落的水平半径（格）。")
-                .defineInRange("perchAromaRange", 16.0, 0.5, 32.0);
-
-        builder.pop();
-
         // The "farming" category held exactly one option, harvestMaxDropMultiplier,
         // and v0.3.4 removed it: the Autumn Serenade effect is charge-based now
         // (20 harvests at a fixed x2-x3), so a configurable upper bound has
@@ -164,15 +131,4 @@ public final class FloraConfig {
     public static double auraRangeMultiplier() { return CONFIG.auraRangeMultiplier.get(); }
     public static double vampiricHealPercent() { return CONFIG.vampiricHealPercent.get(); }
     public static int doubleJumpCount() { return CONFIG.doubleJumpCount.get(); }
-
-    public static double perchGrowthMinutesMin() { return CONFIG.perchGrowthMinutesMin.get(); }
-
-    /** Never below the minimum: Mth.nextDouble needs low < high or it throws. */
-    public static double perchGrowthMinutesMax() {
-        return Math.max(CONFIG.perchGrowthMinutesMax.get(), CONFIG.perchGrowthMinutesMin.get());
-    }
-
-    public static double perchAromaDensity() { return CONFIG.perchAromaDensity.get(); }
-
-    public static double perchAromaRange() { return CONFIG.perchAromaRange.get(); }
 }
