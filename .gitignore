@@ -67,3 +67,8 @@ Thumbs.db
 
 # Source handover archives (e.g. for the 1.20.1 port) - local only
 /src*.zip
+
+# AI agent tooling - local-only, not part of the mod (2026-10-09)
+.agents/
+.mc-skill/
+AGENTS.md
