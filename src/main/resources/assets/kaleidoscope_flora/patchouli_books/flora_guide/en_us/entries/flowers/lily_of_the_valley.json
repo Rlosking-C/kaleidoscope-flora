@@ -1,0 +1,24 @@
+{
+  "name": "May Kiss",
+  "category": "kaleidoscope_flora:defense",
+  "icon": "kaleidoscope_flora:may_kiss",
+  "sortnum": 2,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:may_kiss",
+      "title": "May Kiss",
+      "text": "Lily of the Valley · Flower Drink$(br2)Brewed from the Lily of the Valley Tea Bag in a teapot with water; yields twelve cups.$(br2)$(br2)I am the rose of Sharon, and the lily of the valleys.$(br2)— Song of Songs"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "Releases a poison cloud when struck.$(br2)$(br2)Health Boost 2:15, Lingering Kiss 2:15"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/lily_of_the_valley_tea_bag"
+    }
+  ]
+}

@@ -88,6 +88,10 @@ public final class FloraAdvancements {
     public static final String EVENT_RAW_THREE_PINS = "raw_three_pins";
     public static final String EVENT_DEW_HIGH_IMPACT = "dew_high_impact";
 
+    // v0.4.0 Flower Perch
+    public static final String EVENT_FIRST_PERCH = "first_perch";
+    public static final String EVENT_FULL_BLOOM_PERCH = "full_bloom_perch";
+
     /**
      * Pin targets and their timestamps, per thrower, for the "three in one
      * second" challenge.
@@ -114,6 +118,20 @@ public final class FloraAdvancements {
      */
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Set<ResourceLocation>>> TASTED =
             ATTACHMENTS.register("tasted_drinks", () -> AttachmentType
+                    .<Set<ResourceLocation>>builder(() -> new HashSet<>())
+                    .serialize(ResourceLocation.CODEC.listOf().xmap(
+                            list -> (Set<ResourceLocation>) new HashSet<>(list),
+                            set -> new ArrayList<>(set)))
+                    .copyOnDeath()
+                    .build());
+
+    /**
+     * The set of flower ids that have reached full bloom in a perch. Same
+     * shape and same reasoning as TASTED above: serialized with the player,
+     * copied on death, so a collection is never lost to a respawn.
+     */
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Set<ResourceLocation>>> BLOOMED_PERCHES =
+            ATTACHMENTS.register("bloomed_perches", () -> AttachmentType
                     .<Set<ResourceLocation>>builder(() -> new HashSet<>())
                     .serialize(ResourceLocation.CODEC.listOf().xmap(
                             list -> (Set<ResourceLocation>) new HashSet<>(list),
@@ -400,6 +418,23 @@ public final class FloraAdvancements {
         award(player, EVENT_DEW_IMPACT);
         if (drop >= DEW_HIGH_IMPACT_DROP) {
             award(player, EVENT_DEW_HIGH_IMPACT);
+        }
+    }
+
+    /** One flower planted in a perch ("初居一花"). */
+    public static void perchPlanted(ServerPlayer player) {
+        award(player, EVENT_FIRST_PERCH);
+    }
+
+    /**
+     * One flower reached full bloom in a perch ("花居满庭"). The goal is the
+     * live perch-flower count rather than a literal, so adding a flower to
+     * FlowerPerches later cannot silently make this achievement unreachable.
+     */
+    public static void perchBloomed(ServerPlayer player, ResourceLocation flowerId) {
+        Set<ResourceLocation> bloomed = player.getData(BLOOMED_PERCHES.get());
+        if (bloomed.add(flowerId) && bloomed.size() >= FlowerPerches.perchFlowerCount()) {
+            award(player, EVENT_FULL_BLOOM_PERCH);
         }
     }
 

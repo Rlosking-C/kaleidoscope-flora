@@ -1,0 +1,24 @@
+{
+  "name": "Lullaby",
+  "category": "kaleidoscope_flora:recovery",
+  "icon": "kaleidoscope_flora:lullaby",
+  "sortnum": 3,
+  "read_by_default": false,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:lullaby",
+      "title": "Lullaby",
+      "text": "Poppy · Flower Drink$(br2)Brewed from the Poppy Tea Bag in a teapot with water; yields twelve cups.$(br2)$(br2)In dreams I forget I am a guest, and snatch a moment of joy.$(br2)— Li Yu, Lang Tao Sha Ling"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "Hostiles within 7 blocks become drowsy; phantoms stop hunting.$(br2)$(br2)Drowsiness 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/poppy_tea_bag"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Spring Waltz",
+  "category": "kaleidoscope_flora:buff",
+  "icon": "kaleidoscope_flora:spring_waltz",
+  "sortnum": 5,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:spring_waltz",
+      "title": "Spring Waltz",
+      "text": "Lilac · Flower Drink$(br2)Brewed from the Lilac Tea Bag in a teapot with water; yields twelve cups.$(br2)$(br2)Spring has returned. The Earth is like a child that knows poems.$(br2)— Rainer Maria Rilke"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "Immune to freezing, powder snow, fire and lava.$(br2)$(br2)Warmth 4:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/lilac_tea_bag"
+    }
+  ]
+}

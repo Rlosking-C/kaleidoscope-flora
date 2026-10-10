@@ -1,0 +1,24 @@
+{
+  "name": "火焰圆舞",
+  "category": "kaleidoscope_flora:buff",
+  "icon": "kaleidoscope_flora:fire_waltz",
+  "sortnum": 3,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:fire_waltz",
+      "title": "火焰圆舞",
+      "text": "绒球葱 · 花饮$(br2)用绒球葱花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)吃了蒜与艾草的熊，变成了人。$(br2)——檀君神话"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "近战攻击点燃目标。$(br2)$(br2)抗火 3:00、辛焰 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/allium_tea_bag"
+    }
+  ]
+}

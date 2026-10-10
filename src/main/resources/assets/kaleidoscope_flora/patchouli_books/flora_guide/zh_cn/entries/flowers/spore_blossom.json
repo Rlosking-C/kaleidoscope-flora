@@ -1,0 +1,24 @@
+{
+  "name": "万物萌发",
+  "category": "kaleidoscope_flora:farming",
+  "icon": "kaleidoscope_flora:vernal_awakening",
+  "sortnum": 2,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:vernal_awakening",
+      "title": "万物萌发",
+      "text": "孢子花 · 花饮$(br2)用孢子花花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)你埋下一粒种子，就要相信整个春天。$(br2)——俄罗斯谚语"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "周围的作物随机催熟。$(br2)$(br2)萌发 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/spore_blossom_tea_bag"
+    }
+  ]
+}

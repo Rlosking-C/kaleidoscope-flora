@@ -1,0 +1,25 @@
+{
+  "name": "The Gaze",
+  "category": "kaleidoscope_flora:buff",
+  "icon": "kaleidoscope_flora:the_gaze",
+  "sortnum": 6,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:the_gaze",
+      "title": "The Gaze",
+      "text": "Eyeblossom · Flower Drink$(br2)Brewed from the Eyeblossom Tea Bag in a teapot with water; yields twelve cups.$(br2)$(br2)If you gaze long into an abyss, the abyss gazes also into you.$(br2)— Friedrich Nietzsche, Beyond Good and Evil"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "All beings within 25 blocks glow; a straight stare pins them for 4s, then slows.$(br2)$(br2)Gaze 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/closed_eyeblossom",
+      "recipe2": "kaleidoscope_flora:tea_bag/open_eyeblossom"
+    }
+  ]
+}

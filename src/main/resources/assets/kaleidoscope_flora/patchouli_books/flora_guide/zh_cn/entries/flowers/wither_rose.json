@@ -1,0 +1,24 @@
+{
+  "name": "恶之花",
+  "category": "kaleidoscope_flora:defense",
+  "icon": "kaleidoscope_flora:fleurs_du_mal",
+  "sortnum": 4,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:fleurs_du_mal",
+      "title": "恶之花",
+      "text": "凋灵玫瑰 · 花饮$(br2)用凋灵玫瑰花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)有些花开在坟茔上，比花园里更艳。$(br2)——波德莱尔《恶之花》"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "周围7格内的生物持续凋零，你自身免疫。$(br2)$(br2)凋零光环 3:00、凋零 0:02"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/wither_rose_tea_bag"
+    }
+  ]
+}

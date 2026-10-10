@@ -1,0 +1,19 @@
+{
+  "name": "The Teapot",
+  "category": "kaleidoscope_flora:intro",
+  "icon": "kaleidoscope_cookery:teapot",
+  "read_by_default": true,
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "The Teapot",
+      "text": "The pot takes one tea bag at a time. Pour in water or milk, brew for 240 seconds, and you get 12 cups.$(br2)Catch them in an empty cup from the kitchen, then hold the cup and use it."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_cookery:teapot",
+      "text": "The teapot comes from Kaleidoscope Cookery. Its recipe is not one this book can draw - only the 7 vanilla recipe types can be. Look it up in JEI under kaleidoscope_cookery:teapot."
+    }
+  ]
+}

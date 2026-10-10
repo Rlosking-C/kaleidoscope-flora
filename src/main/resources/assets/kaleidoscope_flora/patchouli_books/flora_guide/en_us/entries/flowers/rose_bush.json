@@ -1,0 +1,24 @@
+{
+  "name": "Tender Thorns",
+  "category": "kaleidoscope_flora:defense",
+  "icon": "kaleidoscope_flora:tender_thorns",
+  "sortnum": 3,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:tender_thorns",
+      "title": "Tender Thorns",
+      "text": "Rose Bush · Flower Drink$(br2)Brewed from the Rose Bush Tea Bag in a teapot with water; yields twelve cups.$(br2)$(br2)O my luve is like a red, red rose.$(br2)— Robert Burns"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "Attackers take 50%-200% of their own damage back, plus Weakness.$(br2)$(br2)Thorns 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/rose_bush_tea_bag"
+    }
+  ]
+}

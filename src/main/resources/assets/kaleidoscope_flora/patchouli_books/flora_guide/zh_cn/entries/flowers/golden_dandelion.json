@@ -1,0 +1,24 @@
+{
+  "name": "如愿",
+  "category": "kaleidoscope_flora:buff",
+  "icon": "kaleidoscope_flora:as_you_wish",
+  "sortnum": 7,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:as_you_wish",
+      "title": "如愿",
+      "text": "金蒲公英 · 花饮$(br2)用金蒲公英花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)擦亮神灯的人，只许一个愿望。$(br2)——《一千零一夜》"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "随机获得一个二级增益或幸运。$(br2)$(br2)如愿 即刻"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/golden_dandelion_tea_bag"
+    }
+  ]
+}

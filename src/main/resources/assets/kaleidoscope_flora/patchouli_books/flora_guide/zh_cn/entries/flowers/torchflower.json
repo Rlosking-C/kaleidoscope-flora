@@ -1,0 +1,24 @@
+{
+  "name": "上古之息",
+  "category": "kaleidoscope_flora:sneak",
+  "icon": "kaleidoscope_flora:breath_of_ancients",
+  "sortnum": 1,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:breath_of_ancients",
+      "title": "上古之息",
+      "text": "火把花 · 花饮$(br2)用火把花花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)说出亡者的名字，便让他们再度活着。$(br2)——《亡灵书》"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "手持刷子右键泥土族方块可挖掘古物。$(br2)$(br2)嗅探者之魂 5:00、夜视 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/torchflower_tea_bag"
+    }
+  ]
+}

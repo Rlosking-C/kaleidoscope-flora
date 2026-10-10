@@ -1,0 +1,7 @@
+{
+  "name": "潜行",
+  "description": "天性善于隐藏。$(br2)——赫拉克利特，残篇一二三",
+  "icon": "kaleidoscope_flora:the_unnoticed",
+  "parent": "kaleidoscope_flora:flower_drinks",
+  "sortnum": 40
+}

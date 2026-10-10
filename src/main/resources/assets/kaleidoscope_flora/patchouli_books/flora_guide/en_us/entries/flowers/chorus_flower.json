@@ -1,0 +1,24 @@
+{
+  "name": "Echo of the End",
+  "category": "kaleidoscope_flora:movement",
+  "icon": "kaleidoscope_flora:echo_of_the_end",
+  "sortnum": 3,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:echo_of_the_end",
+      "title": "Echo of the End",
+      "text": "Chorus Flower · Flower Drink$(br2)Brewed from the Chorus Flower Tea Bag in a teapot with water; yields twelve cups.$(br2)$(br2)The gods gave death to mankind, and kept life for themselves.$(br2)— Epic of Gilgamesh"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "A killing blow is answered: blink away alive on one heart, deathless and fireproof for 12s.$(br2)$(br2)Echo 5:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/chorus_flower_tea_bag"
+    }
+  ]
+}

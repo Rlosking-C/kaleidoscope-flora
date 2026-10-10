@@ -1,0 +1,15 @@
+{
+  "name": "花月饼",
+  "category": "kaleidoscope_flora:food",
+  "icon": "kaleidoscope_flora:blossom_mooncake",
+  "read_by_default": true,
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:blossom_mooncake",
+      "link_recipe": false,
+      "text": "中秋的月饼。放在木托盘上，一块托盘最多叠五块；空手右键可以把月饼取回来。$(br2)吃下获得 浮游：效果期间空气化作水，可以在空中游动。$(br2)夜里喝一杯安眠曲，会换来一块花月饼。$(br2)没有合成配方。"
+    }
+  ]
+}

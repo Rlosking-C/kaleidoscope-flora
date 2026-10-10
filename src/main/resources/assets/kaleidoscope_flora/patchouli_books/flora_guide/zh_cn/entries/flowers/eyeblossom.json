@@ -1,0 +1,25 @@
+{
+  "name": "凝视",
+  "category": "kaleidoscope_flora:buff",
+  "icon": "kaleidoscope_flora:the_gaze",
+  "sortnum": 6,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:the_gaze",
+      "title": "凝视",
+      "text": "眼眸花 · 花饮$(br2)用眼眸花花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)当你凝视深渊时，深渊也在凝视你。$(br2)——尼采《善恶的彼岸》"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "25格内的所有生物发光；直视的目标被定身4秒，随后迟缓。$(br2)$(br2)凝视 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/closed_eyeblossom",
+      "recipe2": "kaleidoscope_flora:tea_bag/open_eyeblossom"
+    }
+  ]
+}

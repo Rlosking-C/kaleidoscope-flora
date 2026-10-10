@@ -1,0 +1,24 @@
+{
+  "name": "When the Wind Rises",
+  "category": "kaleidoscope_flora:recovery",
+  "icon": "kaleidoscope_flora:when_the_wind_rises",
+  "sortnum": 4,
+  "read_by_default": false,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:when_the_wind_rises",
+      "title": "When the Wind Rises",
+      "text": "Dandelion · Flower Drink$(br2)Brewed from the Dandelion Tea Bag in a teapot with milk; yields twelve cups.$(br2)$(br2)The earth delights to feel your bare feet, and the winds long to play with your hair.$(br2)— Kahlil Gibran, The Prophet"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "Instantly clears up to 3 negative effects and grants Slow Falling.$(br2)$(br2)Purge instant, Slow Falling 1:30"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/dandelion_tea_bag"
+    }
+  ]
+}

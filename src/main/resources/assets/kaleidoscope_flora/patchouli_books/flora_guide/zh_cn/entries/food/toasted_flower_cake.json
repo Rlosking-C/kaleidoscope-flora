@@ -1,0 +1,15 @@
+{
+  "name": "焦香鲜花饼",
+  "category": "kaleidoscope_flora:food",
+  "icon": "kaleidoscope_flora:toasted_flower_cake",
+  "read_by_default": true,
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:toasted_flower_cake",
+      "link_recipe": false,
+      "text": "用厨房的锅把生鲜花饼做出来。$(br2)吃下后 40 秒内：移动速度 +20%、力量 +3、挖掘效率 +10%。$(br2)代价是期间饱食度消耗翻倍，效果结束后乏力 3 秒。$(br2)配方见 JEI。"
+    }
+  ]
+}

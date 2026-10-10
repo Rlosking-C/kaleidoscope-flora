@@ -1,0 +1,7 @@
+{
+  "name": "移动",
+  "description": "渡海者易其天，难易其心。$(br2)——贺拉斯《书信集》",
+  "icon": "kaleidoscope_flora:rosy_stride",
+  "parent": "kaleidoscope_flora:flower_drinks",
+  "sortnum": 30
+}

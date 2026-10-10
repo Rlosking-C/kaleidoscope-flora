@@ -1,0 +1,24 @@
+{
+  "name": "Crimson Heartbeat",
+  "category": "kaleidoscope_flora:buff",
+  "icon": "kaleidoscope_flora:crimson_heartbeat",
+  "sortnum": 2,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:crimson_heartbeat",
+      "title": "Crimson Heartbeat",
+      "text": "Red Tulip · Flower Drink$(br2)Brewed from the Red Tulip Tea Bag in a teapot with water; yields twelve cups.$(br2)$(br2)Where the lover's blood fell, red tulips grew.$(br2)— Legend of Khosrow and Shirin"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "20% of your melee damage returns as health.$(br2)$(br2)Vampiric 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/red_tulip_tea_bag"
+    }
+  ]
+}

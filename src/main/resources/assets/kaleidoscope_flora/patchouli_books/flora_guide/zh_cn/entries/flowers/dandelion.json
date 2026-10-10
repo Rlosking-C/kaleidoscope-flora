@@ -1,0 +1,24 @@
+{
+  "name": "风起时",
+  "category": "kaleidoscope_flora:recovery",
+  "icon": "kaleidoscope_flora:when_the_wind_rises",
+  "sortnum": 4,
+  "read_by_default": false,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:when_the_wind_rises",
+      "title": "风起时",
+      "text": "蒲公英 · 花饮$(br2)用蒲公英花茶包在茶壶里加牛奶冲泡而成，产出十二杯。$(br2)$(br2)大地喜欢感受你赤足的触碰，风渴望与你发丝嬉戏。$(br2)——纪伯伦《先知》"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "饮用瞬间清除最多 3 个负面效果，并获得缓降。$(br2)$(br2)净化 即刻、缓降 1:30"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/dandelion_tea_bag"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Raw Flower Cake",
+  "category": "kaleidoscope_flora:food",
+  "icon": "kaleidoscope_flora:raw_flower_cake",
+  "read_by_default": true,
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:raw_flower_cake",
+      "link_recipe": false,
+      "text": "The uncooked cake. Thrown like a snowball, and whatever it hits is pinned in place for 1 second.$(br2)Sneak-use to set one down.$(br2)It has to be cooked before it is worth eating."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:raw_flower_cake"
+    }
+  ]
+}

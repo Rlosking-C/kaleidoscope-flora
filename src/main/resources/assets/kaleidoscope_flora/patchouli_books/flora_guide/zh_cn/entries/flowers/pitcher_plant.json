@@ -1,0 +1,24 @@
+{
+  "name": "贪婪之瓮",
+  "category": "kaleidoscope_flora:buff",
+  "icon": "kaleidoscope_flora:voracious_urn",
+  "sortnum": 4,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:voracious_urn",
+      "title": "贪婪之瓮",
+      "text": "瓶子草 · 花饮$(br2)用瓶子草花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)此刻我关心食虫植物，胜过世上一切物种的起源。$(br2)——达尔文书信"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "击杀视为掠夺等级 +1，且有三成概率掉落翻倍。$(br2)$(br2)消化 4:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/pitcher_plant_tea_bag"
+    }
+  ]
+}

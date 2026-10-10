@@ -1,0 +1,7 @@
+{
+  "name": "Stealth",
+  "description": "Nature is wont to hide herself.$(br2)- Heraclitus, Fragment 123",
+  "icon": "kaleidoscope_flora:the_unnoticed",
+  "parent": "kaleidoscope_flora:flower_drinks",
+  "sortnum": 40
+}

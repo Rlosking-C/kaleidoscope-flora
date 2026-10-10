@@ -1,0 +1,24 @@
+{
+  "name": "安眠曲",
+  "category": "kaleidoscope_flora:recovery",
+  "icon": "kaleidoscope_flora:lullaby",
+  "sortnum": 3,
+  "read_by_default": false,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:lullaby",
+      "title": "安眠曲",
+      "text": "虞美人 · 花饮$(br2)用虞美人花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)梦里不知身是客，一晌贪欢。$(br2)——李煜《浪淘沙令》"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "7格内的敌对生物陷入困倦，幻翼不再索敌。$(br2)$(br2)困倦 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/poppy_tea_bag"
+    }
+  ]
+}

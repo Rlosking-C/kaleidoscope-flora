@@ -1,0 +1,19 @@
+{
+  "name": "凡例",
+  "category": "kaleidoscope_flora:intro",
+  "icon": "minecraft:dandelion",
+  "read_by_default": true,
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "制法",
+      "text": "制作花饮分三步。$(br2)$(li)采摘花朵。$(li)按该花的配方，在合成表中摆好花朵与辅料，制成茶包。$(li)把茶包放进茶壶，注入清水或牛奶，煮制 240 秒。$(br2)每一款花的配方都不一样，具体摆法请看对应篇目的「配方」页。一壶可以煮出 12 杯。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "编排",
+      "text": "本书的编排方式如下。$(br2)$(li)全部花饮按饮用后的效果分为六类，可在「花饮」目录下逐类查阅。$(li)每一款都列出成品、效果、配方和饮用方法。$(li)配方一律绘制真实的合成表。$(li)每一款末尾附一句箴言。"
+    }
+  ]
+}

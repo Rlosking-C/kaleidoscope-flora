@@ -1,0 +1,24 @@
+{
+  "name": "The Voracious Urn",
+  "category": "kaleidoscope_flora:buff",
+  "icon": "kaleidoscope_flora:voracious_urn",
+  "sortnum": 4,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:voracious_urn",
+      "title": "The Voracious Urn",
+      "text": "Pitcher Plant · Flower Drink$(br2)Brewed from the Pitcher Plant Tea Bag in a teapot with water; yields twelve cups.$(br2)$(br2)I care more about Drosera than the origin of all the species in the world.$(br2)— Charles Darwin, letters"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "Kills count as Looting +1 and have a 30% chance to double drops.$(br2)$(br2)Digestion 4:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/pitcher_plant_tea_bag"
+    }
+  ]
+}

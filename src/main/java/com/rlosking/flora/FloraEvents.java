@@ -1746,6 +1746,10 @@ public final class FloraEvents {
             return;
         }
         FloraAdvancements.tick(player);
+        // v0.3.5: the guide book. Hands it out on the first join and flips it to a
+        // flower's page the first time that flower is picked up. Both calls are
+        // inert when Patchouli is absent - see PatchouliGuide for the rule.
+        com.rlosking.flora.compat.PatchouliGuide.tickFlowerUnlock(player);
     }
 
     /**
@@ -2019,6 +2023,12 @@ public final class FloraEvents {
     static double[] lastMove(Player player) {
         double[] delta = MOVE_DELTA.get(player.getUUID());
         return delta == null ? new double[]{0.0, 0.0} : delta;
+    }
+
+    /** v0.3.5: hands the guide to a player the first time they join. */
+    @SubscribeEvent
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        com.rlosking.flora.compat.PatchouliGuide.giveOnce(event.getEntity());
     }
 
     /** Frees the per-entity cooldown maps when a player leaves. */

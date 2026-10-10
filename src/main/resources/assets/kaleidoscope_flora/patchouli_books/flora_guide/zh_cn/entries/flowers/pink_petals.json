@@ -1,0 +1,24 @@
+{
+  "name": "花见物语",
+  "category": "kaleidoscope_flora:movement",
+  "icon": "kaleidoscope_flora:hanami_tale",
+  "sortnum": 4,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:hanami_tale",
+      "title": "花见物语",
+      "text": "粉红色花簇 · 花饮$(br2)用粉红色花簇花茶包在茶壶里加牛奶冲泡而成，产出十二杯。$(br2)$(br2)凋落的樱，未落的樱，终将凋落。$(br2)——良宽辞世句"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "花瓣环绕周身，格挡来袭的弹射物。$(br2)$(br2)落英 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/pink_petals_tea_bag"
+    }
+  ]
+}

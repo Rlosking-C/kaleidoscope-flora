@@ -1,0 +1,24 @@
+{
+  "name": "踏春",
+  "category": "kaleidoscope_flora:farming",
+  "icon": "kaleidoscope_flora:springtime_stroll",
+  "sortnum": 3,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:springtime_stroll",
+      "title": "踏春",
+      "text": "野花簇 · 花饮$(br2)用野花簇花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)行者啊，世上本没有路，路是走出来的。$(br2)——马查多"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "移动时在脚下绽放野花或铺设薄片方块。$(br2)$(br2)花开随行 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/wildflowers_tea_bag"
+    }
+  ]
+}

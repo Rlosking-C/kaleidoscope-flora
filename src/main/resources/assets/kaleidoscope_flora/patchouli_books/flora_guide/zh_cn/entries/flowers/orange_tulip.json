@@ -1,0 +1,24 @@
+{
+  "name": "金秋小夜曲",
+  "category": "kaleidoscope_flora:farming",
+  "icon": "kaleidoscope_flora:autumn_serenade",
+  "sortnum": 1,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:autumn_serenade",
+      "title": "金秋小夜曲",
+      "text": "橙色郁金香 · 花饮$(br2)用橙色郁金香花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)在卓越之门前，诸神安放了汗水。$(br2)——赫西俄德《工作与时日》"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "收获成熟作物时掉落翻倍，附近掉落物被吸向你；不会破坏耕地。$(br2)$(br2)丰收 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/orange_tulip_tea_bag"
+    }
+  ]
+}

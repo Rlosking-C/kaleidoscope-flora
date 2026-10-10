@@ -1,0 +1,7 @@
+{
+  "name": "Farming",
+  "description": "O too happy farmers, if they only knew their good fortune!$(br2)- Virgil, Georgics II",
+  "icon": "kaleidoscope_flora:autumn_serenade",
+  "parent": "kaleidoscope_flora:flower_drinks",
+  "sortnum": 50
+}

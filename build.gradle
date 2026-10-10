@@ -85,6 +85,11 @@ dependencies {
     // ObsidianUI dependency) is never required.
     compileOnly 'maven.modrinth:ryoamiclights:tApwsw9C'
 
+    // Patchouli (v0.3.5): soft dependency for the in-game guide book.
+    // compileOnly + runtime ModList check - the mod must start without it.
+    // Modrinth version id BIogJv2D = Patchouli-1.21.1-93-NEOFORGE.
+    compileOnly 'maven.modrinth:patchouli:BIogJv2D'
+
     // LambDynamicLights v4 API (soft dependency): compile-only against the
     // mojmap variant. At runtime LDL itself instantiates our initializer via
     // the yumi entrypoint declared in neoforge.mods.toml, so the mod is

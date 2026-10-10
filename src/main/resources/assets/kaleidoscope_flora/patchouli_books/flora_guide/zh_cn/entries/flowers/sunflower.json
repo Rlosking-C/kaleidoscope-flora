@@ -1,0 +1,24 @@
+{
+  "name": "逐日者",
+  "category": "kaleidoscope_flora:sneak",
+  "icon": "kaleidoscope_flora:the_sunward",
+  "sortnum": 2,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:the_sunward",
+      "title": "逐日者",
+      "text": "向日葵 · 花饮$(br2)用向日葵花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)向日葵是属于我的花。$(br2)——梵高"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "白天露天缓慢回复生命，夜晚照亮四周。$(br2)$(br2)向阳 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/sunflower_tea_bag"
+    }
+  ]
+}

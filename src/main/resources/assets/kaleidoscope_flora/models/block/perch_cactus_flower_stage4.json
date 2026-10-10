@@ -1,0 +1,7 @@
+{
+  "render_type": "minecraft:cutout",
+  "parent": "kaleidoscope_flora:block/flower_perch_plant",
+  "textures": {
+    "plant": "kaleidoscope_flora:block/perch_bloom_cactus_flower"
+  }
+}

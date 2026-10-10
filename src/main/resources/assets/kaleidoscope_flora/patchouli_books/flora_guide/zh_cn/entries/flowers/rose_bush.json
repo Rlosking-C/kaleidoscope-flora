@@ -1,0 +1,24 @@
+{
+  "name": "带刺的温柔",
+  "category": "kaleidoscope_flora:defense",
+  "icon": "kaleidoscope_flora:tender_thorns",
+  "sortnum": 3,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:tender_thorns",
+      "title": "带刺的温柔",
+      "text": "玫瑰丛 · 花饮$(br2)用玫瑰丛花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)我的爱人像一朵红红的玫瑰。$(br2)——彭斯"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "攻击你的生物按其造成伤害的五成至两倍受到反伤，并附带虚弱。$(br2)$(br2)荆棘 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/rose_bush_tea_bag"
+    }
+  ]
+}

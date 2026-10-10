@@ -1,0 +1,24 @@
+{
+  "name": "Rosy Stride",
+  "category": "kaleidoscope_flora:movement",
+  "icon": "kaleidoscope_flora:rosy_stride",
+  "sortnum": 1,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:rosy_stride",
+      "title": "Rosy Stride",
+      "text": "Pink Tulip · Flower Drink$(br2)Brewed from the Pink Tulip Tea Bag in a teapot with water; yields twelve cups.$(br2)$(br2)The girl born inside a tulip sailed the stream on its petal.$(br2)— Hans Christian Andersen, Thumbelina"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "Walk, sprint and jump on water; sneak to sink.$(br2)$(br2)Petal Stride 1:30"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/pink_tulip_tea_bag"
+    }
+  ]
+}

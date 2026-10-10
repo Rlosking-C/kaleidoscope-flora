@@ -1,0 +1,18 @@
+{
+  "name": "初盏",
+  "category": "kaleidoscope_flora:intro",
+  "icon": "kaleidoscope_flora:dandelion_tea_bag",
+  "read_by_default": true,
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "初饮",
+      "text": "第一次尝试时，建议从蒲公英开始：它随处可见，不挑地形。$(br2)用它制成的花饮名叫「风起时」，饮用后立即清除最多 3 个负面效果，并获得缓降。$(br2)配方如下。"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/dandelion_tea_bag"
+    }
+  ]
+}

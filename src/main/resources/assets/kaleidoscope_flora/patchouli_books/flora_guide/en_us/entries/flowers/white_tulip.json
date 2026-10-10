@@ -1,0 +1,24 @@
+{
+  "name": "Absolution",
+  "category": "kaleidoscope_flora:defense",
+  "icon": "kaleidoscope_flora:absolution",
+  "sortnum": 1,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:absolution",
+      "title": "Absolution",
+      "text": "White Tulip · Flower Drink$(br2)Brewed from the White Tulip Tea Bag in a teapot with milk; yields twelve cups.$(br2)$(br2)The weak can never forgive; forgiveness is the attribute of the strong.$(br2)— Mahatma Gandhi"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "Newly applied negative effects are blocked.$(br2)$(br2)Absolution 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/white_tulip_tea_bag"
+    }
+  ]
+}

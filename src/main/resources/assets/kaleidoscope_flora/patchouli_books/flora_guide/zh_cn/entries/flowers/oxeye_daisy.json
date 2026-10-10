@@ -1,0 +1,24 @@
+{
+  "name": "爱我，不爱我",
+  "category": "kaleidoscope_flora:recovery",
+  "icon": "kaleidoscope_flora:loves_me_not",
+  "sortnum": 2,
+  "read_by_default": false,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:loves_me_not",
+      "title": "爱我，不爱我",
+      "text": "滨菊 · 花饮$(br2)用滨菊花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)摘一片，爱我；再摘一片，不爱我。$(br2)——摘花瓣占卜"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "每8秒获得一次随机的小眷顾。$(br2)$(br2)每 8 秒摘一次花瓣，四种结果：回血一颗心、恢复少量饱食、速度 3 秒，或者什么也没有。$(br2)$(br2)生命恢复 1:30、占卜 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/oxeye_daisy_tea_bag"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "Protection",
+  "description": "No one provokes me with impunity.$(br2)- motto of the Order of the Thistle",
+  "icon": "kaleidoscope_flora:tender_thorns",
+  "parent": "kaleidoscope_flora:flower_drinks",
+  "sortnum": 20
+}

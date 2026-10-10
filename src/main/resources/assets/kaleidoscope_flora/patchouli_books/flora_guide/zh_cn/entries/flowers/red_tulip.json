@@ -1,0 +1,24 @@
+{
+  "name": "绯色心跳",
+  "category": "kaleidoscope_flora:buff",
+  "icon": "kaleidoscope_flora:crimson_heartbeat",
+  "sortnum": 2,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:crimson_heartbeat",
+      "title": "绯色心跳",
+      "text": "红色郁金香 · 花饮$(br2)用红色郁金香花茶包在茶壶里加清水冲泡而成，产出十二杯。$(br2)$(br2)恋人的血落之处，开出红郁金香。$(br2)——《霍斯罗与希琳》传说"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "效果",
+      "text": "近战伤害的 20% 转化为生命。$(br2)$(br2)吸血 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/red_tulip_tea_bag"
+    }
+  ]
+}

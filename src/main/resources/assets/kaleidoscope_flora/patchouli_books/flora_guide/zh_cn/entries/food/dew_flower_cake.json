@@ -1,0 +1,15 @@
+{
+  "name": "清露鲜花饼",
+  "category": "kaleidoscope_flora:food",
+  "icon": "kaleidoscope_flora:dew_flower_cake",
+  "read_by_default": true,
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:dew_flower_cake",
+      "link_recipe": false,
+      "text": "用厨房的蒸笼做出来的那一档。$(br2)吃下后 60 秒内可以在空中多跳一次；从高处落地会掀起冲击波，落得越高伤害越高（最高 20 格）。$(br2)期间免疫摔落伤害。$(br2)配方见 JEI。"
+    }
+  ]
+}

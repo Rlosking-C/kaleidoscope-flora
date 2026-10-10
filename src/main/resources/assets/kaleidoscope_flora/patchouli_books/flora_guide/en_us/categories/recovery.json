@@ -1,0 +1,7 @@
+{
+  "name": "Recovery",
+  "description": "Nature is the physician of diseases.$(br2)- the Hippocratic school",
+  "icon": "kaleidoscope_flora:lullaby",
+  "parent": "kaleidoscope_flora:flower_drinks",
+  "sortnum": 10
+}

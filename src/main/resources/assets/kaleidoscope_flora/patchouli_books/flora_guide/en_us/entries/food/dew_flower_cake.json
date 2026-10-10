@@ -1,0 +1,15 @@
+{
+  "name": "Dew Flower Cake",
+  "category": "kaleidoscope_flora:food",
+  "icon": "kaleidoscope_flora:dew_flower_cake",
+  "read_by_default": true,
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:dew_flower_cake",
+      "link_recipe": false,
+      "text": "The top tier, made in Cookery's steamer.$(br2)Eaten: 60 s of one extra mid-air jump. Landing from a height raises a shockwave - the higher the fall, the harder it hits, capped at 20 blocks.$(br2)You take no fall damage while it lasts.$(br2)See JEI for the recipe."
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Autumn Serenade",
+  "category": "kaleidoscope_flora:farming",
+  "icon": "kaleidoscope_flora:autumn_serenade",
+  "sortnum": 1,
+  "read_by_default": true,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "kaleidoscope_flora:autumn_serenade",
+      "title": "Autumn Serenade",
+      "text": "Orange Tulip · Flower Drink$(br2)Brewed from the Orange Tulip Tea Bag in a teapot with water; yields twelve cups.$(br2)$(br2)Before the gates of excellence, the gods have placed sweat.$(br2)— Hesiod, Works and Days"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Effect",
+      "text": "Harvesting mature crops multiplies drops; nearby drops drift to you; farmland is not destroyed.$(br2)$(br2)Harvest 3:00"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "kaleidoscope_flora:tea_bag/orange_tulip_tea_bag"
+    }
+  ]
+}

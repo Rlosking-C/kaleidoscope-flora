@@ -44,6 +44,15 @@ effects. An addon for Kaleidoscope Cookery.
     ordering = "AFTER"
     side = "BOTH"
 
+# Optional (v0.3.5): the in-game guide book. Not required - the mod boots and
+# plays normally without it, and no Patchouli code is loaded unless present.
+[[dependencies.kaleidoscope_flora]]
+    modId = "patchouli"
+    type = "optional"
+    versionRange = "[1.21.1-93,)"
+    ordering = "NONE"
+    side = "BOTH"
+
 [[mixins]]
 config = "kaleidoscope_flora.mixins.json"
 
