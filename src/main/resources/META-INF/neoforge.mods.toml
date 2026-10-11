@@ -51,3 +51,10 @@ config = "kaleidoscope_flora.mixins.json"
 
 [modproperties.kaleidoscope_flora]
 "yumi:entrypoints" = { "lambdynlights:initializer" = "com.rlosking.flora.client.FloraDynamicLightsInitializer" }
+
+[[dependencies.kaleidoscope_flora]]
+modId = "vanillabackport"
+type = "optional"
+versionRange = "[1.1.7,)"
+ordering = "NONE"
+side = "BOTH"

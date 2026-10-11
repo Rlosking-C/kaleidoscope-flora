@@ -38,6 +38,7 @@ public class KaleidoscopeFlora {
 
         FlowerCakes.register(modBus);
 
+        FloraSelfCheck.verify(LOGGER);
         FloraCreativeTab.register(modBus);
 
         if (net.neoforged.fml.loading.FMLEnvironment.dist.isClient()) {
@@ -45,6 +46,7 @@ public class KaleidoscopeFlora {
         }
 
         FloraDrinks.registerAll();
+        com.rlosking.flora.compat.PatchouliGuide.applyConfigFlags();
 
         SoupBaseManager.registerSoupBase(new LegacyMilkSoupBase());
         LOGGER.info("Legacy milk soup base registered as a save-compat alias for Cookery's minecraft:milk");

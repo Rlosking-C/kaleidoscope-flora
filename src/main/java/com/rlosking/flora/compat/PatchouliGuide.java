@@ -81,4 +81,11 @@ public final class PatchouliGuide {
             return;
         }
     }
+
+    public static void applyConfigFlags() {
+        if (!isLoaded() || !ModList.get().isLoaded("vanillabackport")) {
+            return;
+        }
+        vazkii.patchouli.api.PatchouliAPI.get().setConfigFlag("kaleidoscope_flora:vanillabackport", true);
+    }
 }
