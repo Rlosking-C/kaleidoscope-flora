@@ -85,6 +85,8 @@ Yes, you may port this mod - both the license and the author are fine with it:
 
 ## Credits
 
+- Programming and design: Rlosking and jiasudu. Art: jiasudu.
+
 - [Kaleidoscope Cookery](https://modrinth.com/mod/kaleidoscope-cookery) - upstream mod and required dependency
 
 Another mod by the same author: [Create: Colored Connections](https://www.curseforge.com/minecraft/mc-mods/create-colored-connections)

@@ -8,9 +8,9 @@ modId = "kaleidoscope_flora"
 
 version = "${file.jarVersion}"
 displayName = "Kaleidoscope Flora"
-authors = "Rlosking"
+authors = "Rlosking, jiasudu"
 
-credits = "Programming and design: Rlosking. Art: jiasudu. Creative tab section column designed after Kaleidoscope World Liquor by 111 (MIT); no assets from it are included."
+credits = "Programming and design: Rlosking and jiasudu. Art: jiasudu. Creative tab section column designed after Kaleidoscope World Liquor by 111 (MIT); no assets from it are included."
 
 logoFile = "logo.png"
 description = '''
