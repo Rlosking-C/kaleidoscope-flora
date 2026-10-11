@@ -85,7 +85,7 @@ Yes, you may port this mod - both the license and the author are fine with it:
 
 ## Credits
 
-- Programming and design: Rlosking and jiasudu. Art: jiasudu.
+- Programming and design: Rlosking and jiasudu. Art: Rlosking.
 
 - [Kaleidoscope Cookery](https://modrinth.com/mod/kaleidoscope-cookery) - upstream mod and required dependency
 

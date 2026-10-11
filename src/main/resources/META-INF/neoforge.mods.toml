@@ -10,7 +10,7 @@ version = "${file.jarVersion}"
 displayName = "Kaleidoscope Flora"
 authors = "Rlosking, jiasudu"
 
-credits = "Programming: Rlosking, jiasudu. Art: jiasudu."
+credits = "Programming: Rlosking, jiasudu. Art: Rlosking."
 
 logoFile = "logo.png"
 description = '''
