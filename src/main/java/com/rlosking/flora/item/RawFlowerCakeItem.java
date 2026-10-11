@@ -1,4 +1,4 @@
-package com.rlosking.flora;
+package com.rlosking.flora.item;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;

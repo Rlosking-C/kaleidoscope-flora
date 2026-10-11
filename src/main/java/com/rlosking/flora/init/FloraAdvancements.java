@@ -1,4 +1,4 @@
-package com.rlosking.flora;
+package com.rlosking.flora.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.item.TeacupItem;
 import com.mojang.serialization.Codec;
@@ -28,6 +28,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import com.rlosking.flora.block.FlowerCakeBlock;
+import com.rlosking.flora.effect.ModEffects;
+import com.rlosking.flora.event.FloraEvents;
+import com.rlosking.flora.KaleidoscopeFlora;
 
 public final class FloraAdvancements {
 

@@ -1,4 +1,4 @@
-package com.rlosking.flora;
+package com.rlosking.flora.effect;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -50,6 +50,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import com.rlosking.flora.event.FloraEvents;
+import com.rlosking.flora.init.FloraAdvancements;
+import com.rlosking.flora.init.ModTags;
+import com.rlosking.flora.FloraConfig;
+import com.rlosking.flora.KaleidoscopeFlora;
 
 public final class ModEffects {
 
@@ -780,12 +785,12 @@ public final class ModEffects {
             return true;
         }
 
-        static boolean isSheetItem(ItemStack held) {
+        public static boolean isSheetItem(ItemStack held) {
             return held.getItem() instanceof BlockItem bi
                     && bi.getBlock().defaultBlockState().is(ModTags.SHEET_BLOCKS);
         }
 
-        static Block wildflowers() {
+        public static Block wildflowers() {
             if (wildflowersBlock == null) {
                 wildflowersBlock = BuiltInRegistries.BLOCK.get(
                         ResourceLocation.withDefaultNamespace("wildflowers"));

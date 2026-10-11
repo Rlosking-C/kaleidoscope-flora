@@ -1,4 +1,4 @@
-package com.rlosking.flora;
+package com.rlosking.flora.init;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.food.FoodProperties;
@@ -14,6 +14,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.rlosking.flora.block.FlowerCakeBlock;
+import com.rlosking.flora.item.FlowerCakeItem;
+import com.rlosking.flora.item.RawFlowerCakeItem;
+import com.rlosking.flora.KaleidoscopeFlora;
 
 public final class FlowerCakes {
 

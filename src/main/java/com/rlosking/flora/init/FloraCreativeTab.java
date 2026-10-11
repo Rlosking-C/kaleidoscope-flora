@@ -1,4 +1,4 @@
-package com.rlosking.flora;
+package com.rlosking.flora.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.TeacupRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -12,6 +12,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import com.rlosking.flora.KaleidoscopeFlora;
 
 public final class FloraCreativeTab {
 

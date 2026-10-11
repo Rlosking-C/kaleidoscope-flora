@@ -1,4 +1,4 @@
-package com.rlosking.flora;
+package com.rlosking.flora.init;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
@@ -9,6 +9,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.rlosking.flora.KaleidoscopeFlora;
 
 public final class FloraTeas {
 

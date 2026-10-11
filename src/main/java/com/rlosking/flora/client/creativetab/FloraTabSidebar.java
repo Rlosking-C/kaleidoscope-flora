@@ -1,6 +1,6 @@
 package com.rlosking.flora.client.creativetab;
 
-import com.rlosking.flora.FloraCreativeTab;
+import com.rlosking.flora.init.FloraCreativeTab;
 import com.rlosking.flora.KaleidoscopeFlora;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.neoforged.api.distmarker.Dist;

@@ -1,4 +1,4 @@
-package com.rlosking.flora;
+package com.rlosking.flora.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -18,6 +18,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import com.rlosking.flora.init.BlossomMooncakes;
 
 public class BlossomMooncakeBlock extends Block {
 

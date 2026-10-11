@@ -1,4 +1,4 @@
-package com.rlosking.flora.client;
+package com.rlosking.flora.compat;
 
 import com.rlosking.flora.KaleidoscopeFlora;
 import mezz.jei.api.IModPlugin;

@@ -1,4 +1,4 @@
-package com.rlosking.flora.soupbase;
+package com.rlosking.flora.compat;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.api.client.render.ISoupBaseRender;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.recipe.soupbase.ISoupBase;

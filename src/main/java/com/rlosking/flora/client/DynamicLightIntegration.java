@@ -1,7 +1,7 @@
 package com.rlosking.flora.client;
 
 import com.rlosking.flora.KaleidoscopeFlora;
-import com.rlosking.flora.ModEffects;
+import com.rlosking.flora.effect.ModEffects;
 import dev.lambdaurora.lambdynlights.api.DynamicLightHandler;
 import dev.lambdaurora.lambdynlights.api.DynamicLightHandlers;
 import net.minecraft.client.Minecraft;

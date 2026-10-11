@@ -1,6 +1,6 @@
 package com.rlosking.flora.mixin;
 
-import com.rlosking.flora.ModEffects;
+import com.rlosking.flora.effect.ModEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.NeoForgeMod;

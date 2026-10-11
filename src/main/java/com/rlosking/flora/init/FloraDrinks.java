@@ -1,4 +1,4 @@
-package com.rlosking.flora;
+package com.rlosking.flora.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.TeacupRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -8,6 +8,9 @@ import net.minecraft.world.effect.MobEffects;
 import net.neoforged.fml.ModList;
 
 import java.util.function.Supplier;
+import com.rlosking.flora.effect.ModEffects;
+import com.rlosking.flora.FloraConfig;
+import com.rlosking.flora.KaleidoscopeFlora;
 
 public final class FloraDrinks {
     private static final String COOKERY_ID = "kaleidoscope_cookery";

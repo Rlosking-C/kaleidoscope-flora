@@ -1,4 +1,4 @@
-package com.rlosking.flora;
+package com.rlosking.flora.network;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -11,6 +11,8 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import com.rlosking.flora.event.FloraEvents;
+import com.rlosking.flora.KaleidoscopeFlora;
 
 @EventBusSubscriber(modid = KaleidoscopeFlora.MOD_ID)
 public final class FloraNetwork {

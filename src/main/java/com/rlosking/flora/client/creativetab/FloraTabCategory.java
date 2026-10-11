@@ -1,9 +1,9 @@
 package com.rlosking.flora.client.creativetab;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.init.registry.TeacupRegistry;
-import com.rlosking.flora.BlossomMooncakes;
+import com.rlosking.flora.init.BlossomMooncakes;
 import com.rlosking.flora.KaleidoscopeFlora;
-import com.rlosking.flora.FloraAdvancements;
+import com.rlosking.flora.init.FloraAdvancements;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;

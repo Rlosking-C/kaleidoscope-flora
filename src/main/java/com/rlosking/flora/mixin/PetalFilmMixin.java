@@ -1,6 +1,6 @@
 package com.rlosking.flora.mixin;
 
-import com.rlosking.flora.ModEffects;
+import com.rlosking.flora.effect.ModEffects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.LivingEntity;

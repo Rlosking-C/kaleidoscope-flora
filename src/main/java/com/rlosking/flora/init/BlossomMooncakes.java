@@ -1,4 +1,4 @@
-package com.rlosking.flora;
+package com.rlosking.flora.init;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.food.FoodProperties;
@@ -11,6 +11,9 @@ import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import com.rlosking.flora.block.BlossomMooncakeBlock;
+import com.rlosking.flora.item.BlossomMooncakeItem;
+import com.rlosking.flora.KaleidoscopeFlora;
 
 public final class BlossomMooncakes {
 

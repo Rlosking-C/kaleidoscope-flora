@@ -1,4 +1,4 @@
-package com.rlosking.flora;
+package com.rlosking.flora.event;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -77,6 +77,12 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.joml.Vector3f;
+import com.rlosking.flora.effect.ModEffects;
+import com.rlosking.flora.init.BlossomMooncakes;
+import com.rlosking.flora.init.FloraAdvancements;
+import com.rlosking.flora.FloraConfig;
+import com.rlosking.flora.KaleidoscopeFlora;
+import com.rlosking.flora.compat.PatchouliGuide;
 
 @EventBusSubscriber(modid = KaleidoscopeFlora.MOD_ID)
 public final class FloraEvents {
@@ -934,7 +940,7 @@ public final class FloraEvents {
         player.bob = player.oBob + (stride - player.oBob) * 0.4F;
     }
 
-    static boolean isOnPetalFilm(Player player) {
+    public static boolean isOnPetalFilm(Player player) {
         BlockPos support = BlockPos.containing(player.getX(), player.getY() - 0.2, player.getZ());
         FluidState fluid = player.level().getFluidState(support);
         if (!fluid.is(FluidTags.WATER)) {
@@ -1125,7 +1131,7 @@ public final class FloraEvents {
         return warmthEffect != null && entity.hasEffect(warmthEffect);
     }
 
-    static double[] lastMove(Player player) {
+    public static double[] lastMove(Player player) {
         double[] delta = MOVE_DELTA.get(player.getUUID());
         return delta == null ? new double[]{0.0, 0.0} : delta;
     }

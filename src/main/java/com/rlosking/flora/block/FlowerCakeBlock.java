@@ -1,4 +1,4 @@
-package com.rlosking.flora;
+package com.rlosking.flora.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
