@@ -14,8 +14,6 @@ java {
 neoForge {
     version = project.neo_version
 
-    // Matches the Parchment mappings used by the colored-connections project
-    // on the same machine, keeping parameter names readable in the IDE.
     parchment {
         minecraftVersion = project.minecraft_version
         mappingsVersion = project.parchment_version
@@ -38,9 +36,6 @@ neoForge {
 }
 
 repositories {
-    // Modrinth maven hosts both dependency mod jars. Resolving them by
-    // coordinate instead of committing local jar files keeps this repo
-    // clone-and-build friendly and avoids redistributing third-party jars.
     exclusiveContent {
         forRepository {
             maven { url = 'https://api.modrinth.com/maven' }
@@ -48,96 +43,27 @@ repositories {
         filter { includeGroup 'maven.modrinth' }
     }
 
-    // BlameJared maven hosts JEI API jars for compile-time use.
     maven { url = 'https://maven.blamejared.com' }
 
-    // Gegy maven hosts LambDynamicLights' API and runtime jars, each with
-    // intermediary and mojmap variants selectable via the net.minecraft.mappings
-    // attribute (official LDL dev-environment setup).
     maven { url = 'https://maven.gegy.dev' }
 }
 
-// Selects the mojmap variants of LambDynamicLights artifacts, matching the
-// Mojang-mapped Minecraft that NeoForge ModDev runs against.
 def minecraftMappings = Attribute.of('net.minecraft.mappings', String)
 dependencies.attributesSchema { attribute(minecraftMappings) }
 
 dependencies {
-    // Kaleidoscope Cookery: compile against AND load the published NeoForge
-    // jar. Its TeacupRegistry / TeacupData API is public and meant for
-    // addons, and the jar is already in Mojang mappings, so no
-    // deobfuscation is needed. The coordinate is a Modrinth version id
-    // (1.6.0-neoforge+mc1.21.1). Bumped from 1.5.0 on 2026-10-01 after a player
-    // reported that the declared range excluded 1.6.0; the API this mod uses
-    // did not change, so the range was widened rather than the code.
     implementation 'maven.modrinth:kaleidoscope-cookery:g8w0b2ly'
 
-    // SodiumDynamicLights API (soft dependency): compile-only; at runtime
-    // the integration checks ModList before calling any of its classes,
-    // so the mod is never required (neoforge-1.21.1-1.0.10).
     compileOnly 'maven.modrinth:sodium-dynamic-lights:XI0WLXdn'
 
-    // RyoamicLights API (soft dependency, Modrinth version id for
-    // 0.2.11+mc1.21.1-neoforge): compile-only against the same
-    // registerDynamicLightHandler/makeHandler shape as the legacy LBL API,
-    // only under org.thinkingstudio.ryoamiclights.api. At runtime the
-    // integration is gated on the ryoamiclights mod id, so the mod (and its
-    // ObsidianUI dependency) is never required.
     compileOnly 'maven.modrinth:ryoamiclights:tApwsw9C'
 
-    // Patchouli (v0.3.5): soft dependency for the in-game guide book.
-    // compileOnly + runtime ModList check - the mod must start without it.
-    // Modrinth version id BIogJv2D = Patchouli-1.21.1-93-NEOFORGE.
     compileOnly 'maven.modrinth:patchouli:BIogJv2D'
 
-    // LambDynamicLights v4 API (soft dependency): compile-only against the
-    // mojmap variant. At runtime LDL itself instantiates our initializer via
-    // the yumi entrypoint declared in neoforge.mods.toml, so the mod is
-    // never required (4.8.11 = latest for mc1.21.1).
     compileOnly('dev.lambdaurora.lambdynamiclights:lambdynamiclights-api:4.8.11+1.21.1') {
         attributes { attribute(minecraftMappings, 'mojmap') }
     }
 
-    // Load LDL in the dev runs so the Sunward integration can be tested;
-    // the project ships no Maven metadata, so runtimeOnly stays unpublished
-    // (players bring their own copy from Modrinth/CurseForge).
-    // Currently commented out to test the SDL integration instead - LDL and
-    // SDL are mutually exclusive, uncomment to switch back.
-    //runtimeOnly('dev.lambdaurora.lambdynamiclights:lambdynamiclights-runtime:4.8.11+1.21.1') {
-    //    attributes { attribute(minecraftMappings, 'mojmap') }
-    //}
-
-    // Kaleidoscope End (soft dependency, dev runs only): its 梦境 effect is
-    // the reference implementation for "swim through the air", borrowed by
-    // the mooncake's Floating effect - see the mixin package. No code here
-    // references its classes; players never need it.
-    //
-    // DISABLED 2026-09-23: the mod as shipped crashes the dev client. Every
-    // KECreativeTabs build walks Kaleidoscope Cookery's FoodBiteRegistry and
-    // hands what it finds straight to the creative tab output; one of those
-    // stacks does not have a count of 1, and NeoForge 21.1.248 rejects it:
-    //
-    //   java.lang.IllegalArgumentException: The stack count must be 1
-    //     at EventHooks.lambda$onCreativeModeTabBuildContents$0
-    //     at CreativeModeTab$Output.accept
-    //     at KECreativeTabs.lambda$static$2 (KECreativeTabs.java:77)
-    //
-    // It is not limited to the creative inventory: InventoryScreen#init also
-    // calls CreativeModeInventoryScreen.tryRebuildTabContents, so pressing E
-    // at all takes the client down. 1.0.13 has the same code path (checked),
-    // and 1.0.14 is the newest build for 1.21.1, so there is no version to
-    // move to. Nothing on our side feeds that registry, and the mooncake's
-    // air swimming only borrows the technique, never the classes - so this
-    // dependency is a convenience, not a requirement.
-    //
-    // Re-enable once Kaleidoscope End ships a fix, then verify by opening the
-    // inventory in a dev run:
-    //runtimeOnly 'maven.modrinth:kaleidoscope-end:BSwZoVQH'
-
-    // JEI (soft dependency): compile against the API jar, and load the full
-    // JEI jar in the dev runs so the FloraJeiPlugin info pages can be
-    // tested with runClient. At runtime for players, JEI stays optional -
-    // the plugin class is only loaded by JEI's own service loader.
     compileOnly "mezz.jei:jei-1.21.1-neoforge-api:${jei_version}"
     runtimeOnly "mezz.jei:jei-1.21.1-neoforge:${jei_version}"
 }
@@ -146,12 +72,6 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
-// The mod version is stamped into the jar manifest; neoforge.mods.toml reads
-// it back at runtime via its ${file.jarVersion} placeholder. This keeps
-// gradle.properties as the single source of truth WITHOUT Gradle resource
-// filtering - IntelliJ IDEA cannot replicate CopySpec filtering with its own
-// builder and shows "Cannot resolve resource filtering of MatchingCopyAction"
-// when it sees one, so avoiding filtering keeps IDEA builds warning-free.
 jar {
     manifest {
         attributes 'Implementation-Version': project.version

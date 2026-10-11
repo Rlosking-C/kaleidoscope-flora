@@ -13,19 +13,6 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-/**
- * This mod's own creative tab, holding the tea bags, the mooncake and every
- * flower drink - separate from Cookery's food tab (user decision 2026-09-19).
- *
- * <p><b>How the drinks leave Cookery's tab:</b> Cookery fills its food tab
- * by iterating {@code TeacupRegistry.TEACUP_DATA_MAP.keySet()} at display
- * time, and that map's only other runtime reader is the registration pass
- * (drink effects are cached inside each TeacupItem at construction). So
- * once registration is over, removing this mod's entries from the map in
- * common setup cleanly removes the drinks from Cookery's tab without
- * touching any behaviour - and the map stays untouched for every other
- * addon.</p>
- */
 public final class FloraCreativeTab {
 
     public static final DeferredRegister<CreativeModeTab> TABS =
@@ -42,14 +29,10 @@ public final class FloraCreativeTab {
 
     public static void register(IEventBus modBus) {
         TABS.register(modBus);
-        // FMLCommonSetupEvent fires on the MOD bus, not the game bus.
         modBus.addListener(FloraCreativeTab::removeFromCookeryTab);
     }
 
     private static void fill(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
-        // The chain reads top to bottom: the tea bags, then the mooncake,
-        // then the flower cakes, then every drink they turn into (see
-        // FloraTeas / FlowerCakes).
         for (var item : FloraTeas.teaItems()) {
             output.accept(item.get());
         }
@@ -57,21 +40,13 @@ public final class FloraCreativeTab {
         for (var item : FlowerCakes.cakeItems()) {
             output.accept(item.get());
         }
-        // Registry iteration follows registration order, which is the
-        // catalogue order of FloraDrinks; VB drinks appear only when their
-        // mod is loaded, exactly as registered.
         for (Item item : BuiltInRegistries.ITEM) {
             if (FloraAdvancements.isFloraDrink(new ItemStack(item))) {
                 output.accept(item);
             }
         }
-        // v0.3.5: the guide book is NOT added here. Patchouli reads the book's
-        // own "creative_tab" field and inserts the guide itself; adding it a
-        // second time throws "Itemstack 1 patchouli:guide_book already exists
-        // in the tab's list" and takes the whole client down at tab build.
     }
 
-    /** Removes this mod's drinks from Cookery's teacup map (see class doc). */
     private static void removeFromCookeryTab(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             int before = TeacupRegistry.TEACUP_DATA_MAP.size();

@@ -12,10 +12,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-/**
- * The 0.3.3 Mid-Autumn item: one mooncake, registered as a block (it stacks on
- * a tray) that is also its own item form.
- */
 public final class BlossomMooncakes {
 
     public static final DeferredRegister<Block> BLOCKS =
@@ -29,7 +25,6 @@ public final class BlossomMooncakes {
     public static final DeferredHolder<Item, BlossomMooncakeItem> ITEM =
             ITEMS.register("blossom_mooncake", () -> new BlossomMooncakeItem(MOONCAKE_BLOCK.get(),
                     new Item.Properties().food(new FoodProperties.Builder()
-                            // A bread's worth: 5 hunger, 6 saturation.
                             .nutrition(5)
                             .saturationModifier(0.6F)
                             .build())));

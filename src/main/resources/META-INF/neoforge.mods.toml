@@ -1,22 +1,17 @@
 modLoader = "javafml"
-# NeoForge's javafml version is independent of the MC version (1.21.1 = FML 4.x); do not copy Forge's [21,)
+
 loaderVersion = "[4,)"
 license = "MIT"
 
 [[mods]]
 modId = "kaleidoscope_flora"
-# Resolved at RUNTIME by FML from the jar manifest's Implementation-Version
-# (stamped by the jar task in build.gradle from gradle.properties' mod_version).
-# This avoids Gradle resource filtering, which IntelliJ IDEA cannot replicate
-# with its own builder ("Cannot resolve resource filtering" warning).
+
 version = "${file.jarVersion}"
 displayName = "Kaleidoscope Flora"
 authors = "Rlosking"
-# Attribution required by the MIT licence of the mod this feature's design came
-# from. Only its layout and behaviour were reused - none of its assets ship.
-# See CREDITS.md.
+
 credits = "Programming and design: Rlosking. Art: jiasudu. Creative tab section column designed after Kaleidoscope World Liquor by 111 (MIT); no assets from it are included."
-# Shown in the in-game mod list (480x300 banner at the jar root)
+
 logoFile = "logo.png"
 description = '''
 Brew vanilla flowers into signature teas, each with its own dedicated
@@ -44,8 +39,6 @@ effects. An addon for Kaleidoscope Cookery.
     ordering = "AFTER"
     side = "BOTH"
 
-# Optional (v0.3.5): the in-game guide book. Not required - the mod boots and
-# plays normally without it, and no Patchouli code is loaded unless present.
 [[dependencies.kaleidoscope_flora]]
     modId = "patchouli"
     type = "optional"
@@ -56,9 +49,5 @@ effects. An addon for Kaleidoscope Cookery.
 [[mixins]]
 config = "kaleidoscope_flora.mixins.json"
 
-# LambDynamicLights soft integration: LDL reads this top-level modproperties
-# table (keyed by mod id) via FML's IModInfo#getModProperties and instantiates
-# the initializer itself, only when the mod is installed on the client.
 [modproperties.kaleidoscope_flora]
 "yumi:entrypoints" = { "lambdynlights:initializer" = "com.rlosking.flora.client.FloraDynamicLightsInitializer" }
-

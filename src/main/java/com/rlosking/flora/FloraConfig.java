@@ -2,14 +2,6 @@ package com.rlosking.flora;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-/**
- * Server-synced configuration for Kaleidoscope Flora.
- *
- * <p>Exposes the most impactful gameplay knobs so server admins can tune
- * the mod without editing code or JSON. All values are {@link
- * ModConfig.Type#COMMON COMMON}: loaded on both sides, not synced (each
- * side reads its own file), so client and server should agree.</p>
- */
 public final class FloraConfig {
 
     public static final FloraConfig CONFIG;
@@ -21,51 +13,13 @@ public final class FloraConfig {
         SPEC = pair.getRight();
     }
 
-    // ------------------------------------------------------------------
-    // Effects
-    // ------------------------------------------------------------------
-
-    /** Multiplier applied to every drink's effect duration (1.0 = normal). */
     public final ModConfigSpec.DoubleValue effectDurationMultiplier;
 
-    /** Multiplier applied to all aura radii (Drowsy, Wither Aura, Gaze, Fadeaway). */
     public final ModConfigSpec.DoubleValue auraRangeMultiplier;
 
-    // ------------------------------------------------------------------
-    // Combat
-    // ------------------------------------------------------------------
-
-    /** Percent of melee damage healed by the Crimson Heartbeat vampiric effect. */
     public final ModConfigSpec.DoubleValue vampiricHealPercent;
 
-    // ------------------------------------------------------------------
-    // Flower cakes (v0.3.4)
-    // ------------------------------------------------------------------
-
-    /**
-     * Extra mid-air jumps the Dew Flower Cake grants (1 = a literal double jump).
-     *
-     * <p>The design asked for this to live in the config as the <b>default</b>,
-     * with the effect's own amplifier able to override it per item. That is how
-     * it is wired: {@code FlowerCakeItem} reads this value when it applies the
-     * effect, so the number travels inside the effect instance from then on and
-     * the jump logic itself never reads the config. A future triple-jump item is
-     * therefore a data change - apply the effect with amplifier 2 - and not a
-     * code change.</p>
-     *
-     * <p>0 disables the extra jump while keeping the landing shockwave, which is
-     * the natural way to run the cake as shockwave-only.</p>
-     */
     public final ModConfigSpec.IntValue doubleJumpCount;
-
-    // ------------------------------------------------------------------
-    // Farming
-    // ------------------------------------------------------------------
-    //
-    // Empty since v0.3.4. The category's only option, harvestMaxDropMultiplier,
-    // went away with the time-based Autumn Serenade effect - see the note in the
-    // constructor. Left as a marked placeholder rather than deleted so the next
-    // reader sees the removal was deliberate.
 
     private FloraConfig(ModConfigSpec.Builder builder) {
         builder.comment("Kaleidoscope Flora - Gameplay Settings",
@@ -111,21 +65,7 @@ public final class FloraConfig {
 
         builder.pop();
 
-        // The "farming" category held exactly one option, harvestMaxDropMultiplier,
-        // and v0.3.4 removed it: the Autumn Serenade effect is charge-based now
-        // (20 harvests at a fixed x2-x3), so a configurable upper bound has
-        // nothing left to control. Keeping a dead knob in the config screen would
-        // be worse than removing it - players would move it and see no change.
-        // The category goes with it rather than standing empty.
-        //
-        // Existing config files keep the stale key on disk; NeoForge ignores keys
-        // that the spec no longer defines, so it is harmless and self-cleans if the
-        // file is ever rewritten.
     }
-
-    // ------------------------------------------------------------------
-    // Convenience getters
-    // ------------------------------------------------------------------
 
     public static double effectDurationMultiplier() { return CONFIG.effectDurationMultiplier.get(); }
     public static double auraRangeMultiplier() { return CONFIG.auraRangeMultiplier.get(); }

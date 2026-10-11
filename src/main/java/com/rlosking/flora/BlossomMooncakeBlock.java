@@ -19,20 +19,10 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * The Mid-Autumn mooncake, placed on a wooden tray.
- *
- * <p>Up to five mooncakes stack on one block: {@code stack_count} runs 0-4 and
- * is one less than the number of mooncakes on the tray, so state 0 is a single
- * cake. Placing another one on top is handled by {@link BlossomMooncakeItem};
- * this class owns the shape, the empty-hand take-back and the break drop.</p>
- */
 public class BlossomMooncakeBlock extends Block {
 
-    /** Mooncakes on the tray, minus one: 0 = one cake, 4 = five. */
     public static final IntegerProperty STACK_COUNT = IntegerProperty.create("stack_count", 0, 4);
 
-    /** Tray footprint from the model: 14x2x14 starting at x/z 1. */
     private static final VoxelShape SHAPE = Block.box(1.0, 0.0, 1.0, 15.0, 4.0, 15.0);
 
     public BlossomMooncakeBlock(Properties properties) {
@@ -45,7 +35,6 @@ public class BlossomMooncakeBlock extends Block {
         builder.add(STACK_COUNT);
     }
 
-    /** Only another mooncake replaces this block, and only while the stack has room. */
     @Override
     public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
         return context.getItemInHand().getItem() == BlossomMooncakes.ITEM.get()
@@ -62,7 +51,6 @@ public class BlossomMooncakeBlock extends Block {
         return super.getStateForPlacement(context);
     }
 
-    /** Empty hand takes one mooncake back off the tray; the last one removes the block. */
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
                                               Player player, BlockHitResult hit) {
@@ -85,7 +73,6 @@ public class BlossomMooncakeBlock extends Block {
         return InteractionResult.SUCCESS;
     }
 
-    /** Breaking the tray returns every mooncake still on it. */
     @Override
     public void spawnAfterBreak(BlockState state, ServerLevel level, BlockPos pos,
                                 ItemStack tool, boolean dropExperience) {
