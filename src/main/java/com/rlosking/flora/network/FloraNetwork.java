@@ -11,8 +11,9 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
-import com.rlosking.flora.event.FloraEvents;
+
 import com.rlosking.flora.KaleidoscopeFlora;
+import com.rlosking.flora.event.CakeEvents;
 
 @EventBusSubscriber(modid = KaleidoscopeFlora.MOD_ID)
 public final class FloraNetwork {
@@ -33,7 +34,7 @@ public final class FloraNetwork {
     private static void handleMidAirJump(MidAirJumpPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer player) {
-                FloraEvents.noteMidAirJump(player, payload.stillRising());
+                CakeEvents.noteMidAirJump(player, payload.stillRising());
             }
         });
     }

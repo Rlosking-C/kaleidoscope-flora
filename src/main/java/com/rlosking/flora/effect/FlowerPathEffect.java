@@ -1,6 +1,5 @@
 package com.rlosking.flora.effect;
 
-import com.rlosking.flora.event.FloraEvents;
 import com.rlosking.flora.init.ModTags;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,6 +32,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import com.rlosking.flora.event.PlayerEvents;
 
 public class FlowerPathEffect extends MobEffect {
 
@@ -71,7 +71,7 @@ public class FlowerPathEffect extends MobEffect {
             STAND_POS.remove(player.getUUID());
             return true;
         }
-        double[] step = FloraEvents.lastMove(player);
+        double[] step = PlayerEvents.lastMove(player);
         double dist = Math.hypot(step[0], step[1]);
         Level level = player.level();
         ItemStack held = player.getMainHandItem();

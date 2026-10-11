@@ -1,6 +1,5 @@
 package com.rlosking.flora.effect;
 
-import com.rlosking.flora.event.FloraEvents;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -15,6 +14,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import com.rlosking.flora.event.PlayerEvents;
 
 public class PetalWalkEffect extends MobEffect {
     private static final Map<UUID, Long> SPLASH_CLOCK = new HashMap<>();
@@ -46,7 +46,7 @@ public class PetalWalkEffect extends MobEffect {
         }
         ServerLevel server = (ServerLevel) level;
         double strideDist = entity instanceof Player walker
-                ? Math.hypot(FloraEvents.lastMove(walker)[0], FloraEvents.lastMove(walker)[1])
+                ? Math.hypot(PlayerEvents.lastMove(walker)[0], PlayerEvents.lastMove(walker)[1])
                 : entity.getDeltaMovement().horizontalDistance();
         boolean striding = strideDist > 0.01;
         if (striding) {

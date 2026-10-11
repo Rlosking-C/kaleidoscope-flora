@@ -30,8 +30,9 @@ import java.util.Set;
 import java.util.UUID;
 import com.rlosking.flora.block.FlowerCakeBlock;
 import com.rlosking.flora.init.ModEffects;
-import com.rlosking.flora.event.FloraEvents;
+
 import com.rlosking.flora.KaleidoscopeFlora;
+import com.rlosking.flora.event.PlayerEvents;
 
 public final class FloraAdvancements {
 
@@ -165,8 +166,8 @@ public final class FloraAdvancements {
         Double walked = WATER_WALKED.get(uuid);
         if (!player.hasEffect(ModEffects.PETALWALK)) {
             WATER_WALKED.remove(uuid);
-        } else if (FloraEvents.isOnPetalFilm(player)) {
-            double[] step = FloraEvents.lastMove(player);
+        } else if (PlayerEvents.isOnPetalFilm(player)) {
+            double[] step = PlayerEvents.lastMove(player);
             double total = (walked == null ? 0.0 : walked) + Math.hypot(step[0], step[1]);
             if (total >= WATER_DANCER_BLOCKS) {
                 award(player, EVENT_WATER_DANCER);
@@ -182,7 +183,7 @@ public final class FloraAdvancements {
         if (!ModEffects.isAirborne(player)) {
             AIR_SWUM.remove(uuid);
         } else {
-            double[] step = FloraEvents.lastMove(player);
+            double[] step = PlayerEvents.lastMove(player);
             double total = (flown == null ? 0.0 : flown) + Math.hypot(step[0], step[1]);
             if (total >= RIDE_THE_WIND_BLOCKS) {
                 award(player, EVENT_RIDE_THE_WIND);
