@@ -10,7 +10,7 @@ version = "${file.jarVersion}"
 displayName = "Kaleidoscope Flora"
 authors = "Rlosking, jiasudu"
 
-credits = "Programming and design: Rlosking and jiasudu. Art: jiasudu. Creative tab section column designed after Kaleidoscope World Liquor by 111 (MIT); no assets from it are included."
+credits = "Programming: Rlosking, jiasudu. Art: jiasudu."
 
 logoFile = "logo.png"
 description = '''
