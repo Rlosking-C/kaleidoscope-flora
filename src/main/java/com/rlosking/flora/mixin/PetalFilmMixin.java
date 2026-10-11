@@ -1,6 +1,6 @@
 package com.rlosking.flora.mixin;
 
-import com.rlosking.flora.effect.ModEffects;
+import com.rlosking.flora.init.ModEffects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import com.rlosking.flora.effect.PetalWalkEffect;
 
 @Mixin(BlockBehaviour.BlockStateBase.class)
 public abstract class PetalFilmMixin {
@@ -36,7 +37,7 @@ public abstract class PetalFilmMixin {
                 || (walker instanceof Player pilot && pilot.getAbilities().flying)) {
             return;
         }
-        if (walker.getDeltaMovement().y() < -ModEffects.PetalWalkEffect.PLUNGE_SPEED) {
+        if (walker.getDeltaMovement().y() < -PetalWalkEffect.PLUNGE_SPEED) {
             return;
         }
         float height = Math.max(fluid.getOwnHeight(), 0.05f);

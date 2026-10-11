@@ -9,7 +9,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import org.slf4j.Logger;
-import com.rlosking.flora.effect.ModEffects;
+import com.rlosking.flora.init.ModEffects;
 import com.rlosking.flora.init.BlossomMooncakes;
 import com.rlosking.flora.init.FloraAdvancements;
 import com.rlosking.flora.init.FloraCreativeTab;

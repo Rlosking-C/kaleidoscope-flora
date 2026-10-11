@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import com.rlosking.flora.effect.ModEffects;
+import com.rlosking.flora.init.ModEffects;
 import com.rlosking.flora.init.FlowerCakes;
 import com.rlosking.flora.FloraConfig;
 

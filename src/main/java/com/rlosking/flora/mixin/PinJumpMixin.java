@@ -1,6 +1,6 @@
 package com.rlosking.flora.mixin;
 
-import com.rlosking.flora.effect.ModEffects;
+import com.rlosking.flora.init.ModEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;

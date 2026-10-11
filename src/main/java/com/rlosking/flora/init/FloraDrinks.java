@@ -8,7 +8,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.neoforged.fml.ModList;
 
 import java.util.function.Supplier;
-import com.rlosking.flora.effect.ModEffects;
+import com.rlosking.flora.init.ModEffects;
 import com.rlosking.flora.FloraConfig;
 import com.rlosking.flora.KaleidoscopeFlora;
 

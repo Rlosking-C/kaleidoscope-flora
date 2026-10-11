@@ -29,7 +29,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import com.rlosking.flora.block.FlowerCakeBlock;
-import com.rlosking.flora.effect.ModEffects;
+import com.rlosking.flora.init.ModEffects;
 import com.rlosking.flora.event.FloraEvents;
 import com.rlosking.flora.KaleidoscopeFlora;
 

@@ -1,7 +1,7 @@
 package com.rlosking.flora.mixin.client;
 
 import com.rlosking.flora.network.FloraNetwork;
-import com.rlosking.flora.effect.ModEffects;
+import com.rlosking.flora.init.ModEffects;
 import com.rlosking.flora.client.DewJumpFeedback;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;

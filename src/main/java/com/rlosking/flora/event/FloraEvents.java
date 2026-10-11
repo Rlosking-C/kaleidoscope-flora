@@ -77,12 +77,15 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.joml.Vector3f;
-import com.rlosking.flora.effect.ModEffects;
+import com.rlosking.flora.init.ModEffects;
 import com.rlosking.flora.init.BlossomMooncakes;
 import com.rlosking.flora.init.FloraAdvancements;
 import com.rlosking.flora.FloraConfig;
 import com.rlosking.flora.KaleidoscopeFlora;
 import com.rlosking.flora.compat.PatchouliGuide;
+import com.rlosking.flora.effect.FlowerPathEffect;
+import com.rlosking.flora.effect.GazeEffect;
+import com.rlosking.flora.effect.PetalWalkEffect;
 
 @EventBusSubscriber(modid = KaleidoscopeFlora.MOD_ID)
 public final class FloraEvents {
@@ -626,19 +629,19 @@ public final class FloraEvents {
     @SubscribeEvent
     public static void onWalkFlowerDrops(BlockDropsEvent event) {
         BlockPos pos = event.getPos();
-        boolean trail = ModEffects.FlowerPathEffect.isTrailBlock(event.getLevel(), pos);
+        boolean trail = FlowerPathEffect.isTrailBlock(event.getLevel(), pos);
         if (!trail) {
             if (!(event.getBreaker() instanceof Player breaker)
                     || !breaker.hasEffect(ModEffects.FLOWER_PATH)
-                    || ModEffects.FlowerPathEffect.isSheetItem(breaker.getMainHandItem())) {
+                    || FlowerPathEffect.isSheetItem(breaker.getMainHandItem())) {
                 return;
             }
             Block held = event.getState().getBlock();
-            if (held == Blocks.AIR || held != ModEffects.FlowerPathEffect.wildflowers()) {
+            if (held == Blocks.AIR || held != FlowerPathEffect.wildflowers()) {
                 return;
             }
         }
-        ModEffects.FlowerPathEffect.untrackTrail(event.getLevel(), pos);
+        FlowerPathEffect.untrackTrail(event.getLevel(), pos);
         event.setCanceled(true);
         event.setDroppedExperience(0);
     }
@@ -646,7 +649,7 @@ public final class FloraEvents {
     @SubscribeEvent
     public static void onLevelUnload(LevelEvent.Unload event) {
         if (event.getLevel() instanceof ServerLevel server) {
-            ModEffects.FlowerPathEffect.clearTrail(server.dimension());
+            FlowerPathEffect.clearTrail(server.dimension());
         }
     }
 
@@ -1154,9 +1157,9 @@ public final class FloraEvents {
         PETAL_VEIL_COOLDOWN_UNTIL.remove(uuid);
         DEW_AIR.remove(uuid);
         MIDAIR_JUMP_REPORTED.remove(uuid);
-        ModEffects.FlowerPathEffect.clearPlayer(uuid);
-        ModEffects.GazeEffect.clearPlayer(uuid);
-        ModEffects.PetalWalkEffect.clearPlayer(uuid);
+        FlowerPathEffect.clearPlayer(uuid);
+        GazeEffect.clearPlayer(uuid);
+        PetalWalkEffect.clearPlayer(uuid);
         FloraAdvancements.clearPlayer(uuid);
         clearBrushSession((ServerPlayer) event.getEntity(), false);
     }

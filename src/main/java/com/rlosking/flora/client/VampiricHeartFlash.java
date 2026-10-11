@@ -1,7 +1,7 @@
 package com.rlosking.flora.client;
 
 import com.rlosking.flora.KaleidoscopeFlora;
-import com.rlosking.flora.effect.ModEffects;
+import com.rlosking.flora.init.ModEffects;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
