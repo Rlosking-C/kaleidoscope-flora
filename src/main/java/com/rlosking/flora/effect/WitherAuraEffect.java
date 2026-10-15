@@ -8,6 +8,9 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.OwnableEntity;
+import net.minecraft.world.entity.monster.Enemy;
 
 public class WitherAuraEffect extends MobEffect {
     public WitherAuraEffect() {
@@ -28,7 +31,7 @@ public class WitherAuraEffect extends MobEffect {
         double range = 7.0 * FloraConfig.auraRangeMultiplier();
         for (LivingEntity other : server.getEntitiesOfClass(LivingEntity.class,
                 entity.getBoundingBox().inflate(range))) {
-            if (other == entity) {
+            if (other == entity || !isValidTarget(other)) {
                 continue;
             }
             other.addEffect(new MobEffectInstance(MobEffects.WITHER, 40, 0));
@@ -38,4 +41,14 @@ public class WitherAuraEffect extends MobEffect {
         }
         return true;
     }
+    private static boolean isValidTarget(LivingEntity other) {
+        if (other instanceof OwnableEntity ownable && ownable.getOwnerUUID() != null) {
+            return false;
+        }
+        if (other instanceof Enemy) {
+            return true;
+        }
+        return other instanceof Mob mob && mob.getTarget() != null;
+    }
+
 }
