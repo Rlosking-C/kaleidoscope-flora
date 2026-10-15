@@ -12,6 +12,7 @@ built jar.
 ## Who made what
 
 - **Programming and design: Rlosking, jiasudu.**
+- **Art: Potralia** - the tea bag and effect icons
 - **Art: Rlosking** - the drink and flower cake item icons, the placed-cake models
   and block textures, the effect icons and the creative tab's section sprites.
 
