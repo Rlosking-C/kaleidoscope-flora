@@ -25,15 +25,19 @@ public final class FloraSelfCheck {
     }
 
     public static void verify(Logger log) {
+        boolean client = FMLEnvironment.dist.isClient();
         List<String> broken = new ArrayList<>();
         for (String name : SUBSCRIBER_CLASSES) {
+            if (!client && name.startsWith("com.rlosking.flora.client.")) {
+                continue;
+            }
             try {
                 Class<?> type = Class.forName(name);
                 if (!type.isAnnotationPresent(EventBusSubscriber.class)) {
                     broken.add(name + " - missing @EventBusSubscriber");
                 }
-            } catch (ClassNotFoundException e) {
-                broken.add(name + " - class not found");
+            } catch (Throwable t) {
+                broken.add(name + " - " + t.getClass().getSimpleName());
             }
         }
         if (broken.isEmpty()) {
