@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.ModList;
 
@@ -36,18 +37,48 @@ public final class PatchouliGuide {
         if (!isLoaded()) {
             return;
         }
-        CompoundTag data = player.getPersistentData();
-        if (data.getBoolean(GIVEN)) {
-            return;
-        }
-        data.putBoolean(GIVEN, true);
         if (!(player instanceof ServerPlayer serverPlayer)) {
             return;
         }
+        if (hasGuideFlag(serverPlayer) || hasGuide(serverPlayer)) {
+            markGuideGiven(serverPlayer);
+            return;
+        }
+        markGuideGiven(serverPlayer);
         ItemStack book = bookStack();
-        if (!book.isEmpty() && !serverPlayer.getInventory().contains(book)) {
+        if (!book.isEmpty()) {
             serverPlayer.getInventory().add(book);
         }
+    }
+
+    private static final ResourceLocation GIVEN_ADVANCEMENT =
+            ResourceLocation.fromNamespaceAndPath(KaleidoscopeFlora.MOD_ID, "flora_guide_given");
+
+    private static boolean hasGuideFlag(ServerPlayer player) {
+        var holder = player.server.getAdvancements().get(GIVEN_ADVANCEMENT);
+        return holder != null && player.getAdvancements().getOrStartProgress(holder).isDone();
+    }
+
+    private static void markGuideGiven(ServerPlayer player) {
+        var holder = player.server.getAdvancements().get(GIVEN_ADVANCEMENT);
+        if (holder != null) {
+            player.getAdvancements().award(holder, "given");
+        }
+    }
+
+    private static boolean hasGuide(ServerPlayer player) {
+        Item guide = net.minecraft.core.registries.BuiltInRegistries.ITEM
+                .get(ResourceLocation.fromNamespaceAndPath(PATCHOULI, "guide_book"));
+        if (guide == null) {
+            return false;
+        }
+        var inventory = player.getInventory();
+        for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
+            if (inventory.getItem(slot).is(guide)) {
+                return true;
+            }
+        }
+        return player.getOffhandItem().is(guide);
     }
 
     public static void tickFlowerUnlock(ServerPlayer player) {
