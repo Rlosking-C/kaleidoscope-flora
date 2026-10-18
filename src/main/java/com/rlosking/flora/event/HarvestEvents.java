@@ -91,18 +91,20 @@ public final class HarvestEvents {
             return;
         }
         UUID uuid = breaker.getUUID();
-        int left = HARVEST_CHARGES_LEFT.getOrDefault(uuid, HARVEST_CHARGES);
-        if (left <= 0) {
-            HARVEST_CHARGES_LEFT.remove(uuid);
-            breaker.removeEffect(ModEffects.HARVEST);
-            return;
-        }
-        left--;
-        if (left <= 0) {
-            HARVEST_CHARGES_LEFT.remove(uuid);
-            breaker.removeEffect(ModEffects.HARVEST);
-        } else {
-            HARVEST_CHARGES_LEFT.put(uuid, left);
+        if (chargeHarvestOnce(breaker)) {
+            int left = HARVEST_CHARGES_LEFT.getOrDefault(uuid, HARVEST_CHARGES);
+            if (left <= 0) {
+                HARVEST_CHARGES_LEFT.remove(uuid);
+                breaker.removeEffect(ModEffects.HARVEST);
+                return;
+            }
+            left--;
+            if (left <= 0) {
+                HARVEST_CHARGES_LEFT.remove(uuid);
+                breaker.removeEffect(ModEffects.HARVEST);
+            } else {
+                HARVEST_CHARGES_LEFT.put(uuid, left);
+            }
         }
         int multiplier = HARVEST_MIN_MULTIPLIER
                 + breaker.getRandom().nextInt(HARVEST_MAX_MULTIPLIER - HARVEST_MIN_MULTIPLIER + 1);
@@ -122,6 +124,16 @@ public final class HarvestEvents {
         if (event.getEntity() instanceof LivingEntity walker && walker.hasEffect(ModEffects.HARVEST)) {
             event.setCanceled(true);
         }
+    }
+
+    private static boolean chargeHarvestOnce(Player player) {
+        int now = player.tickCount;
+        Integer last = HARVEST_CHARGED_TICK.get(player.getUUID());
+        if (last != null && last == now) {
+            return false;
+        }
+        HARVEST_CHARGED_TICK.put(player.getUUID(), now);
+        return true;
     }
 
     @SubscribeEvent
@@ -346,6 +358,8 @@ public final class HarvestEvents {
     public static final int BRUSH_DIG_TICKS = 48;
 
     public static final Map<UUID, Integer> HARVEST_CHARGES_LEFT = new HashMap<>();
+    public static final Map<UUID, Integer> HARVEST_CHARGED_TICK = new HashMap<>();
+
 
     public static final int HARVEST_CHARGES = 20;
 
@@ -365,6 +379,7 @@ public final class HarvestEvents {
     public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
         UUID uuid = event.getEntity().getUUID();
         HARVEST_CHARGES_LEFT.remove(uuid);
+        HARVEST_CHARGED_TICK.remove(uuid);
         clearBrushSession((ServerPlayer) event.getEntity(), false);
     }
 
