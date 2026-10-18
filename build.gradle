@@ -77,3 +77,9 @@ jar {
         attributes 'Implementation-Version': project.version
     }
 }
+
+jar {
+    manifest {
+        attributes('Built-At': new Date().format('yyyy-MM-dd HH:mm:ss'))
+    }
+}
