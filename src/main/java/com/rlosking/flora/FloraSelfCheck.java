@@ -6,20 +6,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.loading.FMLEnvironment;
 import org.slf4j.Logger;
 
-/**
- * Startup self-check: turns silent failures into loud ones.
- *
- * <p>NeoForge discovers event handlers by scanning for the
- * {@code @EventBusSubscriber} annotation. If that annotation is ever lost -
- * a file moved, a merge gone wrong - the handlers simply never run: no
- * error, no warning, the feature is just gone. The same is true of a class
- * that is renamed out from under a mixin config or an entry point.</p>
- *
- * <p>This class names every subscriber class explicitly and verifies, at
- * startup, that each one still exists and still carries the annotation. Any
- * problem is logged at ERROR level, and in a development environment it
- * throws, so a broken build cannot pass unnoticed.</p>
- */
 public final class FloraSelfCheck {
 
     private static final List<String> SUBSCRIBER_CLASSES = List.of(

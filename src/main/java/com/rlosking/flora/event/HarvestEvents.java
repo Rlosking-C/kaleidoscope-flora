@@ -360,7 +360,6 @@ public final class HarvestEvents {
     public static final Map<UUID, Integer> HARVEST_CHARGES_LEFT = new HashMap<>();
     public static final Map<UUID, Integer> HARVEST_CHARGED_TICK = new HashMap<>();
 
-
     public static final int HARVEST_CHARGES = 20;
 
     public static final int HARVEST_MIN_MULTIPLIER = 2;

@@ -110,8 +110,6 @@ public final class ModEffects {
         return Math.max(PIN_MIN_LIFT, Math.min(PIN_MAX_LIFT, entity.getBbHeight() * PIN_LIFT_PER_HEIGHT));
     }
 
-    
-
     public static final DeferredHolder<MobEffect, MobEffect> TASTEBLOOM =
             EFFECTS.register("tastebloom", TastebloomEffect::new);
 
@@ -147,8 +145,6 @@ public final class ModEffects {
 
     public static final DeferredHolder<MobEffect, MobEffect> ECHO =
             EFFECTS.register("echo", () -> new MarkerEffect(MobEffectCategory.BENEFICIAL, 0xA59BB8));
-
-    
 
     private ModEffects() {
     }
