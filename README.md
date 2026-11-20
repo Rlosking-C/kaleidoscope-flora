@@ -68,4 +68,4 @@ Flowers are not decoration here — they are ingredients with consequences. Ever
 
 ## License
 
-Code: MIT. Art assets: CC BY-NC-SA 4.0.
+All rights reserved. See [LICENSE](LICENSE) for the full terms.
