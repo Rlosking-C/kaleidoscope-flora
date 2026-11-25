@@ -52,7 +52,7 @@ def minecraftMappings = Attribute.of('net.minecraft.mappings', String)
 dependencies.attributesSchema { attribute(minecraftMappings) }
 
 dependencies {
-    implementation 'maven.modrinth:kaleidoscope-cookery:g8w0b2ly'
+    implementation 'maven.modrinth:kaleidoscope-cookery:COtTVhOl'
 
     compileOnly 'maven.modrinth:sodium-dynamic-lights:XI0WLXdn'
 

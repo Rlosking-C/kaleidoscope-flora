@@ -11,6 +11,16 @@ All notable changes to this project are documented in this file.
 > detail. Earlier versions are still thin and should be filled in from the
 > release notes as they are found.
 
+## 0.3.5.2
+
+### Fixed
+
+- **Kaleidoscope Cookery 1.7.0 refused to load alongside this mod.** The
+  declared range stopped at `<1.7`, so 1.7.0 was rejected before it could even
+  finish loading. The teacup, teapot, soup-base and creative-tab APIs this mod
+  uses are byte-for-byte unchanged in 1.7.0, so the range is now
+  `[1.6.0, 1.8)` and the build compiles against 1.7.0.
+
 ## 0.3.4
 
 ### Changed
