@@ -52,7 +52,7 @@ Flowers are not decoration here — they are ingredients with consequences. Ever
 
 **Minecraft 1.21.1 / NeoForge** and **Minecraft 1.20.1 / Forge** are both supported.
 
-- **Required:** [Kaleidoscope Cookery](https://www.curseforge.com/minecraft/mc-mods/kaleidoscope-cookery) 1.6.0
+- **Required:** [Kaleidoscope Cookery](https://www.curseforge.com/minecraft/mc-mods/kaleidoscope-cookery) 1.6.0 or 1.7.0
 
 - **Optional:**
   - [Patchouli](https://modrinth.com/mod/patchouli) — enables The Infusion Ledger
